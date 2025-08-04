@@ -54,6 +54,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $permissions->links() }}
                     </div>
 
                     @if($permissions->isEmpty())

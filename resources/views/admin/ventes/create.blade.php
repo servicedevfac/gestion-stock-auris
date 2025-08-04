@@ -101,8 +101,6 @@
                 </form>
             </div>
         </div>
-<<<<<<< HEAD
-=======
 
         {{-- Date & Paiement --}}
         <div class="row mt-3">
@@ -122,7 +120,6 @@
 
         <button type="submit" class="btn btn-header1  btn-lg mt-2"><i class="fas fa-save me-2"></i> Enregistrer la vente</button>
     </form>
->>>>>>> djuedev
     </div>
     @endsection
 

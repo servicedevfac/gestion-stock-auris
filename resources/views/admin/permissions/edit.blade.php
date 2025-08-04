@@ -34,8 +34,4 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> djuedev
 @endsection

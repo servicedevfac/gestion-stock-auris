@@ -114,96 +114,6 @@
                 </div>
             </li>
 
-<<<<<<< HEAD
-            <li class="menu-item">
-                <a href="#menuClients" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="users-round"></i></span>
-                    <span class="menu-text"> Clients </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="menuClients">
-                    <ul class="sub-menu">
-                        <li class="menu-item">
-                            <a href="{{ route('clients.create') }}" class="menu-link">
-                                <span class="menu-text">Nouveau client</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{{ route('clients.index') }}" class="menu-link">
-                                <span class="menu-text">Liste clients</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="menu-item">
-                <a href="#menuUsers" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="users"></i></span>
-                    <span class="menu-text"> Utilisateurs </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="menuUsers">
-                    <ul class="sub-menu">
-                        <li class="menu-item">
-                            <a href="{{route('users.create')}}" class="menu-link">
-                                <span class="menu-text">Nouveau utiisateur</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{{route('users.index')}}" class="menu-link">
-                                <span class="menu-text">Liste utilisateurs</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="menu-item">
-                <a href="#role" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="scale"></i></span>
-                    <span class="menu-text"> Rôles </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="role">
-                    <ul class="sub-menu">
-                        <li class="menu-item">
-                            <a href="{{route('roles.create')}}" class="menu-link">
-                                <span class="menu-text">Nouveau rôle</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{{route('roles.index')}}" class="menu-link">
-                                <span class="menu-text">Liste rôles</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="menu-item">
-                <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="ruler"></i></span>
-                    <span class="menu-text"> Permissions </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="Permission">
-                    <ul class="sub-menu">
-                        
-                        <li class="menu-item">
-                            <a href="{{route('permissions.create')}}" class="menu-link">
-                                <span class="menu-text">Nouvelle permission</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{{route('permissions.index')}}" class="menu-link">
-                                <span class="menu-text">Liste permissions</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
-=======
                     <li class="menu-title">Menu</li>
 
                     <li class="menu-item">
@@ -413,4 +323,3 @@
                 </ul>
             </div>
         </div>
->>>>>>> djuedev
