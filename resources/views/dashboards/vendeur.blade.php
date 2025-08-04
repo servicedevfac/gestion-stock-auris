@@ -131,6 +131,7 @@
                                     <tr>
                                         <td>
                                             {{ $client->client->nom }}
+<<<<<<< HEAD
                             </td>
                             <td>
                                 {{ $client->client->adresse }}
@@ -148,6 +149,24 @@
             <!-- end col -->
         </div>
     </div> 
+=======
+                                        </td>
+                                        <td>
+                                            {{ $client->client->adresse }}
+                                        </td>
+                                        <td>
+                                            {{ $client->client->telephone }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- end card-body--><!-- end col -->
+            </div>
+        </div> <!-- end card-->
+     <!-- end row -->
+>>>>>>> djuedev
 
 </div>
     @endsection

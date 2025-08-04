@@ -34,5 +34,11 @@
                 </form>
             </div>
         </div>
+<<<<<<< HEAD
     </div>
+=======
+
+
+
+>>>>>>> djuedev
 @endsection

@@ -63,7 +63,11 @@
                         </tbody>
                     </table>
 
+<<<<<<< HEAD
                     <button type="button" class="btn btn-header1" id="ajouter-ligne">➕ Ajouter un produit</button>
+=======
+        <button type="button" class="btn btn-header1" id="ajouter-ligne"><i class="fas fa-plus me-2"></i> Ajouter un produit</button>
+>>>>>>> djuedev
 
                     {{-- Remise et total --}}
                     <div class="row mt-4">
@@ -97,6 +101,28 @@
                 </form>
             </div>
         </div>
+<<<<<<< HEAD
+=======
+
+        {{-- Date & Paiement --}}
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>Date de vente</label>
+                <input type="date" name="date_vente" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+            </div>
+            <div class="col-md-6">
+                <label>Mode de paiement</label>
+                <select name="mode_paiement" class="form-control" required>
+                    <option value="espèces">Espèces</option>
+                    <option value="mobile money">Mobile Money</option>
+                    <option value="carte">Carte</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-header1  btn-lg mt-2"><i class="fas fa-save me-2"></i> Enregistrer la vente</button>
+    </form>
+>>>>>>> djuedev
     </div>
     @endsection
 

@@ -24,14 +24,13 @@
                 @else
                 <p>Aucune permission associée à ce rôle.</p>
                 @endif
-
-                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-header1 btn-lg me-2">
-                    <i class="fas fa-edit me-1"></i> Modifier
-                </a>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
+=======
+>>>>>>> djuedev
 
 
 @endsection
