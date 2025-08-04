@@ -50,33 +50,7 @@
                     <button class="btn btn-header1" type="submit">Créer le produit</button>
                 </form>
             </div>
-        
 
-            <form class="needs-validation" novalidate method="POST" action="{{ route('produits.store') }}">
-                @csrf
-                <div class="mb-3">
-                    <label for="nom" class="form-label">Nom du produit</label>
-                    <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" value="{{ old('nom') }}" required maxlength="255">
-                    <div class="invalid-feedback">
-                        Veuillez saisir le nom du produit.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="prix" class="form-label">Prix</label>
-                    <input type="number" step="0.01" min="0" class="form-control @error('prix') is-invalid @enderror" id="prix" name="prix" value="{{ old('prix') }}" required>
-                    <div class="invalid-feedback">
-                        Veuillez saisir un prix valide.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="seuil_alerte" class="form-label">Seuil d'alerte</label>
-                    <input type="number" min="0" class="form-control @error('seuil_alerte') is-invalid @enderror" id="seuil_alerte" name="seuil_alerte" value="{{ old('seuil_alerte') }}" required>
-                    <div class="invalid-feedback">
-                        Veuillez saisir un seuil d'alerte valide.
-                    </div>
-                </div>
-                <button class="btn btn-info" type="submit">Créer le produit</button>
-            </form>
         </div>
     </div>
 </div>
