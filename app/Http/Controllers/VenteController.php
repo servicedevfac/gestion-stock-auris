@@ -21,7 +21,13 @@ class VenteController extends Controller
 {
     public function index(Request $request)
     {
-        $ventes = Vente::with(['client', 'user']);
+        if(Auth::user()->hasRole('vendeur')) {
+
+            $ventes = Vente::where('user_id', Auth::user()->id)->paginate(15);
+        } else {
+
+        $ventes = Vente::with(['client', 'user'])->orderByDesc('created_at')->paginate(15);
+        }
 
         // Filtrage par période
         if ($request->periode && $request->date_debut && $request->date_fin) {
@@ -48,7 +54,6 @@ class VenteController extends Controller
             });
         }
 
-        $ventes = $ventes->orderByDesc('created_at')->paginate(15);
         return view('admin.ventes.index', compact('ventes'));
     }
 
@@ -57,21 +62,11 @@ class VenteController extends Controller
         $clients = Client::all();
         $utilisateurs = User::all();
         $produits = Produit::all();
-
         return view('admin.ventes.create', compact('clients', 'utilisateurs', 'produits'));
-
     }
-
-
-
-
-
 public function store(Request $request)
 {
-    //  if (!$this->estDansLesHoraires()) {
-    //     return redirect()->back()->with('error', 'Les ventes ne sont pas autorisées à cette heure.');
-    // }
-
+    
     $request->validate([
         'client_id' => 'required|exists:clients,id',
         'montant_total' => 'required|numeric|min:0',

@@ -27,7 +27,7 @@
 
                     </div>
 
-                        <button type="submit" class="btn btn-header1 btn-sm p-2">
+                        <button type="submit" class="btn btn-header1 btn-lg p-2">
                             <i class="fas fa-save "></i> Créer la permission
                         </button>
                     </div>

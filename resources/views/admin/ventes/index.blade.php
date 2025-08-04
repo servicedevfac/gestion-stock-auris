@@ -13,6 +13,7 @@
 
             <div class="card-body">
 
+<<<<<<< HEAD
 
                 <form method="GET" action="" class="mb-3">
                     <div class="row">
@@ -49,6 +50,43 @@
                     {{ session()->get('error') }}
                 </div>
                 @endif
+=======
+    <form method="GET" action="" class="mb-3">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Période</label>
+                <select name="periode" class="form-control" id="periode-select">
+                    <option value="jour" @if(request('periode')=='jour') selected @endif>Jour</option>
+                    <option value="semaine" @if(request('periode')=='semaine') selected @endif>Semaine</option>
+                    <option value="mois" @if(request('periode')=='mois') selected @endif>Mois</option>
+                    <option value="annee" @if(request('periode')=='annee') selected @endif>Année</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Date de début</label>
+                <input type="date" name="date_debut" class="form-control" value="{{ request('date_debut') }}">
+            </div>
+            <div class="col-md-3">
+                <label>Date de fin</label>
+                <input type="date" name="date_fin" class="form-control" value="{{ request('date_fin') }}">
+            </div>
+            <div class="col-md-3">
+                <label>Recherche</label>
+                <input type="text" name="q" class="form-control" placeholder="Client, code reçu, utilisateur..." value="{{ request('q') }}">
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+            </div>
+        </div>
+    </form>
+    @if (session()->has('error'))
+    <div class="alert alert-danger">
+        {{ session()->get('error') }}
+    </div>
+    @endif
+>>>>>>> djuedev
 
                 <table class="table table-hover table-bordered dt-responsive nowrap w-100">
                     <thead class="card-heade  table-dark">

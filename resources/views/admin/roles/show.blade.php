@@ -11,8 +11,8 @@
                 </a>
             </div>
             <div class="card-body">
-                <h3 class="mb-3">Nom du rôle :</h3>
-                <H4 class="fw-bold">{{ $role->name }}</H4>
+                <h3 class="mb-3">Nom du rôle : <span class="fw-bold">{{ $role->name }}</span></h3>
+
 
                 <h5 class="mb-3">Permissions associées :</h5>
                 @if($role->permissions->count())
@@ -25,7 +25,7 @@
                 <p>Aucune permission associée à ce rôle.</p>
                 @endif
 
-                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-header1 btn-sm me-2">
+                <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-header1 btn-lg me-2">
                     <i class="fas fa-edit me-1"></i> Modifier
                 </a>
             </div>

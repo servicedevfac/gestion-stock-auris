@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light" data-menu-color="dark" data-topbar-color="light">
-
 <head>
     <meta charset="utf-8" />
     <title>@yield('title')</title>
@@ -111,8 +110,31 @@
                             {{ session('error') }}
                         </div>
                     @endif
-
                     @yield('content')
+<<<<<<< HEAD
+=======
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <script>document.write(new Date().getFullYear())</script> © Drezoc
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
+                            <p class="mb-0">Design & Develop by <a href="https://myrathemes.com/"
+                                    target="_blank">MyraStudio</a> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+>>>>>>> djuedev
 
                     @stack('scripts')
                     

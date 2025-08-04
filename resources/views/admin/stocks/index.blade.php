@@ -8,7 +8,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="text-white m-0"><i class="fas fa-list me-2"></i>  Liste des mouvements de stock</h3>
-                <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header text-info fw-bold shadow-sm">
+                <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header  fw-bold shadow-sm">
                     <i class="fas fa-plus me-1"></i> Nouveau mouvement de stock
                 </a>
             </div>

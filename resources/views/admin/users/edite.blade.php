@@ -65,10 +65,17 @@
                             <option value="{{ $role->name }}" {{ $user->role === $role->name ? 'selected' : '' }}>
                                 {{ $role->name }}
                             </option>
+<<<<<<< HEAD
                             @endforeach
                         </select>
                     </div>
                     <button type="submit" class="btn btn-header1"><i class="fas fa-save me-2"></i> Mettre à jour</button>
+=======
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-header1 btn-lg"><i class="fas fa-save me-2"></i> Mettre à jour</button>
+>>>>>>> djuedev
 
                 </form>
             </div>
