@@ -9,12 +9,12 @@
             <i class="bi bi-x-octagon-fill" style="font-size: 4rem;"></i>
         </div>
         <h2 class="text-danger mb-3">Vente bloquée</h2>
-        <p class="lead">⛔ Les ventes ne sont pas autorisées à cette heure.</p>
+        <p class="lead"><i class="fas fa-"></i> Les ventes ne sont pas autorisées à cette heure.</p>
         <p>Horaires autorisés pour <strong>{{ $jour }}</strong> :</p>
         <p><span class="badge bg-secondary">{{ $ouverture }} - {{ $fermeture }}</span></p>
 
-        <a href="{{ url()->previous() }}" class="btn btn-outline-primary mt-4">
-            <i class="bi bi-arrow-left-circle"></i> Retour
+        <a href="{{ url()->previous() }}" class="btn btn-header1 mt-4">
+            <i class="fas fa-arrow-left"></i> Retour
         </a>
     </div>
 </div>
