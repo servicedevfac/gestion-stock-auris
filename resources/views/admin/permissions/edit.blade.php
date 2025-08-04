@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Modifier Permission')
-
 @section('content')
     <div class="row mt-5">
         <div class="col-12">
@@ -14,28 +12,26 @@
                 </div>
                 <div class="card-body">
 
-                <form class="needs-validation" action="{{ route('permissions.update', $permission->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">Nom de la permission</label>
-                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
-                                   value="{{ old('name', $permission->name) }}" required>
-                            @error('name')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                    <form class="needs-validation" action="{{ route('permissions.update', $permission->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="name">Nom de la permission</label>
+                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $permission->name) }}" required>
+                                @error('name')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
 
                         <button type="submit" class="btn btn-header1 btn-lg px-5">
                             <i class="fas fa-save me-2"></i> Modifier
                         </button>
 
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 @endsection

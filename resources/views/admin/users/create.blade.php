@@ -10,52 +10,50 @@
                 </a>
             </div>
             <div class="card-body">
-            <form action="{{ route('users.store') }}" method="POST">
-                @csrf
+                <form action="{{ route('users.store') }}" method="POST">
+                    @csrf
 
-                <div class="mb-3">
-                    <label for="nom" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="nom" name="nom"  >
-                </div>
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="nom" name="nom"  >
+                    </div>
 
-                <div class="mb-3">
-                    <label for="prenom" class="form-label">Prénom</label>
-                    <input type="text" class="form-control" id="prenom" name="prenom"  >
-                </div>
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="prenom" name="prenom"  >
+                    </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Adresse email</label>
-                    <input type="email" class="form-control" id="email" name="email"  >
-                </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse email</label>
+                        <input type="email" class="form-control" id="email" name="email"  >
+                    </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Mot de passe</label>
-                    <input type="password" class="form-control" id="password" name="password" >
-                </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" >
+                    </div>
 
-                <div class="mb-3">
-                    <label for="telephone" class="form-label">Numéro de téléphone</label>
-                    <input type="tel" class="form-control" id="telephone" name="telephone">
-                </div>
-                <div class="mb-3">
-                    <label for="role" class="form-label">Rôle</label>
-                    <select class="form-select" id="role" name="role">
-                        @foreach($roles as $role)
-                            <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
-                                {{ $role->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label for="telephone" class="form-label">Numéro de téléphone</label>
+                        <input type="tel" class="form-control" id="telephone" name="telephone">
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Rôle</label>
+                        <select class="form-select" id="role" name="role">
+                            @foreach($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <button type="submit" class="btn btn-info btn-sm px-5"><i class="fas fa-save me-2"></i> Créer</button>
+                    <button type="submit" class="btn btn-info btn-sm px-5"><i class="fas fa-save me-2"></i> Créer</button>
 
-            </form>
-        </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-  </div>
-    </div>
 
 @endsection

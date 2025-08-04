@@ -3,10 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body { font-family: sans-serif; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-        h2 { text-align: center; }
+        body {
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>

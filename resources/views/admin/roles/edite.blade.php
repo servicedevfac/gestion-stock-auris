@@ -19,40 +19,34 @@
 
                     <div class="mb-4">
                         <label for="name" class="form-label fw-bold">Nom du rôle</label>
-                    <input type="text" name="name" class="form-control form-control-lg border-" value="{{ $role->name }}" required>
-                </div>
+                        <input type="text" name="name" class="form-control form-control-lg border-" value="{{ $role->name }}" required>
+                    </div>
 
-                <div class="mb-4">
-                    <label for="permissions" class="form-label fw-bold">Permissions</label>
-                    <div class="row g-3">
-                        @foreach($permissions as $permission)
+                    <div class="mb-4">
+                        <label for="permissions" class="form-label fw-bold">Permissions</label>
+                        <div class="row g-3">
+                            @foreach($permissions as $permission)
                             <div class="col-md-4">
                                 <div class="form-check custom-checkbox">
-                                    <input class="form-check-input border-info" type="checkbox"
-                                           name="permissions[]"
-                                           value="{{ $permission->name }}"
-                                           id="perm-{{ $permission->id }}"
-                                           {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
+                                    <input class="form-check-input border-info" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm-{{ $permission->id }}" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }}>
                                     <label class="form-check-label text-black" for="perm-{{ $permission->id }}">
                                         {{ $permission->name }}
                                     </label>
                                 </div>
                             </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
-                <div class="text-end">
-                    <button type="submit" class="btn btn-header1 btn-lg px-5">
-                        <i class="fas fa-save me-2"></i>Enregistrer
-                    </button>
-                </div>
-            </form>
-        </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-header1 btn-lg px-5">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-  </div>
-    </div>
 
 @endsection

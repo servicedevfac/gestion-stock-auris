@@ -25,12 +25,10 @@
                             <tr>
                                 <td class="fw-semibold">{{ ucfirst($jour) }}</td>
                                 <td>
-                                    <input type="time" class="form-control" name="heure_ouverture[{{ $jour }}]"
-                                        value="{{ $horaires[$jour]->heure_ouverture ?? '' }}" required>
+                                    <input type="time" class="form-control" name="heure_ouverture[{{ $jour }}]" value="{{ $horaires[$jour]->heure_ouverture ?? '' }}" required>
                                 </td>
                                 <td>
-                                    <input type="time" class="form-control" name="heure_fermeture[{{ $jour }}]"
-                                        value="{{ $horaires[$jour]->heure_fermeture ?? '' }}" required>
+                                    <input type="time" class="form-control" name="heure_fermeture[{{ $jour }}]" value="{{ $horaires[$jour]->heure_fermeture ?? '' }}" required>
                                 </td>
                             </tr>
                             @endforeach

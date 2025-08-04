@@ -85,8 +85,6 @@
 
     </style>
 
-
-
 </head>
 
 <body>
@@ -96,12 +94,13 @@
         @include('layouts.sidebar')
 
         <div class="page-content">
+
+            @include('layouts.top-bar')
+
             <div class="px-3">
                 <!-- Start Content-->
                 <div class="container-fluid">
-                    <div>
-                        @include('layouts.top-bar')
-                    </div>
+                    
                     @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -114,31 +113,32 @@
                     @endif
 
                     @yield('content')
+
                     @stack('scripts')
+                    
                 </div>
             </div>
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                <script>document.write(new Date().getFullYear())</script> © Drezoc
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
+                                <p class="mb-0">Design & Develop by <a href="https://myrathemes.com/"
+                                        target="_blank">MyraStudio</a> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            
         </div>
-
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div>
-                            <script>document.write(new Date().getFullYear())</script> © Drezoc
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Design & Develop by <a href="https://myrathemes.com/"
-                                    target="_blank">MyraStudio</a> </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        
     </div>
-
 
 
     <!-- ============================================================== -->

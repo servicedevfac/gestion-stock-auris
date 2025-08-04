@@ -26,40 +26,38 @@
                         </thead>
                         <tbody>
                             @foreach($users as $user)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $user->nom }}</td>
-                                    <td>{{ $user->prenom }}</td>
-                                    <td>
-                                        @forelse($user->getRoleNames() as $role)
-                                            <span class="badge bg-primary">{{ $role }}</span>
-                                        @empty
-                                            <span class="text-muted">Aucun rôle</span>
-                                        @endforelse
-                                    </td>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $user->nom }}</td>
+                                <td>{{ $user->prenom }}</td>
+                                <td>
+                                    @forelse($user->getRoleNames() as $role)
+                                        <span class="badge bg-primary">{{ $role }}</span>
+                                    @empty
+                                        <span class="text-muted">Aucun rôle</span>
+                                    @endforelse
+                                </td>
 
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->telephone }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-3">
-                                            <a href="{{ route('users.show', $user->id) }}"
-                                                class="btn btn-sm btn-header1 rounded-3">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('users.edit', $user->id) }}"
-                                                class="btn btn-sm btn-success rounded-3">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                           <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger btn-delete" data-form-id="delete-form-{{ $user->id }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->telephone }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-header1 rounded-3">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-success rounded-3">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete" data-form-id="delete-form-{{ $user->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -67,8 +65,4 @@
             </div>
         </div>
     </div>
-    </div>
-
-
-
 @endsection

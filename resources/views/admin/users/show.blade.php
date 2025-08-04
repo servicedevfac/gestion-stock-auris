@@ -1,5 +1,4 @@
 @extends('layouts.base')
-@section('title', 'Détails de l\'utilisateur')
 @section('content')
 <div class="row mt-5">
     <div class="col-12">
@@ -27,14 +26,12 @@
                     <dt class="col-sm-3">Rôle</dt>
                     <dd class="col-sm-9">
                         @foreach($user->getRoleNames() as $role)
-                            <span class="badge bg-primary">{{ $role }}</span>
+                        <span class="badge bg-primary">{{ $role }}</span>
                         @endforeach
                     </dd>
                 </dl>
             </div>
         </div>
     </div>
-</div>
-</div>
 </div>
 @endsection

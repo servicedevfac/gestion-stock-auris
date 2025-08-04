@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -11,7 +10,7 @@
             <label for="produit_id" class="form-label">Produit</label>
             <select name="produit_id" id="produit_id" class="form-control" required>
                 @foreach($produits as $produit)
-                    <option value="{{ $produit->id }}">{{ $produit->nom }} ({{ $produit->prix }} FCFA)</option>
+                <option value="{{ $produit->id }}">{{ $produit->nom }} ({{ $produit->prix }} FCFA)</option>
                 @endforeach
             </select>
         </div>
@@ -20,7 +19,7 @@
             <label for="id_client" class="form-label">Client</label>
             <select name="id_client" id="id_client" class="form-control">
                 @foreach($clients as $client)
-                    <option value="{{ $client->id }}">{{ $client->nom }}</option>
+                <option value="{{ $client->id }}">{{ $client->nom }}</option>
                 @endforeach
             </select>
         </div>

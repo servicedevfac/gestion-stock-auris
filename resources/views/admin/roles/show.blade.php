@@ -16,13 +16,13 @@
 
                 <h5 class="mb-3">Permissions associées :</h5>
                 @if($role->permissions->count())
-                    <ul class="list-group mb-3">
-                        @foreach($role->permissions as $permission)
-                            <li class="list-group-item">{{ $permission->name }}</li>
-                        @endforeach
-                    </ul>
+                <ul class="list-group mb-3">
+                    @foreach($role->permissions as $permission)
+                    <li class="list-group-item">{{ $permission->name }}</li>
+                    @endforeach
+                </ul>
                 @else
-                    <p>Aucune permission associée à ce rôle.</p>
+                <p>Aucune permission associée à ce rôle.</p>
                 @endif
 
                 <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-header1 btn-sm me-2">
@@ -32,7 +32,6 @@
         </div>
     </div>
 </div>
-</div>
-</div>
+
 
 @endsection

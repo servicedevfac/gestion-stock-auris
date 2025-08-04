@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Gestion des prmissions')
+
 
 @section('content')
     <div class="row my-5">
@@ -47,9 +47,7 @@
                                                 <button type="button" class="btn btn-sm  btn-delete rounded-3" data-form-id="delete-form-{{ $permission->id }}">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
-
                                             </form>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -67,8 +65,4 @@
             </div>
         </div>
     </div>
-</div>
-  </div>
-    </div>
-
 @endsection
