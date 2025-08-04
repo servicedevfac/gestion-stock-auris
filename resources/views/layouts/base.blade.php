@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light" data-menu-color="dark" data-topbar-color="light">
+
 <head>
     <meta charset="utf-8" />
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Drezoc - Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="MyraStudio" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{url('assets/images/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{url('assets/images/favicon.ico')}} ">
 
     <link href="{{url('assets/libs/morris.js/morris.css')}}" rel="stylesheet" type="text/css" />
 
@@ -17,23 +16,14 @@
     <link href="{{url('assets/css/style.min.css')}}" rel="stylesheet" type="text/css">
     <link href="{{url('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
     <script src="{{url('assets/js/config.js')}}"></script>
-    <link rel="shortcut icon" href="{{url('assets/images/favicon.ico')}} ">
 
     <!-- third party css -->
-    <link href="{{url('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{url('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{url('assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css')}}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{url('assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css')}}" rel="stylesheet"
-        type="text/css" />
+    <link href="{{url('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{url('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{url('assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{url('assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- third party css end -->
 
-    <!-- App css -->
-    <link href="{{url('assets/css/style.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{url('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
-    <script src="{{url('assets/js/config.js')}}"></script>
     <style>
         .card-heade {
             background-color: #02228b;
@@ -110,31 +100,8 @@
                             {{ session('error') }}
                         </div>
                     @endif
+
                     @yield('content')
-<<<<<<< HEAD
-=======
-                </div>
-            </div>
-        </div>
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div>
-                            <script>document.write(new Date().getFullYear())</script> © Drezoc
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Design & Develop by <a href="https://myrathemes.com/"
-                                    target="_blank">MyraStudio</a> </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
->>>>>>> djuedev
 
                     @stack('scripts')
                     

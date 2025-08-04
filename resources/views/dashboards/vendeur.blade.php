@@ -12,7 +12,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffairesvendeurs }}</span>
+                            {{-- <span class="h3 mb-0">{{ $chiffreAffairesvendeurs }}</span> --}}
                         </div>
 
                     </div> <!-- end row -->
@@ -27,7 +27,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires du mois</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffaireMoisEnCours }}</span>
+                            {{-- <span class="h3 mb-0">{{ $chiffreAffaireMoisEnCours }}</span> --}}
                         </div>
                     </div> <!-- end row -->
 
@@ -42,7 +42,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Nombre de ventes</h6>
-                            <span class="h3 mb-0">{{ $nombreVentes }}</span>
+                            {{-- <span class="h3 mb-0">{{ $nombreVentes }}</span> --}}
                         </div>
                     </div> <!-- end row -->
 
@@ -57,7 +57,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires de la semaine</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffairesSemaine }}</span>
+                            {{-- <span class="h3 mb-0">{{ $chiffreAffairesSemaine }}</span> --}}
                         </div>
                     </div> <!-- end row -->
                     <div id="sparkline4" class="mt-3"></div>
@@ -88,7 +88,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($ventes as $vente)
+                                {{-- @foreach ($ventes as $vente)
                                 <tr>
                                         <td>
                                             {{ $vente->code_recu }}
@@ -104,7 +104,7 @@
                                         </td>
                                     @endforeach
 
-                                </tr>
+                                </tr> --}}
 
                             </tbody>
                         </table>
@@ -132,7 +132,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($derniersClients as $client)
+                                {{-- @foreach ($derniersClients as $client)
                                     <tr>
                                         <td>
                                             {{ $client->client->nom }}
@@ -144,7 +144,7 @@
                                             {{ $client->client->telephone }}
                                         </td>
                                     </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>

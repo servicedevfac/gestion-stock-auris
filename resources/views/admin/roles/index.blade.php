@@ -12,15 +12,10 @@
                     <i class="fas fa-plus me-1"></i> Nouveau rôle
                 </a>
             </div>
-<<<<<<< HEAD
             <div class="card-body">
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success">{{ $message }}</div>
                 @endif
-=======
-        <div class="card-body">
-
->>>>>>> djuedev
 
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
@@ -45,7 +40,6 @@
                                 <td >
                                     <div style="display:flex;flex-direction:row;justify-content:end; gap: 5px; ">
 
-<<<<<<< HEAD
                                             <a href="{{ route('roles.show', $role->id) }}" class="btn btn-header1 btn-sm rounded-3" title="Voir">
                                                 <i class="fas fa-eye"></i>
                                             </a>
@@ -59,22 +53,6 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
-=======
-                                        <a href="{{ route('roles.show', $role->id) }}" class="btn btn-header1 btn-sm rounded-3" title="Voir">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-success  btn-sm rounded-3" title="Modifier">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                       <form id="delete-form-{{ $role->id }}" action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-sm  btn-delete rounded-3" data-form-id="delete-form-{{ $role->id }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-
-                                        </form>
->>>>>>> djuedev
 
                                     </div>
 
@@ -88,12 +66,7 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </div>
-=======
-    </div>
-
->>>>>>> djuedev
 
 @endsection
 

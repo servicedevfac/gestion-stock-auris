@@ -46,29 +46,14 @@
                         @enderror
                     </div>
 
-<<<<<<< HEAD
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-header1 btn-sm px-5">
-                            <i class="fas fa-save me-2"></i>Enregistrer le client
-                        </button>
-                    </div>
-                </form>
-=======
-                            <button type="submit" class="btn btn-header1 btn-lg px-2">
-                                <i class="fas fa-save me-2"></i>Enregistrer le client
-                            </button>
+                    <button type="submit" class="btn btn-header1 btn-lg px-2">
+                        <i class="fas fa-save me-2"></i>Enregistrer le client
+                    </button>
 
-                    </form>
-                </div>
->>>>>>> djuedev
+                </form>
             </div>
         </div>
-
-<<<<<<< HEAD
     </div>
 </div>
-=======
 
-
->>>>>>> djuedev
 @endsection

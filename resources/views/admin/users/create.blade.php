@@ -48,11 +48,7 @@
                         </select>
                     </div>
 
-<<<<<<< HEAD
-                    <button type="submit" class="btn btn-info btn-sm px-5"><i class="fas fa-save me-2"></i> Créer</button>
-=======
                 <button type="submit" class="btn btn-header1 btn-lg px-3 "><i class="fas fa-save me-2"></i> Créer </button>
->>>>>>> djuedev
 
                 </form>
             </div>

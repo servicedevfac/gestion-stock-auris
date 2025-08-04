@@ -87,16 +87,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
 // Groupe pour les administrateurs vérifiés
 Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     // Gestion des ventes (édition, suppression, annulation)

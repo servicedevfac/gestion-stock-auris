@@ -46,18 +46,12 @@
                         <div class="invalid-feedback">
                             Veuillez saisir un seuil d'alerte valide.
                         </div>
-<<<<<<< HEAD
-                    </div>
-                    <button class="btn btn-primary" type="submit">Mettre à jour le produit</button>
-                </form>
-=======
                         <button class="btn btn-primary" type="submit">Mettre à jour le produit</button>
                     </form>
 
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col-->
->>>>>>> djuedev
 
             </div> <!-- end card-body-->
         </div> <!-- end card-->
