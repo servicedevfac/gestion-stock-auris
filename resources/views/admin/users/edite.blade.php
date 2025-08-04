@@ -69,7 +69,7 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="btn btn-header1"><i class="fas fa-save me-2"></i> Mettre à jour</button>
+                <button type="submit" class="btn btn-header1 btn-lg"><i class="fas fa-save me-2"></i> Mettre à jour</button>
 
             </form>
         </div>

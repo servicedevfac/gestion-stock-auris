@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light" data-menu-color="dark" data-topbar-color="light">
-
 <head>
     <meta charset="utf-8" />
     <title>@yield('title')</title>
@@ -112,9 +111,7 @@
                             {{ session('error') }}
                         </div>
                     @endif
-
                     @yield('content')
-                    @stack('scripts')
                 </div>
             </div>
         </div>

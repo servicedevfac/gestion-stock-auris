@@ -8,7 +8,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header card-heade d-flex justify-content-between align-items-center">
                     <h3 class="header-title text-white"><i class="fas fa-plus me-2"></i>Nouveau Produit</h3>
-                     <a href="{{ route('produits.index') }}" class="btn btn-light text-info fw-bold shadow-sm">
+                     <a href="{{ route('produits.index') }}" class="btn btn-header fw-bold shadow-sm">
                     <i class="fas fa-arrow-left me-1"></i> Retour
                 </a>
                 </div>
@@ -48,16 +48,12 @@
                                 Veuillez saisir un seuil d'alerte valide.
                             </div>
                         </div>
-                        <button class="btn btn-info" type="submit">Créer le produit</button>
+                        <button class="btn btn-header1" type="submit">Créer le produit</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-      </div>
-    </div>
-      </div>
-    </div>
+
 
 
 

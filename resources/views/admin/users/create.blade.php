@@ -4,7 +4,7 @@
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
-                <h3 class="text-white m-0"><i class="fas fa-add me-2"></i>  Creation un utilisateur</h3>
+                <h3 class="text-white m-0"><i class="fas fa-add me-2"></i>  Créer un utilisateur</h3>
                 <a href="{{ route('users.index') }}" class="btn btn-header fw-bold shadow-sm">
                     <i class="fas fa-arrow-left me-1"></i> Retour
                 </a>
@@ -48,7 +48,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-info btn-sm px-5"><i class="fas fa-save me-2"></i> Créer</button>
+                <button type="submit" class="btn btn-header1 btn-lg px-3 "><i class="fas fa-save me-2"></i> Créer </button>
 
             </form>
         </div>

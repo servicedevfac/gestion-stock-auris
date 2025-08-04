@@ -8,7 +8,7 @@
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="text-white m-0"><i class="fas fa-plus me-3"></i>  Créer un client</h3>
                 <a href="{{ route('clients.index') }}" class="btn btn-header fw-bold shadow-sm">
-                    <i class="fas fa-plus me-1"></i> Retour à la liste
+                    <i class="fas fa-arrow-left me-1"></i> Retour à la liste
                 </a>
             </div>
         <div class="card-body">
@@ -47,18 +47,15 @@
                             @enderror
                         </div>
 
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-header1 btn-sm px-5">
+                            <button type="submit" class="btn btn-header1 btn-lg px-2">
                                 <i class="fas fa-save me-2"></i>Enregistrer le client
                             </button>
-                        </div>
+
                     </form>
                 </div>
             </div>
 
         </div>
-    </div>
-</div>
 
 
 

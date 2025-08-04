@@ -4,14 +4,14 @@
             <div class="logo-box">
                 <!-- Brand Logo Light -->
                 <a href="index.html" class="logo-light">
-                    <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="18">
-                    <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
+                    <img src="" alt="logo" class="logo-lg" height="18">
+                    <img src="" alt="small logo" class="logo-sm" height="24">
                 </a>
 
                 <!-- Brand Logo Dark -->
-                <a href="index.html" class="logo-dark">
-                    <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="18">
-                    <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
+                <a href="{{ url('/dashboard') }}" class="logo-dark">
+                    <img src="" alt="dark logo" class="logo-lg" height="18">
+                    <img src="" alt="small logo" class="logo-sm" height="24">
                 </a>
             </div>
 
@@ -25,7 +25,7 @@
                         <a href="{{route('dashboard')}}" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="airplay "></i></span>
                             <span class="menu-text"> Dashboards </span>
-                            <span class="badge bg-info rounded-pill ms-auto">3</span>
+
                         </a>
                     </li>
 

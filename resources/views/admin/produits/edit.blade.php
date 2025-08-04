@@ -53,9 +53,6 @@
                 </div> <!-- end card-body-->
             </div> <!-- end card-->
         </div> <!-- end col-->
-    </div>
-      </div>
-    </div>
 
 
 <a href="{{ route('produits.index') }}">Retour à la liste des produits</a>

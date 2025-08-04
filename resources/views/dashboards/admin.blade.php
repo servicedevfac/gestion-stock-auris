@@ -54,7 +54,7 @@
                                     <span class="h3 mb-0">{{ (number_format($ca_journalier, 0, ',', ' ')) }} Fr</span>
                                 </div>
                                 <div class="col-auto">
-                                    <span class="badge badge-soft-success">+3.5%</span>
+
                                 </div>
                             </div> <!-- end row -->
 
@@ -83,7 +83,7 @@
                 <div class="row mt-3">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header card-heade">
                                 <h4 class="card-title">Chiffre d'affaires par produit (par mois)</h4>
                             </div>
                             <div class="card-body">
@@ -97,7 +97,7 @@
                 <div class="row mt-3">
                     <div class="col-xl-6">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header card-heade">
                                 <h4 class="card-title">Derniers clients ayant acheté</h4>
                             </div>
                             <div class="card-ody">
@@ -139,7 +139,7 @@
 
                     <div class="col-xl-6">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header card-heade">
                                 <h4 class="card-title">les 5 dernieres ventes</h4>
                             </div>
 
@@ -209,42 +209,6 @@
             ymax: 'auto' // Vous pouvez remplacer 'auto' par une valeur numérique pour fixer l'échelle max
         });
     </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: @json($labels),
-            datasets: [{
-                label: 'Chiffre d’affaires par mois',
-                data: @json($data),
-                borderColor: 'turquoise',
-                backgroundColor: 'rgba(64, 224, 208, 0.2)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            if (value >= 1000000) {
-                                return (value / 1000000).toFixed(1) + ' M CFA';
-                            } else if (value >= 1000) {
-                                return (value / 1000).toFixed(0) + ' k CFA';
-                            }
-                            return value + ' CFA';
-                        }
-                    }
-                }
-            }
-        }
-    });
-</script>
 
 
 

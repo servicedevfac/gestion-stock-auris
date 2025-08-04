@@ -13,9 +13,7 @@
                 </a>
             </div>
         <div class="card-body">
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success">{{ $message }}</div>
-            @endif
+
 
             <div class="table-responsive">
                  <table class="table table-hover table-bordered dt-responsive nowrap w-100">
@@ -46,12 +44,13 @@
                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-success  btn-sm rounded-3" title="Modifier">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('roles.destroy', $role->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer ce rôle ?')" class="d-inline rounded-3">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm rounded-3" title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                       <form id="delete-form-{{ $role->id }}" action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-sm  btn-delete rounded-3" data-form-id="delete-form-{{ $role->id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+
                                         </form>
 
                                 </div>
@@ -65,9 +64,6 @@
             </div>
         </div>
     </div>
-    </div>
-</div>
-  </div>
     </div>
 
 

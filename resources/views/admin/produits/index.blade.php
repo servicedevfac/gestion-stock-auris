@@ -6,9 +6,9 @@
 <div class="row mt-5">
     <div class="col-12">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-gradient bg-info d-flex justify-content-between align-items-center">
+            <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="header-title text-white "><i class="fas fa-list me-2"></i>  Liste des produits</h3>
-                <a href="{{ route('produits.create') }}" class="btn btn-light text-info fw-bold shadow-sm">
+                <a href="{{ route('produits.create') }}" class="btn btn-header fw-bold shadow-sm">
                     <i class="fas fa-plus me-1"></i> Nouveau produit
                 </a>
             </div>
@@ -46,7 +46,7 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($produit->date)->format('d/m/Y') }}</td>
                             <td>
-                                <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-lg btn-info">
+                                <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form id="delete-form-{{ $produit->id }}" action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
@@ -65,8 +65,8 @@
             </div> <!-- end card-body -->
         </div> <!-- end card -->
   </div>
-    </div>
 
-</div> <!-- end col -->
-</div> <!-- end row -->
+
+
+
 @endsection
