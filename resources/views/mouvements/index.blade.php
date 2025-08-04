@@ -4,9 +4,7 @@
 <div class="container">
     <h1>Liste des mouvements de stock</h1>
     <a href="{{ route('mouvementStocks.create') }}" class="btn btn-primary mb-3">Ajouter un mouvement</a>
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>

@@ -63,7 +63,7 @@
             </tbody>
         </table>
 
-        <button type="button" class="btn btn-header1" id="ajouter-ligne">➕ Ajouter un produit</button>
+        <button type="button" class="btn btn-header1" id="ajouter-ligne"><i class="fas fa-plus me-2"></i> Ajouter un produit</button>
 
         {{-- Remise et total --}}
         <div class="row mt-4">
@@ -93,7 +93,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-header1 mt-4">💾 Enregistrer la vente</button>
+        <button type="submit" class="btn btn-header1  btn-lg mt-2"><i class="fas fa-save me-2"></i> Enregistrer la vente</button>
     </form>
     </div>
     </div>

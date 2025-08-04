@@ -172,11 +172,14 @@
                         </a>
                         <div class="collapse" id="role">
                             <ul class="sub-menu">
+                                @can('creer role')
                                 <li class="menu-item">
                                     <a href="{{route('roles.create')}}" class="menu-link">
-                                        <span class="menu-text">Nouveau roles</span>
+                                        <span class="menu-text">Nouveau rôle</span>
                                     </a>
                                 </li>
+                                @endcan
+
                                 <li class="menu-item">
                                     <a href="{{route('roles.index')}}" class="menu-link">
                                         <span class="menu-text">Liste roles</span>
@@ -186,7 +189,7 @@
                         </div>
                     </li>
                     @endcan
-                     @can('creer permission')
+                     @can('Voix permisson')
 
                     <li class="menu-item">
                         <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">

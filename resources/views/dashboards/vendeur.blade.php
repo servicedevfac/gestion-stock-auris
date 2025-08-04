@@ -148,7 +148,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div> <!-- end card-body--><!-- end col -->
             </div>
         </div> <!-- end card-->

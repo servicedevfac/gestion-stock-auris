@@ -61,7 +61,7 @@
       padding: 12px;
       border: none;
       border-radius: 12px;
-      background: linear-gradient(to right, #5b247a, #1bcedf);
+      background: linear-gradient(to right, #02226b, #e6ba23);
       color: white;
       font-weight: 500;
       transition: 0.3s ease;

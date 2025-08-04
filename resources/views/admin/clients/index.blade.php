@@ -14,11 +14,7 @@
             </div>
 
             <div class="card-body">
-     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+
 
     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
         <thead class="table-dark">

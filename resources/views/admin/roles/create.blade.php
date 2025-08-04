@@ -39,15 +39,14 @@
                 </div>
 
                 <div class="text-end">
-                    <button type="submit" class="btn btn-header1 btn-sm p-2">
+                    <button type="submit" class="btn btn-header1 btn-lg p-2">
                         <i class="fas fa-save me-2"></i>Créer le rôle
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</div>
-  </div>
-    </div>
+        </div>
+
 
 @endsection
