@@ -14,22 +14,22 @@ class DashboardController extends Controller
 {
     public function index()
     {  // Récupérer les données pour le graphique des ventes par mois
-    $chartData1 = DB::table('ventes')->where('statut', 'valide')
-        ->select(
-            DB::raw("strftime('%m', date_vente) as mois"),
-            DB::raw("SUM(montant_total) as total")
-        )
-        ->groupBy(DB::raw("strftime('%m', date_vente)"))
-        ->orderBy(DB::raw("strftime('%m', date_vente)"))
-        ->get();
+    // $chartData1 = DB::table('ventes')->where('statut', 'valide')
+    //     ->select(
+    //         DB::raw("strftime('%m', date_vente) as mois"),
+    //         DB::raw("SUM(montant_total) as total")
+    //     )
+    //     ->groupBy(DB::raw("strftime('%m', date_vente)"))
+    //     ->orderBy(DB::raw("strftime('%m', date_vente)"))
+    //     ->get();
 
-    $labels = [];
-    $data = [];
+    // $labels = [];
+    // $data = [];
 
-    foreach ($chartData1 as $row) {
-        $labels[] = DateTime::createFromFormat('!m', $row->mois)->format('F');
-        $data[] = (int) $row->total;
-    }
+    // foreach ($chartData1 as $row) {
+    //     $labels[] = DateTime::createFromFormat('!m', $row->mois)->format('F');
+    //     $data[] = (int) $row->total;
+    // }
 
     // Récupérer l'utilisateur actuellement authentifié
     $user = Auth::user();
@@ -108,8 +108,8 @@ class DashboardController extends Controller
                 'nombreVentes',
                 'derniersVentes',
                 'derniersClients',
-                'data',
-                'labels',
+                // 'data',
+                // 'labels',
                 'chiffreAffaireMoisEnCours',
                 'chartData' // Passer les données du graphique
             ));

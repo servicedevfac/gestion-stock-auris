@@ -209,7 +209,7 @@
             ymax: 'auto' // Vous pouvez remplacer 'auto' par une valeur numérique pour fixer l'échelle max
         });
     </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('barChart').getContext('2d');
@@ -244,7 +244,7 @@
             }
         }
     });
-</script>
+</script> --}}
 
 
 
