@@ -18,6 +18,8 @@
     <link href="{{url('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
     <script src="{{url('assets/js/config.js')}}"></script>
     <link rel="shortcut icon" href="{{url('assets/images/favicon.ico')}} ">
+    {{-- HEAD --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- third party css -->
     <link href="{{url('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}" rel="stylesheet"
@@ -205,6 +207,8 @@
     <script src="{{url('assets/libs/pdfmake/build/pdfmake.min.js')}}"></script>
     <script src="{{url('assets/libs/pdfmake/build/vfs_fonts.js')}}"></script>
     <!-- third party js ends -->
+    {{-- SCRIPTS (dans @section('scripts')) --}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Datatables js -->
     <script src="{{url('assets/js/pages/datatables.js')}}"></script>

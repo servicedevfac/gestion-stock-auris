@@ -36,6 +36,7 @@
                     <td>{{ $client->telephone }}</td>
                     <td>{{ $client->adresse }}</td>
                     <td>
+                        @can('gérer client')
                         <div class="btn-group gap-2">
                             <a href="{{ route('clients.show', $client) }}" class="btn btn-sm btn-header1 rounded-3">
                                 <i class="fas fa-eye"></i>
@@ -45,14 +46,13 @@
                             </a>
                             <form id="delete-form-{{ $client->id }}" action="{{ route('clients.destroy', $client) }}" method="POST" class="d-inline">
                                 @csrf
-                                                @method('DELETE')
+                                @method('DELETE')
                                                 <button type="button" class="btn btn-sm btn-danger btn-delete rounded-3" data-form-id="delete-form-{{ $client->id }}">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
-
                                             </form>
-
                                         </div>
+                               @endcan
                     </td>
                 </tr>
             @endforeach

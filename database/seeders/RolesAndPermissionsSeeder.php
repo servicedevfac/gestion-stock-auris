@@ -20,14 +20,33 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Créer les permissions
         $permissions = [
-            'produit.index', 'produit.create', 'produit.edit', 'produit.delete',
-        'vente.create', 'vente.index', 'vente.show', 'vente.annuler',
-        'stock.index', 'stock.mouvement',
-        'client.create', 'client.index',
-        'recu.print', 'dashboard.view',
-        'user.manage', 'role.manage',
-        'export.excel'
 
+        'voir produit',
+        'gérer produit',
+        // Vente permissions
+        'voir vente',
+        'gérer vente',
+        'créer vente',
+        // Stock permissions
+        'voir stock',
+        'gérer stock',
+        // Client permissions
+        'gérer client',
+        'voir client',
+        // User permissions
+        'voir user',
+        'gérer user',
+        // Recu permissions
+        'exporter excel',
+        // Permissions pour les rôles
+        'gérer rôles',
+        'voir role',
+        // Permissions pour les permissions
+        'voir permission',
+        'gérer permission',
+        // Permissions spécifiques
+        'voir paramètre',
+        'gérer paramètre',
         ];
 
         foreach ($permissions as $perm) {
@@ -37,16 +56,31 @@ class RolesAndPermissionsSeeder extends Seeder
         // Créer les rôles et leurs permissions
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $vendeur = Role::firstOrCreate(['name' => 'vendeur']);
-        $superviseur = Role::firstOrCreate(['name' => 'superviseur']);
+        $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
 
-        $admin->givePermissionTo($permissions);
-        $vendeur->givePermissionTo(['produit.index', 'vente.create', 'vente.index', 'vente.show',
-        'stock.index', 'client.create', 'client.index', 'recu.print', 'dashboard.view']);
-        
-        $superviseur->givePermissionTo(['produit.index', 'produit.create', 'produit.edit',
-        'vente.create', 'vente.index', 'vente.show', 'vente.annuler',
-        'stock.index', 'stock.mouvement', 'client.create', 'client.index',
-        'recu.print', 'dashboard.view', 'export.excel']);
+        $superAdmin->givePermissionTo($permissions);
+        $vendeur->givePermissionTo([
+            'voir produit',
+            'voir vente',
+            'créer vente',
+            'voir stock',
+            'gérer client',
+            'voir client',
+            'exporter excel',
+        ]);
+        $admin->givePermissionTo([
+            'voir produit',
+            'gérer produit',
+            'voir vente',
+            'gérer vente',
+            'voir stock',
+            'gérer stock',
+            'gérer client',
+            'voir client',
+            'voir user',
+            'gérer user',
+            'exporter excel',
+            ]);
     }
 }
 

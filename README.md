@@ -66,7 +66,20 @@ Gestion Stock Auris est une application web basée sur le framework Laravel, con
      ```bash
      php artisan serve
      ```
+    ## Ajout des Seeders
 
+    Pour initialiser la base de données avec des données de test, vous pouvez utiliser les seeders Laravel :
+
+    1. Exécutez les seeders après les migrations :
+        ```bash
+        php artisan db:seed
+        ```
+    2. Pour exécuter un seeder spécifique :
+        ```bash
+        php artisan db:seed --class=NomDuSeeder
+        ```
+
+    Les seeders se trouvent dans le dossier `database/seeders`. Modifiez-les selon vos besoins pour ajouter des données par défaut.
 ## Documentation
 
 Pour plus d’informations sur l’utilisation de Laravel, consultez la [documentation officielle](https://laravel.com/docs).

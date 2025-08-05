@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 // Page de connexion par défaut
 Route::get('/', fn () => view('auth.login'));
 
+Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');
 // Groupe pour utilisateurs authentifiés
 Route::middleware('auth')->group(function () {
     // Profil utilisateur
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ventes/create', [VenteController::class, 'create'])->name('ventes.create')->middleware('verifier.heure.vente');
     Route::post('/ventes', [VenteController::class, 'store'])->name('ventes.store')->middleware('verifier.heure.vente');
     Route::get('/ventes/{vente}', [VenteController::class, 'show'])->name('ventes.show');
+
 });
 
 // Groupe pour les administrateurs vérifiés
@@ -53,6 +55,7 @@ Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     Route::delete('/ventes/{vente}', [VenteController::class, 'destroy'])->name('ventes.destroy');
     Route::post('/ventes/{vente}/annuler', [VenteController::class, 'annulerVente'])->name('ventes.annuler');
 
+
     // Suppression des clients
     Route::delete('clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
 
@@ -62,8 +65,6 @@ Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     // Gestion des rôles, permissions, utilisateurs
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
-
-
 
     // Mouvements de stock (hors index)
     Route::resource('mouvementStocks', MouvementStockController::class)->only( 'create', 'store', 'update', 'destroy');

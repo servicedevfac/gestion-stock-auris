@@ -38,7 +38,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li><a class="dropdown-item" href="{{ route('admin.horaires.edit', $horaire->id) }}"><i class="fas fa-edit me-2"></i>Modifier</a></li>
-                                                <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Supprimer</a></li>
+
                                             </ul>
                                         </div>
                                     </td>

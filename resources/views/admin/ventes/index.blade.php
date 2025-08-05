@@ -97,7 +97,7 @@
                 </td>
                 <td style="display:flex;flex-direction:row;justify-content:center; gap: 5px; ">
                      <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
-                    @can('Modifier / annuler vente')
+                    @can('gérer vente')
                     <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST">
                     @csrf
                     <button type="button" class="btn btn-delete btn-lg" onclick="confirmerAnnulation({{ $vente->id }})"><i class="fas fa-cancel"></i></button>

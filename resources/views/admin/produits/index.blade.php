@@ -8,9 +8,11 @@
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="header-title text-white "><i class="fas fa-list me-2"></i>  Liste des produits</h3>
-                <a href="{{ route('produits.create') }}" class="btn btn-header fw-bold shadow-sm">
-                    <i class="fas fa-plus me-1"></i> Nouveau produit
-                </a>
+                    @can('gérer produit')
+                    <a href="{{ route('produits.create') }}" class="btn btn-header fw-bold shadow-sm">
+                        <i class="fas fa-plus me-1"></i> Nouveau produit
+                    </a>
+                    @endcan
             </div>
 
             <div class="card-body">
@@ -46,6 +48,7 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($produit->date)->format('d/m/Y') }}</td>
                             <td>
+                                @can('gérer produit')
                                 <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -56,6 +59,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                    @endcan
                             </td>
                         </tr>
                         @endforeach
