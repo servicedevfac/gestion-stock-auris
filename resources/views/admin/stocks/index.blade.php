@@ -1,13 +1,11 @@
-gérer@extends('layouts.base')
-
-@section('title', 'Liste des produits')
+@extends('layouts.base')
 
 @section('content')
 <div class="row mt-5">
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
-                <h3 class="text-white m-0"><i class="fas fa-list me-2"></i>  Liste des mouvements de stock</h3>
+                <h3 class="text-white m-0"><i class="fas fa-list me-2"></i> Liste des mouvements de stock</h3>
                 @can('gérer stock')
 
                 <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header  fw-bold shadow-sm">
@@ -17,39 +15,39 @@ gérer@extends('layouts.base')
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                <table id="datatable-buttons" class="table table-hover table-bordered dt-responsive nowrap w-100">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Produit</th>
-                            <th>Utilisateur</th>
-                            <th>Type de mouvement</th>
-                            <th>Quantité</th>
-                            <th>Stock après mouvement</th>
-                            <th>Motif</th>
-                            <th>Date du mouvement</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                    <table id="datatable-buttons" class="table table-hover table-bordered dt-responsive nowrap w-100">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Produit</th>
+                                <th>Utilisateur</th>
+                                <th>Type de mouvement</th>
+                                <th>Quantité</th>
+                                <th>Stock après mouvement</th>
+                                <th>Motif</th>
+                                <th>Date du mouvement</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        @foreach ($mouvements as $mouvement)
-                        <tr>
-                            <td>{{ $mouvement->id }}</td>
-                            <td>{{ $mouvement->produit->nom }}</td>
-                            <td>{{ $mouvement->user->nom }}</td>
-                            <td>{{ $mouvement->type_mouvement }}</td>
-                            <td>{{ $mouvement->quantite }}</td>
-                            <td>{{ $mouvement->produit->stock_actuel }}</td>
-                            <td>{{ $mouvement->motif }}</td>
-                            <td>{{ \Carbon\Carbon::parse($mouvement->date_mouvement)->format('d/m/Y') }}</td>
-                             <td>
-                                 @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('admin'))
-                                @can('gérer stock')
+                        <tbody>
+                            @foreach ($mouvements as $mouvement)
+                            <tr>
+                                <td>{{ $mouvement->id }}</td>
+                                <td>{{ $mouvement->produit->nom }}</td>
+                                <td>{{ $mouvement->user->nom }}</td>
+                                <td>{{ $mouvement->type_mouvement }}</td>
+                                <td>{{ $mouvement->quantite }}</td>
+                                <td>{{ $mouvement->produit->stock_actuel }}</td>
+                                <td>{{ $mouvement->motif }}</td>
+                                <td>{{ \Carbon\Carbon::parse($mouvement->date_mouvement)->format('d/m/Y') }}</td>
+                                <td>
+                                    @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('admin'))
+                                    @can('gérer stock')
 
-                                @endcan
-                                <a href="{{ route('mouvementStocks.edit', $mouvement->id) }}" class="btn btn-sm btn-success">
-                                    <i class="fas fa-edit"></i>
+                                    @endcan
+                                    <a href="{{ route('mouvementStocks.edit', $mouvement->id) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('mouvementStocks.destroy', $mouvement->id) }}" method="POST" class="d-inline">
                                         @csrf
@@ -59,21 +57,19 @@ gérer@extends('layouts.base')
                                         </button>
                                     </form>
                                 </td>
-                                    @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
+                                @endif
+                            </tr>
+                            @endforeach
+                        </tbody>
 
-                </table>
-                 <div>
+                    </table>
+                    <div>
                         {{ $mouvements->links() }}
                     </div>
                 </div> <!-- end table-responsive -->
             </div> <!-- end card-body -->
         </div> <!-- end card -->
     </div> <!-- end col -->
-
+</div>
 
 @endsection
-
-

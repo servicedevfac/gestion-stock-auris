@@ -12,9 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'is.admin' => \App\Http\Middleware\IsAdmin::class,
             'verifier.heure.vente' => \App\Http\Middleware\VerifierHoraireVente::class,
 

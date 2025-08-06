@@ -17,7 +17,7 @@
                 <div id="sparkline1" class="mt-3"></div>
             </div> <!-- end card-body-->
         </div> <!-- end card-->
-    </div> 
+    </div>
 
     <div class="col-lg-6 col-xl-3">
         <div class="card">
@@ -32,7 +32,7 @@
                 <div id="sparkline2" class="mt-3"></div>
             </div> <!-- end card-body-->
         </div> <!-- end card-->
-    </div> 
+    </div>
 
     <div class="col-lg-6 col-xl-3">
         <div class="card">
@@ -47,7 +47,7 @@
                 <div id="sparkline3" class="mt-3"></div>
             </div> <!-- end card-body-->
         </div> <!-- end card-->
-    </div> 
+    </div>
 
     <div class="col-lg-6 col-xl-3">
         <div class="card">
@@ -61,7 +61,7 @@
                 <div id="sparkline4" class="mt-3"></div>
             </div> <!-- end card-body-->
         </div> <!-- end card-->
-    </div> 
+    </div>
 </div>
 
 
@@ -107,7 +107,7 @@
 
             </div> <!-- end card-body-->
         </div> <!-- end card-->
-    </div> 
+    </div>
 
     <div class="col-xl-6">
         <div class="card">
@@ -127,26 +127,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($derniersClients as $client)
+                            @foreach ($derniersClients as $client)
                                     <tr>
                                         <td>
                                             {{ $client->client->nom }}
-                                        </td>
-                                        <td>
-                                            {{ $client->client->adresse }}
-                                        </td>
-                                        <td>
-                                            {{ $client->client->telephone }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div> <!-- end card-body--><!-- end col -->
-            </div>
-        </div> <!-- end card-->
-     <!-- end row -->
+                            </td>
+                            <td>
+                                {{ $client->client->adresse }}
+                            </td>
+                            <td>
+                                {{ $client->client->telephone }}
+                            </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- end card-body-->
+            <!-- end col -->
+        </div>
+    </div> <!-- end card-->
+    <!-- end row -->
 
 </div>
-    @endsection
+@endsection

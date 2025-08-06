@@ -10,7 +10,6 @@
 
 </div>
 
-
 <div class="row mt-3">
     <div class="col-lg-6 col-xl-3">
         <div class="card">
@@ -172,47 +171,50 @@
         </div>
     </div>
 
+</div>
 
 
-    @endsection
-    @section('scripts')
-    <!-- Morris.js et dépendances -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+@endsection
 
-    <script>
-        const chartData = @json($chartData);
 
-        const moisLabels = Object.keys(chartData);
-        const produits = [...new Set(Object.values(chartData).flatMap(item => Object.keys(item)))];
+@section('scripts')
+<!-- Morris.js et dépendances -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-        const morrisData = moisLabels.map(mois => {
-            const row = {
-                y: mois
-            };
-            produits.forEach(produit => {
-                row[produit] = chartData[mois][produit] ? ? 0;
-            });
-            return row;
+<script>
+    const chartData = @json($chartData);
+
+    const moisLabels = Object.keys(chartData);
+    const produits = [...new Set(Object.values(chartData).flatMap(item => Object.keys(item)))];
+
+    const morrisData = moisLabels.map(mois => {
+        const row = {
+            y: mois
+        };
+        produits.forEach(produit => {
+            row[produit] = chartData[mois][produit] ? ? 0;
         });
+        return row;
+    });
 
-        new Morris.Bar({
-            element: 'chart'
-            , data: morrisData
-            , xkey: 'y'
-            , ykeys: produits
-            , labels: produits
-            , hideHover: 'auto'
-            , resize: true
-            , barColors: ['#0b62a4', '#7a92a3', '#4da74d', '#afd8f8']
-            , ymin: 0, // Définir l'origine de l'axe Y à 0 (modifiable)
-            ymax: 'auto' // Vous pouvez remplacer 'auto' par une valeur numérique pour fixer l'échelle max
-        });
+    new Morris.Bar({
+        element: 'chart'
+        , data: morrisData
+        , xkey: 'y'
+        , ykeys: produits
+        , labels: produits
+        , hideHover: 'auto'
+        , resize: true
+        , barColors: ['#0b62a4', '#7a92a3', '#4da74d', '#afd8f8']
+        , ymin: 0, // Définir l'origine de l'axe Y à 0 (modifiable)
+        ymax: 'auto' // Vous pouvez remplacer 'auto' par une valeur numérique pour fixer l'échelle max
+    });
 
-    </script>
+</script>
 
 
 
-    @endsection
+@endsection
