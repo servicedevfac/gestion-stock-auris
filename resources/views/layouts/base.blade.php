@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="light" data-menu-color="dark" data-topbar-color="light">
 <head>
     <meta charset="utf-8" />
-    <title>@yield('title')</title>
+    <title>Gest_Stock-Auris</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Drezoc - Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="MyraStudio" name="author" />

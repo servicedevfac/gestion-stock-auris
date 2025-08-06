@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Gestion des prmissions')
-
 @section('content')
     <div class="row my-5">
         <div class="col-12">

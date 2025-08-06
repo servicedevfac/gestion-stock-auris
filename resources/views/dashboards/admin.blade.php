@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Dashboard Administrateur')
+
 @section('content')
 
 

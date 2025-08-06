@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Liste des Clients')
+
 @section('content')
 
 @section('content')

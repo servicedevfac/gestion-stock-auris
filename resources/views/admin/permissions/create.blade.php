@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Create Permission')
-
 @section('content')
     <div class="row mt-5">
         <div class="col-12">

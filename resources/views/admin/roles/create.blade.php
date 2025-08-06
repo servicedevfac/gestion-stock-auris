@@ -1,6 +1,4 @@
 @extends('layouts.base')
-
-@section('title', 'Créer un rôle')
 @section('content')
 
 

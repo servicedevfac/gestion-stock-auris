@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Roles Management')
-
 @section('content')
 <div class="row mt-5">
     <div class="col-12">
@@ -13,8 +11,6 @@
                 </a>
             </div>
         <div class="card-body">
-
-
             <div class="table-responsive">
                  <table class="table table-hover table-bordered dt-responsive nowrap w-100">
                     <thead class="table-dark">
@@ -54,8 +50,6 @@
                                         </form>
 
                                 </div>
-
-
                             </td>
                         </tr>
                         @endforeach

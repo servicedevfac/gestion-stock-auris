@@ -17,68 +17,83 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Reset
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-
         // Créer les permissions
         $permissions = [
-        'voir produit',
-        'gérer produit',
-        // Vente permissions
-        'voir vente',
-        'gérer vente',
-        'créer vente',
-        // Stock permissions
-        'voir stock',
-        'gérer stock',
-        // Client permissions
-        'gérer client',
-        'voir client',
-        // User permissions
-        'voir user',
-        'gérer user',
-        // Recu permissions
-        'exporter excel',
-        // Permissions pour les rôles
-        'gérer rôles',
-        'voir role',
-        // Permissions pour les permissions
-        'voir permission',
-        'gérer permission',
-        // Permissions spécifiques
-        'voir paramètre',
-        'gérer paramètre',
+            'view permission',
+            'create permission',
+            'edit permission',
+            'delete permission',
+
+            'view role',
+            'create role',
+            'edit role',
+            'delete role',
+
+            'view utilisateur',
+            'create utilisateur',
+            'edit utilisateur',
+            'delete utilisateur',
+
+            'view produit',
+            'create produit',
+            'edit produit',
+            'delete produit',
+            'view client',
+            'create client',
+            'edit client',
+            'delete client',
+            'exporter client',
+
+            'view vente',
+            'create vente',
+            'edit vente',
+            'delete vente',
+            'exporter vente',
+
+            'view stock',
+            'create stock',
+            'edit stock',
+            'delete stock',
+            'exporter stock',
         ];
 
         foreach ($permissions as $perm) {
             Permission::firstOrCreate(['name' => $perm]);
         }
-
         // Créer les rôles et leurs permissions
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $vendeur = Role::firstOrCreate(['name' => 'vendeur']);
         $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
         $superAdmin->givePermissionTo($permissions);
         $vendeur->givePermissionTo([
-            'voir produit',
-            'voir vente',
-            'créer vente',
-            'créer vente',
-            'voir stock',
-            'gérer client',
-            'voir client',
-            'exporter excel',
+           'view client',
+            'create client',
+            'edit client',
+            'view produit',
+            'view vente',
+            'create vente',
+            'view stock',
         ]);
         $admin->givePermissionTo([
-            'voir produit',
-            'gérer produit',
-            'voir vente',
-            'gérer vente',
-            'voir stock',
-            'gérer stock',
-            'gérer client',
-            'voir client',
-            'voir user',
-            'gérer user',
-            'exporter excel',
+            'view utilisateur',
+            'create utilisateur',
+            'edit utilisateur',
+            'delete utilisateur',
+            'view client',
+            'create client',
+            'edit client',
+            'delete client',
+            'exporter client',
+            'view vente',
+            'create vente',
+            'edit vente',
+            'delete vente',
+            'exporter vente',
+            'view stock',
+            'create stock',
+            'edit stock',
+            'delete stock',
+            'exporter stock',
             ]);
     }
 }

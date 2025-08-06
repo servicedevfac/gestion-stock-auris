@@ -1,6 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Vente non autorisée')
 
 @section('content')
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">

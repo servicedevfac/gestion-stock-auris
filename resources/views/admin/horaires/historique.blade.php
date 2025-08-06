@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Historique des horaires')
+
 
 @section('content')
 <div class="row mt-5">

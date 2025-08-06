@@ -1,6 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Détails du client')
 
 @section('content')
 <div class="row mt-5">

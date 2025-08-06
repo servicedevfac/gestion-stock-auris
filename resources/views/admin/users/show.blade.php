@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Détails de l\'utilisateur')
+
 @section('content')
 <div class="row mt-5">
     <div class="col-12">

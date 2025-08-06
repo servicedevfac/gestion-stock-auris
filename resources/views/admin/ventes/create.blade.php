@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'Créer une vente')
+
 
 @section('head')
 <!-- Select2 CSS -->

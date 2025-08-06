@@ -1,6 +1,6 @@
 @extends('layouts.base')
 @section('content')
-@section('title', 'Dashboard Vendeur')
+
 
 
     <!-- end page title -->
