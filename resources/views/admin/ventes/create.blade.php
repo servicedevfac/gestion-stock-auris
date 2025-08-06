@@ -63,11 +63,7 @@
                         </tbody>
                     </table>
 
-<<<<<<< HEAD
-                    <button type="button" class="btn btn-header1" id="ajouter-ligne">➕ Ajouter un produit</button>
-=======
         <button type="button" class="btn btn-header1" id="ajouter-ligne"><i class="fas fa-plus me-2"></i> Ajouter un produit</button>
->>>>>>> djuedev
 
                     {{-- Remise et total --}}
                     <div class="row mt-4">

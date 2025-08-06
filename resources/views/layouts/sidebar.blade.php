@@ -7,7 +7,6 @@
             <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
         </a>
 
-<<<<<<< HEAD
         <!-- Brand Logo Dark -->
         <a href="index.html" class="logo-dark">
             <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="18">
@@ -26,19 +25,9 @@
                     <span class="menu-icon"><i data-lucide="airplay "></i></span>
                     <span class="menu-text"> Dashboard </span>
                     <span class="badge bg-info rounded-pill ms-auto">3</span>
-=======
-        <div class="main-menu">
-            <!-- Brand Logo -->
-            <div class="logo-box">
-                <!-- Brand Logo Light -->
-                <a href="index.html" class="logo-light">
-                    <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="18">
-                    <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
->>>>>>> djuedev
                 </a>
             </li>
 
-<<<<<<< HEAD
             <li class="menu-title">Custom</li>
             
             <li class="menu-item">
@@ -46,12 +35,6 @@
                     <span class="menu-icon"><i data-lucide="badge-dollar-sign"></i></span>
                     <span class="menu-text"> Ventes  </span>
                     <span class="menu-arrow"></span>
-=======
-                <!-- Brand Logo Dark -->
-                <a href="index.html" class="logo-dark">
-                    <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="18">
-                    <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
->>>>>>> djuedev
                 </a>
                 <div class="collapse" id="Ventes">
                     <ul class="sub-menu">
