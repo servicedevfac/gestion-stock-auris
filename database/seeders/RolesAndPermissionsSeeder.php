@@ -20,7 +20,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Créer les permissions
         $permissions = [
-
         'voir produit',
         'gérer produit',
         // Vente permissions
@@ -57,7 +56,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $vendeur = Role::firstOrCreate(['name' => 'vendeur']);
         $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
-
         $superAdmin->givePermissionTo($permissions);
         $vendeur->givePermissionTo([
             'voir produit',
