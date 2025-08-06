@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Horaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\HistoriqueHoraire;
 
 class HoraireController extends Controller
 {
@@ -36,22 +37,47 @@ class HoraireController extends Controller
 
     public function update(Request $request)
     {
+
         $jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
 
-        foreach ($jours as $jour) {
-            $ouverture = $request->input("heure_ouverture.$jour");
-            $fermeture = $request->input("heure_fermeture.$jour");
+    foreach ($jours as $jour) {
+        $ouverture = $request->input("heure_ouverture.$jour");
+        $fermeture = $request->input("heure_fermeture.$jour");
 
-            Horaire::updateOrCreate(
-                ['jour_semaine' => $jour],
-                [
-                    'heure_ouverture' => $ouverture,
-                    'heure_fermeture' => $fermeture,
-                    'id_utilisateur' => Auth::user()->id,
-                ]
-            );
+        $horaireExistant = Horaire::where('jour_semaine', $jour)->first();
+
+        // S'il y a une modification, on enregistre dans l'historique
+        if ($horaireExistant &&
+            ($horaireExistant->heure_ouverture != $ouverture || $horaireExistant->heure_fermeture != $fermeture)
+        ) {
+            HistoriqueHoraire::create([
+                'jour_semaine' => $jour,
+                'ancienne_ouverture' => $horaireExistant->heure_ouverture,
+                'ancienne_fermeture' => $horaireExistant->heure_fermeture,
+                'nouvelle_ouverture' => $ouverture,
+                'nouvelle_fermeture' => $fermeture,
+                'id_utilisateur' => Auth::id(),
+            ]);
         }
 
-        return redirect()->route('admin.horaires.index')->with('success', 'Horaires mis à jour');
+        Horaire::updateOrCreate(
+            ['jour_semaine' => $jour],
+            [
+                'heure_ouverture' => $ouverture,
+                'heure_fermeture' => $fermeture,
+                'id_utilisateur' => Auth::id(),
+            ]
+        );
     }
+
+    return redirect()->route('admin.horaires.index')->with('success', 'Horaires mis à jour');
+}
+
+public function historique()
+{
+    $historique = HistoriqueHoraire::with('user')->latest()->paginate(20); // pagination
+
+    return view('admin.horaires.historique', compact('historique'));
+}
+
 }

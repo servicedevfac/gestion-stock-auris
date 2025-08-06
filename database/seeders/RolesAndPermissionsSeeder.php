@@ -63,6 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'voir produit',
             'voir vente',
             'créer vente',
+            'créer vente',
             'voir stock',
             'gérer client',
             'voir client',

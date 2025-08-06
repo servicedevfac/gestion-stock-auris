@@ -54,6 +54,8 @@ Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     Route::put('/ventes', [VenteController::class, 'update'])->name('ventes.update');
     Route::delete('/ventes/{vente}', [VenteController::class, 'destroy'])->name('ventes.destroy');
     Route::post('/ventes/{vente}/annuler', [VenteController::class, 'annulerVente'])->name('ventes.annuler');
+    Route::get('/admin/horaires/historique', [HoraireController::class, 'historique'])->name('admin.horaires.historique');
+
 
 
     // Suppression des clients

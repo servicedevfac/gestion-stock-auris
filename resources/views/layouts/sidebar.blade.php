@@ -18,17 +18,13 @@
             <!--- Menu -->
             <div data-simplebar>
                 <ul class="app-menu">
-
                     <li class="menu-title">Menu</li>
-
                     <li class="menu-item">
                         <a href="{{route('dashboard')}}" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="airplay "></i></span>
                             <span class="menu-text"> Dashboards </span>
-
                         </a>
                     </li>
-
                     <li class="menu-item">
                     <a href="#Ventes" data-bs-toggle="collapse" class="menu-link waves-effect">
                         <span class="menu-icon"><i data-lucide="badge-dollar-sign"></i></span>
@@ -51,8 +47,6 @@
                                 </a>
                             </li>
                             @endcan
-
-
                         </ul>
                     </div>
                 </li>
@@ -79,8 +73,6 @@
                                 </a>
                              </li>
                             @endcan
-
-
                         </ul>
                     </div>
                 </li>
@@ -111,7 +103,6 @@
                             </ul>
                         </div>
                     </li>
-
                     <li class="menu-item">
                         <a href="#menuClients" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="users-round"></i></span>
@@ -163,16 +154,18 @@
                             </ul>
                         </div>
                     </li>
-                    @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('admin'))
+
+                @if (Auth::user()->hasRole('super admin'))
+
                     <li class="menu-item">
                         <a href="#role" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="scale"></i></span>
-                            <span class="menu-text"> roles </span>
+                            <span class="menu-text"> rôles </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="role">
                             <ul class="sub-menu">
-                                @can('gérer role')
+                                @can('gérer rôles')
                                 <li class="menu-item">
                                     <a href="{{route('roles.create')}}" class="menu-link">
                                         <span class="menu-text">Nouveau rôle</span>
@@ -190,8 +183,8 @@
                         </div>
                     </li>
                     @endif
-                    @if (Auth::user()->hasRole('super Admin'))
 
+                    @if (Auth::user()->hasRole('super admin'))
                     <li class="menu-item">
                         <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="ruler"></i></span>
@@ -218,11 +211,6 @@
                         </div>
                     </li>
                     @endif
-
-
-
-
-
                 </ul>
             </div>
         </div>

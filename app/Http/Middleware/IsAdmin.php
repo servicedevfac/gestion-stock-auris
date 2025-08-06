@@ -11,7 +11,7 @@ class IsAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->user() || !auth()->user()->hasRole('admin')) {
+        if (!auth()->check() || !auth()->user()->hasRole('super admin')) {
             abort(403, 'Accès réservé aux administrateurs.');
         }
 

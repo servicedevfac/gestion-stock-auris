@@ -14466,7 +14466,7 @@ html[data-bs-theme=dark] .auth-logo .logo-dark {
 }
 
 .nav-user {
-  padding: 0 12px !important;
+  padding: 20px !important;
 }
 .nav-user img {
   height: 32px;
