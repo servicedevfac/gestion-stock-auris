@@ -6,10 +6,11 @@ use App\Models\Detail_vente;
 use App\Models\User;
 use App\Models\Vente;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use DateTime;
+use Illuminate\Http\Request;
+
 
 class DashboardController extends Controller
 {

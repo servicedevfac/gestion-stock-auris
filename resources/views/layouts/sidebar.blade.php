@@ -136,54 +136,54 @@
                 </a>
                 <div class="collapse" id="menuUsers">
                     <ul class="sub-menu">
-                        @can('gérer user')
+                        {{-- @can('gérer user') --}}
                         <li class="menu-item">
                             <a href="{{route('users.create')}}" class="menu-link">
-                                <span class="menu-text">Nouveau utiisateur</span>
+                                <span class="menu-text">Nouveau utilisateur</span>
                             </a>
                         </li>
-                        @endcan
-                        @can('voir user')
+                        {{-- @endcan
+                        @can('voir user') --}}
                         <li class="menu-item">
                             <a href="{{route('users.index')}}" class="menu-link">
                                 <span class="menu-text">Liste utilisateur</span>
                             </a>
                         </li>
-                        @endcan
+                        {{-- @endcan --}}
                     </ul>
                 </div>
             </li>
 
-            @if (Auth::user()->hasRole('super admin'))
+            {{-- @if (Auth::user()->hasRole('super admin')) --}}
 
             <li class="menu-item">
                 <a href="#role" data-bs-toggle="collapse" class="menu-link waves-effect">
                     <span class="menu-icon"><i data-lucide="scale"></i></span>
-                    <span class="menu-text"> rôles </span>
+                    <span class="menu-text"> Rôles </span>
                     <span class="menu-arrow"></span>
                 </a>
                 <div class="collapse" id="role">
                     <ul class="sub-menu">
-                        @can('gérer rôles')
+                        {{-- @can('gérer rôles') --}}
                         <li class="menu-item">
                             <a href="{{route('roles.create')}}" class="menu-link">
                                 <span class="menu-text">Nouveau rôle</span>
                             </a>
                         </li>
-                        @endcan
-                        @can('voir role')
+                        {{-- @endcan
+                        @can('voir role') --}}
                         <li class="menu-item">
                             <a href="{{route('roles.index')}}" class="menu-link">
                                 <span class="menu-text">Liste roles</span>
                             </a>
                         </li>
-                        @endcan
+                        {{-- @endcan --}}
                     </ul>
                 </div>
             </li>
-            @endif
+            {{-- @endif --}}
 
-            @if (Auth::user()->hasRole('super admin'))
+            {{-- @if (Auth::user()->hasRole('super admin'))
             <li class="menu-item">
                 <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">
                     <span class="menu-icon"><i data-lucide="ruler"></i></span>
@@ -209,7 +209,35 @@
                     </ul>
                 </div>
             </li>
-            @endif
+            @endif --}}
+
+            {{-- @if (Auth::user()->hasRole('super admin')) --}}
+            <li class="menu-item">
+                <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">
+                    <span class="menu-icon"><i data-lucide="ruler"></i></span>
+                    <span class="menu-text"> Permission </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="Permission">
+                    <ul class="sub-menu">
+                        {{-- @can('gérer permission') --}}
+                        <li class="menu-item">
+                            <a href="{{route('permissions.create')}}" class="menu-link">
+                                <span class="menu-text">Nouvelle permission</span>
+                            </a>
+                        </li>
+                        {{-- @endcan
+                        @can('voir permission') --}}
+                        <li class="menu-item">
+                            <a href="{{route('permissions.index')}}" class="menu-link">
+                                <span class="menu-text">Liste permission</span>
+                            </a>
+                        </li>
+                        {{-- @endcan --}}
+                    </ul>
+                </div>
+            </li>
+            {{-- @endif --}}
         </ul>
     </div>
 </div>

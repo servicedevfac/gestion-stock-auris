@@ -1,7 +1,5 @@
 @extends('layouts.base')
 
-
-
 @section('content')
     <div class="row my-5">
         <div class="col-12">
@@ -59,7 +57,7 @@
 
                     @if($permissions->isEmpty())
                     <div class="alert alert-info mt-3" role="alert">
-                        Aucun rôle trouvé.
+                        Aucune permission trouvé.
                     </div>
                     @endif
                 </div>

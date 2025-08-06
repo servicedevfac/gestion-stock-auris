@@ -9,7 +9,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserContoller; // ✅ Correction du nom
+use App\Http\Controllers\UserContoller; 
 use App\Http\Controllers\VenteController;
 use Illuminate\Support\Facades\Route;
 
