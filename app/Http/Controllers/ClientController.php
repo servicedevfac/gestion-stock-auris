@@ -104,4 +104,10 @@ public function show(Client $client)
 
         return redirect()->route('clients.index')->with('success', 'Client supprimé avec succès.');
     }
+    public function search(Request $request)
+{
+    $search = $request->get('q');
+    $clients = Client::where('nom', 'like', "%$search%")->get(['id', 'nom']);
+    return response()->json($clients);
+}
 }

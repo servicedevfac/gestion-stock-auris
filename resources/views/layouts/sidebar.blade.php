@@ -14,100 +14,16 @@
         </a>
     </div>
 
-    <!--- Menu -->
-    <div data-simplebar>
-        <ul class="app-menu">
-
-            <li class="menu-title">Menu</li>
-
-            <li class="menu-item">
-                <a href="{{route('dashboard')}}" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="airplay "></i></span>
-                    <span class="menu-text"> Dashboard </span>
-                    <span class="badge bg-info rounded-pill ms-auto">3</span>
-                </a>
-            </li>
-
-            <li class="menu-title">Custom</li>
-            
-            <li class="menu-item">
-                <a href="#Ventes" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="badge-dollar-sign"></i></span>
-                    <span class="menu-text"> Ventes  </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="Ventes">
-                    <ul class="sub-menu">
-                        
-                        <li class="menu-item">
-                            <a href="{{ route('ventes.create') }}" class="menu-link">
-                                <span class="menu-text">Creer vente</span>
-                            </a>
-                        </li>
-                        
-                        <li class="menu-item">
-                            <a href="{{ route('ventes.index') }}" class="menu-link">
-                                <span class="menu-text">Liste ventes</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="menu-item">
-                <a href="#Produit" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="package-search"></i></span>
-                    <span class="menu-text"> Produits  </span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="Produit">
-                    <ul class="sub-menu">
-                        <li class="menu-item">
-                            <a href="{{ route('produits.create') }}" class="menu-link">
-                                <span class="menu-text">Creer produit</span>
-                            </a>
-                        </li>
-
-                        <li class="menu-item">
-                            <a href="{{ route('produits.index') }}" class="menu-link">
-                                <span class="menu-text">Liste produits</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="menu-item">
-                <a href="#Stocks" data-bs-toggle="collapse" class="menu-link waves-effect">
-                    <span class="menu-icon"><i data-lucide="warehouse"></i></span>
-                    <span class="menu-text">Stocks</span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="Stocks">
-                    <ul class="sub-menu">
-                        <li class="menu-item">
-                            <a href="{{ route('mouvementStocks.create') }}" class="menu-link">
-                                <span class="menu-text">Nouveau stock</span>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="{{ route('mouvementStocks.index') }}" class="menu-link">
-                                <span class="menu-text">Liste stocks</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
+            <!--- Menu -->
+            <div data-simplebar>
+                <ul class="app-menu">
                     <li class="menu-title">Menu</li>
-
                     <li class="menu-item">
                         <a href="{{route('dashboard')}}" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="airplay "></i></span>
                             <span class="menu-text"> Dashboards </span>
-
                         </a>
                     </li>
-
-                    <li class="menu-title">Custom</li>
                     <li class="menu-item">
                     <a href="#Ventes" data-bs-toggle="collapse" class="menu-link waves-effect">
                         <span class="menu-icon"><i data-lucide="badge-dollar-sign"></i></span>
@@ -116,22 +32,20 @@
                     </a>
                     <div class="collapse" id="Ventes">
                         <ul class="sub-menu">
-                            @can('Créer vente')
+                            @can('créer vente')
                             <li class="menu-item">
                                 <a href="{{ route('ventes.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Vente</span>
                                 </a>
                             </li>
                             @endcan
-                            @can('Voir ventes')
+                            @can('voir vente')
                             <li class="menu-item">
                                 <a href="{{ route('ventes.index') }}" class="menu-link">
                                     <span class="menu-text">Liste Ventes</span>
                                 </a>
                             </li>
                             @endcan
-
-
                         </ul>
                     </div>
                 </li>
@@ -143,14 +57,14 @@
                     </a>
                     <div class="collapse" id="Produit">
                         <ul class="sub-menu">
-                            @can('Creer produit')
+                            @can('gérer produit')
                             <li class="menu-item">
                                 <a href="{{ route('produits.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Produit</span>
                                 </a>
                             </li>
                             @endcan
-                            @can('Voix produits')
+                            @can('voir produit')
 
                             <li class="menu-item">
                                 <a href="{{ route('produits.index') }}" class="menu-link">
@@ -158,8 +72,6 @@
                                 </a>
                              </li>
                             @endcan
-
-
                         </ul>
                     </div>
                 </li>
@@ -171,12 +83,15 @@
                         </a>
                         <div class="collapse" id="Stocks">
                             <ul class="sub-menu">
+                                @can('gérer stock')
                                 <li class="menu-item">
                                     <a href="{{ route('mouvementStocks.create') }}" class="menu-link">
                                         <span class="menu-text">Nouveau Stock</span>
                                     </a>
                                 </li>
-                                @can('Voir stock disponible')
+                                @endcan
+
+                                @can('voir stock')
                                 <li class="menu-item">
                                     <a href="{{ route('mouvementStocks.index') }}" class="menu-link">
                                         <span class="menu-text">Liste Stocks</span>
@@ -187,7 +102,6 @@
                             </ul>
                         </div>
                     </li>
-
                     <li class="menu-item">
                         <a href="#menuClients" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="users-round"></i></span>
@@ -196,25 +110,24 @@
                         </a>
                         <div class="collapse" id="menuClients">
                             <ul class="sub-menu">
-                                @can('')
+                                @can('gérer client')
 
-                                @endcan
                                 <li class="menu-item">
                                     <a href="{{ route('clients.create') }}" class="menu-link">
                                         <span class="menu-text">Nouveau Client</span>
                                     </a>
                                 </li>
+                                @endcan
+                                @can('gérer client')
                                 <li class="menu-item">
                                     <a href="{{ route('clients.index') }}" class="menu-link">
                                         <span class="menu-text">Liste Clients</span>
                                     </a>
                                 </li>
-
+                                @endcan
                             </ul>
                         </div>
                     </li>
-                    @can('isAdmin')
-                    @can('voix utilisateur')
                     <li class="menu-item">
                         <a href="#menuUsers" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="users"></i></span>
@@ -223,14 +136,14 @@
                         </a>
                         <div class="collapse" id="menuUsers">
                             <ul class="sub-menu">
-                                @can('cree un utilisateur')
+                                @can('gérer user')
                                 <li class="menu-item">
                                     <a href="{{route('users.create')}}" class="menu-link">
                                         <span class="menu-text">Nouveau utiisateur</span>
                                     </a>
                                 </li>
                                 @endcan
-                                @can('voix utilisateur')
+                                @can('voir user')
                                 <li class="menu-item">
                                     <a href="{{route('users.index')}}" class="menu-link">
                                         <span class="menu-text">Liste utilisateur</span>
@@ -240,35 +153,37 @@
                             </ul>
                         </div>
                     </li>
-                    @endcan
-                    @can('voix role')
+
+                @if (Auth::user()->hasRole('super admin'))
+
                     <li class="menu-item">
                         <a href="#role" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="scale"></i></span>
-                            <span class="menu-text"> roles </span>
+                            <span class="menu-text"> rôles </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <div class="collapse" id="role">
                             <ul class="sub-menu">
-                                @can('creer role')
+                                @can('gérer rôles')
                                 <li class="menu-item">
                                     <a href="{{route('roles.create')}}" class="menu-link">
                                         <span class="menu-text">Nouveau rôle</span>
                                     </a>
                                 </li>
                                 @endcan
-
+                                @can('voir role')
                                 <li class="menu-item">
                                     <a href="{{route('roles.index')}}" class="menu-link">
                                         <span class="menu-text">Liste roles</span>
                                     </a>
                                 </li>
+                                @endcan
                             </ul>
                         </div>
                     </li>
-                    @endcan
-                     @can('Voix permisson')
+                    @endif
 
+                    @if (Auth::user()->hasRole('super admin'))
                     <li class="menu-item">
                         <a href="#Permission" data-bs-toggle="collapse" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="ruler"></i></span>
@@ -277,32 +192,24 @@
                         </a>
                         <div class="collapse" id="Permission">
                             <ul class="sub-menu">
-                                @can('creer permission')
+                                @can('gérer permission')
                                 <li class="menu-item">
                                     <a href="{{route('permissions.create')}}" class="menu-link">
                                         <span class="menu-text">Nouvelle permission</span>
                                     </a>
                                 </li>
                                 @endcan
-                                @can('Voix permisson')
+                                @can('voir permission')
                                 <li class="menu-item">
                                     <a href="{{route('permissions.index')}}" class="menu-link">
                                         <span class="menu-text">Liste permission</span>
                                     </a>
                                 </li>
                                 @endcan
-
-
                             </ul>
                         </div>
                     </li>
-                    @endcan
-                    @endcan
-
-
-
-
-
+                    @endif
                 </ul>
             </div>
         </div>

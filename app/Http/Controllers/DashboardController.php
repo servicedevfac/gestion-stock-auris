@@ -18,7 +18,7 @@ class DashboardController extends Controller
 
         $user = Auth::user();
         // Afficher le dashboard correspondant au rôle de l'utilisateur
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('admin') || $user->hasRole('super admin')) {
             // Récupérer l'utilisateur actuellement authentifié
                 // Récupérer toutes les ventes
                 $ventes = Vente::all();

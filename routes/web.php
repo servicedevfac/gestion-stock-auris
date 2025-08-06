@@ -55,6 +55,7 @@ Route::resource('permissions', PermissionController::class);
 // Page de connexion par défaut
 Route::get('/', fn () => view('auth.login'));
 
+Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');
 // Groupe pour utilisateurs authentifiés
 Route::middleware('auth')->group(function () {
     // Profil utilisateur
@@ -82,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ventes/create', [VenteController::class, 'create'])->name('ventes.create')->middleware('verifier.heure.vente');
     Route::post('/ventes', [VenteController::class, 'store'])->name('ventes.store')->middleware('verifier.heure.vente');
     Route::get('/ventes/{vente}', [VenteController::class, 'show'])->name('ventes.show');
+
 });
 
 
@@ -94,6 +96,9 @@ Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     Route::put('/ventes', [VenteController::class, 'update'])->name('ventes.update');
     Route::delete('/ventes/{vente}', [VenteController::class, 'destroy'])->name('ventes.destroy');
     Route::post('/ventes/{vente}/annuler', [VenteController::class, 'annulerVente'])->name('ventes.annuler');
+    Route::get('/admin/horaires/historique', [HoraireController::class, 'historique'])->name('admin.horaires.historique');
+
+
 
     // Suppression des clients
     Route::delete('clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
@@ -105,8 +110,6 @@ Route::middleware(['web', 'verified', 'auth', 'is.admin'])->group(function () {
     // Route::resource('roles', RoleController::class);
     // Route::resource('permissions', PermissionController::class);
     // Route::resource('users', UserContoller::class);
-
-
 
     // Mouvements de stock (hors index)
     // Route::resource('mouvementStocks', MouvementStockController::class)->only( 'create', 'store', 'update', 'destroy');

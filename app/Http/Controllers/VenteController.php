@@ -66,7 +66,7 @@ class VenteController extends Controller
     }
 public function store(Request $request)
 {
-    
+
     $request->validate([
         'client_id' => 'required|exists:clients,id',
         'montant_total' => 'required|numeric|min:0',
@@ -231,6 +231,8 @@ public function store(Request $request)
         return back()->with('error', 'Erreur lors de l’annulation : ' . $e->getMessage());
     }
 }
+
+
 
 
 

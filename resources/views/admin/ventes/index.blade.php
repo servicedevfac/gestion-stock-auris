@@ -84,53 +84,53 @@
                         <span style="background-color:#214ea7 ;">{{ $vente->statut }}</span>
                             @endif
 
-                            </td> --}}
-                            <td>{{ $vente->created_at->format('d/m/Y H:i') }}</td>
-                            <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
-                            <td>{{ number_format($vente->remise, 0, ',', ' ') }} FCFA</td>
-                            <td>
-                                @if($vente->code_recu)
-                                <a href="{{ asset('storage/recus/recu_vente_'.$vente->client->nom.'_'.$vente->code_recu.'.pdf') }}" class="btn btn-header1 btn-lg" target="_blank"><i class="fas fa-file-pdf"></i></a>
-                                @else
-                                <span class="text-muted">Pas de reçu</span>
-                                @endif
-                            </td>
-                            <td style="display:flex;flex-direction:row;justify-content:center; gap: 5px; ">
-                                <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
-                                @can('Modifier / annuler vente')
-                                <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST">
-                                    @csrf
-                                    <button type="button" class="btn btn-delete btn-lg" onclick="confirmerAnnulation({{ $vente->id }})"><i class="fas fa-cancel"></i></button>
-                                </form>
-                                @endcan
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                {{ $ventes->appends(request()->query())->links() }}
-            </div>
+                </td> --}}
+                <td>{{ $vente->created_at->format('d/m/Y H:i') }}</td>
+                <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
+                <td>{{ number_format($vente->remise, 0, ',', ' ') }} FCFA</td>
+                <td>
+                    @if($vente->code_recu)
+                        <a href="{{ asset('storage/recus/recu_vente_'.$vente->client->nom.'_'.$vente->code_recu.'.pdf') }}" class="btn btn-header1 btn-lg" target="_blank"><i class="fas fa-file-pdf"></i></a>
+                    @else
+                        <span class="text-muted">Pas de reçu</span>
+                    @endif
+                </td>
+                <td style="display:flex;flex-direction:row;justify-content:center; gap: 5px; ">
+                     <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
+                    @can('gérer vente')
+                    <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST">
+                    @csrf
+                    <button type="button" class="btn btn-delete btn-lg" onclick="confirmerAnnulation({{ $vente->id }})"><i class="fas fa-cancel"></i></button>
+                    </form>
+                 @endcan
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    {{ $ventes->appends(request()->query())->links() }}
         </div>
     </div>
-    <script>
-        function confirmerAnnulation(id) {
-            Swal.fire({
-                title: 'Êtes-vous sûr ?'
-                , text: "Vous allez annuler cette vente !"
-                , icon: 'danger'
-                , showCancelButton: true
-                , confirmButtonColor: '#d33'
-                , cancelButtonColor: '#3085d6'
-                , confirmButtonText: 'Oui, annuler'
-                , cancelButtonText: 'Non'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('form-annuler-' + id).submit();
-                }
-            });
-        }
-
-    </script>
 </div>
+<script>
+function confirmerAnnulation(id) {
+    Swal.fire({
+        title: 'Êtes-vous sûr ?',
+        text: "Vous allez annuler cette vente !",
+        icon: 'danger',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, annuler',
+        cancelButtonText: 'Non'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-annuler-' + id).submit();
+        }
+    });
+}
+</script>
+
+
 
     @endsection

@@ -1,38 +1,43 @@
 @extends('layouts.base')
 @section('title', 'Créer une vente')
 
+@section('head')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .btn-delete {
+        cursor: pointer;
+        color: red;
+    }
+</style>
+@endsection
+
 @section('content')
 
 <div class="row mt-5">
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
-                <h3 class="text-white m-0"><i class="fas fa-list me-2"></i> Liste des ventes</h3>
+                <h3 class="text-white m-0"><i class="fas fa-list me-2"></i> Nouvelle vente</h3>
                 <a href="{{ route('ventes.create') }}" class="btn btn-header fw-bold shadow-sm">
                     <i class="fas fa-plus me-1"></i> Nouvelle vente
                 </a>
             </div>
             <div class="card-body">
                 <p>Enregistrez une nouvelle vente en remplissant le formulaire ci-dessous.</p>
-                <form class="needs-validation" novalidate method="POST" action="{{ route('ventes.store') }}">
+
+                <form method="POST" action="{{ route('ventes.store') }}" novalidate>
                     @csrf
 
-
-                    {{-- Client & utilisateur --}}
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Client</label>
-                            <select name="client_id" class="form-control" required>
-                                <option value="">-- Choisir un client --</option>
-                                @foreach($clients as $client)
-                                <option value="{{ $client->id }}">{{ $client->nom }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
+                    {{-- Client --}}
+                    <div class="mb-3">
+                        <label for="client_id" class="form-label">Client</label>
+                        <select id="client-select" name="client_id" class="form-control" required style="width: 100%;">
+                            <!-- AJAX rempli par Select2 -->
+                        </select>
                     </div>
 
-                    {{-- Tableau des produits --}}
+                    {{-- Tableau produits --}}
                     <table class="table table-bordered" id="produits-table">
                         <thead>
                             <tr>
@@ -49,9 +54,9 @@
                                     <select name="produits[0][produit_id]" class="form-control produit-select" required>
                                         <option value="">-- Produit --</option>
                                         @foreach($produits as $produit)
-                                        <option value="{{ $produit->id }}" data-prix="{{ $produit->prix }}">
-                                            {{ $produit->nom }}
-                                        </option>
+                                            <option value="{{ $produit->id }}" data-prix="{{ $produit->prix }}">
+                                                {{ $produit->nom }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -63,65 +68,53 @@
                         </tbody>
                     </table>
 
-        <button type="button" class="btn btn-header1" id="ajouter-ligne"><i class="fas fa-plus me-2"></i> Ajouter un produit</button>
+                    <button type="button" class="btn btn-header1" id="ajouter-ligne">
+                        <i class="fas fa-plus me-2"></i> Ajouter un produit
+                    </button>
 
                     {{-- Remise et total --}}
                     <div class="row mt-4">
                         <div class="col-md-4">
-                            <label>Remise (FCFA)</label>
-                            <input type="number" name="remise" class="form-control" id="remise" value="0">
+                            <label for="remise" class="form-label">Remise (FCFA)</label>
+                            <input type="number" name="remise" id="remise" class="form-control" value="0" min="0" step="1">
                         </div>
                         <div class="col-md-4 offset-md-4">
-                            <label>Total à payer (FCFA)</label>
-                            <input type="number" name="montant_total" class="form-control" id="montant_total" readonly>
+                            <label for="montant_total" class="form-label">Total à payer (FCFA)</label>
+                            <input type="number" name="montant_total" id="montant_total" class="form-control" readonly>
                         </div>
                     </div>
 
-                    {{-- Date & Paiement --}}
+                    {{-- Date et paiement --}}
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label>Date de vente</label>
-                            <input type="date" name="date_vente" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                            <label for="date_vente" class="form-label">Date de vente</label>
+                            <input type="date" name="date_vente" id="date_vente" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label>Mode de paiement</label>
-                            <select name="mode_paiement" class="form-control" required>
+                            <label for="mode_paiement" class="form-label">Mode de paiement</label>
+                            <select name="mode_paiement" id="mode_paiement" class="form-control" required>
                                 <option value="espèces">Espèces</option>
                                 <option value="mobile money">Mobile Money</option>
                                 <option value="carte">Carte</option>
                             </select>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-header1 mt-4">💾 Enregistrer la vente</button>
+                    <button type="submit" class="btn btn-header1 btn-lg mt-4">
+                        <i class="fas fa-save me-2"></i> Enregistrer la vente
+                    </button>
                 </form>
             </div>
         </div>
-
-        {{-- Date & Paiement --}}
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <label>Date de vente</label>
-                <input type="date" name="date_vente" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
-            </div>
-            <div class="col-md-6">
-                <label>Mode de paiement</label>
-                <select name="mode_paiement" class="form-control" required>
-                    <option value="espèces">Espèces</option>
-                    <option value="mobile money">Mobile Money</option>
-                    <option value="carte">Carte</option>
-                </select>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-header1  btn-lg mt-2"><i class="fas fa-save me-2"></i> Enregistrer la vente</button>
-    </form>
     </div>
-    @endsection
 
-    @section('scripts')
-    <script>
-        let index = 1;
+@endsection
+
+@section('scripts')
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    let index = 1;
 
         function recalculerTotals() {
             let total = 0;
@@ -134,75 +127,99 @@
                 total += ligneTotal;
             });
 
-            const remise = parseFloat(document.getElementById('remise') ? .value || 0);
-            document.getElementById('montant_total').value = (total - remise).toFixed(0);
-        }
+        const remise = parseFloat(document.getElementById('remise')?.value || 0);
+        let montantApayer = total - remise;
+        if(montantApayer < 0) montantApayer = 0;
+        document.getElementById('montant_total').value = montantApayer.toFixed(0);
+    }
 
         document.getElementById('ajouter-ligne').addEventListener('click', function() {
             const table = document.getElementById('ligne-produits');
             const firstRow = table.querySelector('tr');
             const nouvelleLigne = firstRow.cloneNode(true);
 
-            // Réinitialiser les valeurs de la nouvelle ligne
-            nouvelleLigne.querySelectorAll('input, select').forEach(el => {
-                if (el.name && el.name.includes('produits')) {
-                    const base = el.name.split('[')[0];
-                    const champ = el.name.substring(el.name.indexOf(']') + 1);
-                    el.name = `${base}[${index}]${champ}`;
-                }
-                if (el.classList.contains('prix') || el.classList.contains('total')) {
-                    el.value = '';
-                }
-                if (el.classList.contains('quantite')) {
-                    el.value = 1;
-                }
-                if (el.tagName === 'SELECT') {
-                    el.selectedIndex = 0;
-                }
-            });
-            // Supprimer les événements précédents sur la nouvelle ligne
-            nouvelleLigne.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
-                const rows = document.querySelectorAll('#ligne-produits tr');
-                if (rows.length > 1) {
-                    e.target.closest('tr').remove();
-                    recalculerTotals();
-                }
-            });
-            nouvelleLigne.querySelector('.produit-select').addEventListener('change', function(e) {
-                const prix = e.target.selectedOptions[0].getAttribute('data-prix');
-                const row = e.target.closest('tr');
-                row.querySelector('.prix').value = prix;
-                recalculerTotals();
-            });
-            nouvelleLigne.querySelector('.quantite').addEventListener('input', recalculerTotals);
-            table.appendChild(nouvelleLigne);
-            index++;
-            recalculerTotals();
+        // Réinitialiser les valeurs de la nouvelle ligne
+        nouvelleLigne.querySelectorAll('input, select').forEach(el => {
+            if (el.name && el.name.includes('produits')) {
+                const base = el.name.split('[')[0];
+                const champ = el.name.substring(el.name.indexOf(']') + 1);
+                el.name = `${base}[${index}]${champ}`;
+            }
+            if (el.classList.contains('prix') || el.classList.contains('total')) {
+                el.value = '';
+            }
+            if (el.classList.contains('quantite')) {
+                el.value = 1;
+            }
+            if (el.tagName === 'SELECT') {
+                el.selectedIndex = 0;
+            }
         });
 
-        // Initialiser les événements sur la première ligne
-        document.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
+        // Supprimer la nouvelle ligne (bouton)
+        nouvelleLigne.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
             const rows = document.querySelectorAll('#ligne-produits tr');
             if (rows.length > 1) {
                 e.target.closest('tr').remove();
                 recalculerTotals();
             }
         });
-        document.querySelector('.produit-select').addEventListener('change', function(e) {
+
+        // Au changement produit, remplir le prix
+        nouvelleLigne.querySelector('.produit-select').addEventListener('change', function(e) {
             const prix = e.target.selectedOptions[0].getAttribute('data-prix');
             const row = e.target.closest('tr');
             row.querySelector('.prix').value = prix;
             recalculerTotals();
         });
-        document.querySelector('.quantite').addEventListener('input', recalculerTotals);
 
-        // Appliquer la remise en temps réel
-        document.getElementById('remise').addEventListener('input', recalculerTotals);
+        // Modifier quantité recalcul
+        nouvelleLigne.querySelector('.quantite').addEventListener('input', recalculerTotals);
+
+        table.appendChild(nouvelleLigne);
+        index++;
+        recalculerTotals();
+    });
+
+    // Initialiser la première ligne : supprimer, changement produit, quantité
+    document.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
+        const rows = document.querySelectorAll('#ligne-produits tr');
+        if (rows.length > 1) {
+            e.target.closest('tr').remove();
+            recalculerTotals();
+        }
+    });
+    document.querySelector('.produit-select').addEventListener('change', function(e) {
+        const prix = e.target.selectedOptions[0].getAttribute('data-prix');
+        const row = e.target.closest('tr');
+        row.querySelector('.prix').value = prix;
+        recalculerTotals();
+    });
+    document.querySelector('.quantite').addEventListener('input', recalculerTotals);
+
+    // Remise en temps réel
+    document.getElementById('remise').addEventListener('input', recalculerTotals);
 
         // Calcul initial
         recalculerTotals();
 
-    </script>
-
-
-    @endsection
+    // Init Select2 client
+    $('#client-select').select2({
+        placeholder: 'Rechercher un client...',
+        minimumInputLength: 2,
+        ajax: {
+            url: '{{ route("clients.search") }}',
+            dataType: 'json',
+            delay: 250,
+            data: params => ({ q: params.term }),
+            processResults: data => ({
+                results: data.map(client => ({
+                    id: client.id,
+                    text: client.nom
+                }))
+            }),
+            cache: true
+        }
+    });
+</script>
+@endsection
