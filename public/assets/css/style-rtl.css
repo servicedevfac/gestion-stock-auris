@@ -14466,11 +14466,11 @@ html[data-bs-theme=dark] .auth-logo .logo-dark {
 }
 
 .nav-user {
-  padding: 20px !important;
+  padding: 30px !important;
 }
 .nav-user img {
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
 }
 
 html[data-topbar-color=brand] .navbar-custom .logo-box .logo-light,

@@ -31,12 +31,14 @@
                         </li>
 
                         <li class="dropdown">
-                            <a class=" dropdown-toggle  nav-user  waves-effect waves-dark btn btn-header1 p-3" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+
+                                <a class=" dropdown-toggle btn btn-header1 nav-user  waves-effect waves-dark  p-3" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <img src="{{url('assets/images/users/avatar-1.jpg')}}" alt="user-image" class="rounded-circle">
                                 <span class="ms-1 d-none d-md-inline-block">
                                     {{Auth::user()->nom}} <i class="mdi mdi-chevron-down"></i>
                                 </span>
                             </a>
+
 
                             <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
                                 <!-- item-->
