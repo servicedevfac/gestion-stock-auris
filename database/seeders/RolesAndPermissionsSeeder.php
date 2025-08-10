@@ -38,6 +38,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'create produit',
             'edit produit',
             'delete produit',
+            'exporter produit',
+
             'view client',
             'create client',
             'edit client',
@@ -49,6 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit vente',
             'delete vente',
             'exporter vente',
+            'annuler vente',
 
             'view stock',
             'create stock',
@@ -94,6 +97,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit stock',
             'delete stock',
             'exporter stock',
+            'view produit',
+            'create produit',
+            'edit produit',
+            'delete produit',
+            'exporter produit',
             ]);
     }
 }

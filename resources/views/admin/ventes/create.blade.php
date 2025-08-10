@@ -5,14 +5,12 @@
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-    .btn-delete {
-        cursor: pointer;
-        color: red;
-    }
+
 </style>
 @endsection
 
 @section('content')
+
 
 <div class="row mt-5">
     <div class="col-12">
@@ -24,6 +22,12 @@
                 </a>
             </div>
             <div class="card-body">
+                @if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
                 <p>Enregistrez une nouvelle vente en remplissant le formulaire ci-dessous.</p>
 
                 <form method="POST" action="{{ route('ventes.store') }}" novalidate>

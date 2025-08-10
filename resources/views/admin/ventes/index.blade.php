@@ -5,13 +5,13 @@
         <div class="card shadow-sm border-0">
             <div class="card-header  d-flex justify-content-between align-items-center card-heade">
                 <h3 class="text-white m-0"><i class="fas fa-list me-2"></i> Liste des ventes</h3>
+                @can('create vente')
                 <a href="{{ route('ventes.create') }}" class="btn btn-header  fw-bold shadow-sm">
                     <i class="fas fa-plus me-1"></i> Nouvelle vente
                 </a>
+                @endcan
             </div>
-
             <div class="card-body">
-
     <form method="GET" action="" class="mb-3">
         <div class="row">
             <div class="col-md-3">
@@ -73,17 +73,6 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $vente->code_recu }}</td>
                 <td>{{ $vente->client->nom ?? '' }}</td>
-
-                {{-- <td>
-                    @if ($vente->statut=='valide')
-                        <span class="badge bg-success">Validée</span>
-                    @elseif ($vente->statut=='annulee')
-                        <span class="badge bg-danger">Annulée</span>
-                    @else
-                        <span style="background-color:#214ea7 ;">{{ $vente->statut }}</span>
-                    @endif
-
-                </td> --}}
                 <td>{{ $vente->created_at->format('d/m/Y H:i') }}</td>
                 <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
                 <td>{{ number_format($vente->remise, 0, ',', ' ') }} FCFA</td>
@@ -95,13 +84,17 @@
                     @endif
                 </td>
                 <td style="display:flex;flex-direction:row;justify-content:center; gap: 5px; ">
-                     <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
-                    @can('gérer vente')
+                    @can('view vente')
+                        <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
+                    @endcan
+                    @if (Auth::user()->can('edit vente'))
+                    @can('annuler vente')
                     <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST">
                     @csrf
                     <button type="button" class="btn btn-delete btn-lg" onclick="confirmerAnnulation({{ $vente->id }})"><i class="fas fa-cancel"></i></button>
                     </form>
                  @endcan
+                    @endif
                 </td>
             </tr>
             @endforeach

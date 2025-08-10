@@ -5,7 +5,7 @@
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="text-white m-0"><i class="fas fa-list me-2"></i>  Liste des mouvements de stock</h3>
-                @can('gérer stock')
+                @can('create stock')
 
                 <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header  fw-bold shadow-sm">
                     <i class="fas fa-plus me-1"></i> Nouveau mouvement de stock
@@ -42,12 +42,12 @@
                             <td>{{ \Carbon\Carbon::parse($mouvement->date_mouvement)->format('d/m/Y') }}</td>
                              <td>
                                  @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('admin'))
-                                @can('gérer stock')
-
-                                @endcan
+                                @can('edit stock')
                                 <a href="{{ route('mouvementStocks.edit', $mouvement->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-edit"></i>
                                     </a>
+                                @endcan
+                                @can('delete stock')
                                     <form action="{{ route('mouvementStocks.destroy', $mouvement->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
@@ -55,7 +55,8 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                </td>
+                                @endcan
+                            </td>
                                     @endif
                         </tr>
                         @endforeach

@@ -33,14 +33,14 @@
                     </a>
                     <div class="collapse" id="Ventes">
                         <ul class="sub-menu">
-                            @can('créer vente')
+                            @can('create vente')
                             <li class="menu-item">
                                 <a href="{{ route('ventes.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Vente</span>
                                 </a>
                             </li>
                             @endcan
-                            @can('voir vente')
+                            @can('view vente')
                             <li class="menu-item">
                                 <a href="{{ route('ventes.index') }}" class="menu-link">
                                     <span class="menu-text">Liste Ventes</span>
@@ -58,14 +58,14 @@
                     </a>
                     <div class="collapse" id="Produit">
                         <ul class="sub-menu">
-                            @can('gérer produit')
+                            @can('create produit')
                             <li class="menu-item">
                                 <a href="{{ route('produits.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Produit</span>
                                 </a>
                             </li>
                             @endcan
-                            @can('voir produit')
+                            @can('view produit')
 
                             <li class="menu-item">
                                 <a href="{{ route('produits.index') }}" class="menu-link">
@@ -84,7 +84,7 @@
                         </a>
                         <div class="collapse" id="Stocks">
                             <ul class="sub-menu">
-                                @can('gérer stock')
+                                @can('create stock')
                                 <li class="menu-item">
                                     <a href="{{ route('mouvementStocks.create') }}" class="menu-link">
                                         <span class="menu-text">Nouveau Stock</span>
@@ -92,7 +92,7 @@
                                 </li>
                                 @endcan
 
-                                @can('voir stock')
+                                @can('view stock')
                                 <li class="menu-item">
                                     <a href="{{ route('mouvementStocks.index') }}" class="menu-link">
                                         <span class="menu-text">Liste Stocks</span>
@@ -111,7 +111,7 @@
                         </a>
                         <div class="collapse" id="menuClients">
                             <ul class="sub-menu">
-                                @can('gérer client')
+                                @can('create client')
 
                                 <li class="menu-item">
                                     <a href="{{ route('clients.create') }}" class="menu-link">
@@ -119,7 +119,7 @@
                                     </a>
                                 </li>
                                 @endcan
-                                @can('gérer client')
+                                @can('view client')
                                 <li class="menu-item">
                                     <a href="{{ route('clients.index') }}" class="menu-link">
                                         <span class="menu-text">Liste Clients</span>
@@ -137,14 +137,14 @@
                         </a>
                         <div class="collapse" id="menuUsers">
                             <ul class="sub-menu">
-                                @can('gérer user')
+                                @can('create utilisateur')
                                 <li class="menu-item">
                                     <a href="{{route('users.create')}}" class="menu-link">
                                         <span class="menu-text">Nouveau utiisateur</span>
                                     </a>
                                 </li>
                                 @endcan
-                                @can('voir user')
+                                @can('view utilisateur')
                                 <li class="menu-item">
                                     <a href="{{route('users.index')}}" class="menu-link">
                                         <span class="menu-text">Liste utilisateur</span>
@@ -165,14 +165,14 @@
                         </a>
                         <div class="collapse" id="role">
                             <ul class="sub-menu">
-                                @can('gérer rôles')
+                                @can('create role')
                                 <li class="menu-item">
                                     <a href="{{route('roles.create')}}" class="menu-link">
                                         <span class="menu-text">Nouveau rôle</span>
                                     </a>
                                 </li>
                                 @endcan
-                                @can('voir role')
+                                @can('view role')
                                 <li class="menu-item">
                                     <a href="{{route('roles.index')}}" class="menu-link">
                                         <span class="menu-text">Liste roles</span>
@@ -193,14 +193,14 @@
                         </a>
                         <div class="collapse" id="Permission">
                             <ul class="sub-menu">
-                                @can('gérer permission')
+                                @can('create permission')
                                 <li class="menu-item">
                                     <a href="{{route('permissions.create')}}" class="menu-link">
                                         <span class="menu-text">Nouvelle permission</span>
                                     </a>
                                 </li>
                                 @endcan
-                                @can('voir permission')
+                                @can('view permission')
                                 <li class="menu-item">
                                     <a href="{{route('permissions.index')}}" class="menu-link">
                                         <span class="menu-text">Liste permission</span>

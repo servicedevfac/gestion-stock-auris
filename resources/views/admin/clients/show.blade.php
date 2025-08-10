@@ -25,9 +25,11 @@
                     <dt class="col-sm-3">Adresse</dt>
                     <dd class="col-sm-9">{{ $client->adresse }}</dd>
                 </dl>
-                <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-header1 me-2">
-                    <i class="fas fa-edit me-1"></i> Modifier
-                </a>
+                @can('edit client')
+                    <a href="{{ route('clients.edit', $client->id) }}" class="btn btn-header1 me-2">
+                        <i class="fas fa-edit me-1"></i> Modifier
+                    </a>
+                @endcan
             </div>
         </div>
     </div>
