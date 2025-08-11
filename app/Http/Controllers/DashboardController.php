@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Detail_vente;
+use App\Models\Produit;
 use App\Models\Vente;
 use Carbon\Carbon;
 use DateTime;
@@ -84,6 +85,19 @@ class DashboardController extends Controller
                     ->groupBy('mois')
                     ->orderBy('mois')
                     ->get();
+
+                $produitsStockFaible = Produit::select('produits.*')
+            ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
+            ->selectRaw('
+                SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
+                SUM(CASE WHEN type_mouvement = "sortie" THEN quantite ELSE 0 END) as stock_actuel
+            ')
+            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
+            ->havingRaw('stock_actuel <= seuil_alerte')
+            ->get();
+
+
+
             return view('dashboards.admin', compact(
                 'ca_journalier',
                 'chiffreAffaires',
@@ -91,6 +105,7 @@ class DashboardController extends Controller
                 'derniersVentes',
                 'derniersClients',
                 'data',
+                'produitsStockFaible',
                 'chiffreAffaireMoisEnCours',
                 'chartData' // Passer les données du graphique
             ));
@@ -132,7 +147,28 @@ class DashboardController extends Controller
                 ->where('user_id', $user->id)
                 ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
                 ->sum('montant_total');
-            return view('dashboards.vendeur', compact('chiffreAffairesvendeurs', 'chiffreAffairesSemaine', 'chiffreAffaireMoisEnCours', 'nombreVentes','ventes', 'derniersClients'));
+            // Récupérer les données pour les produits dont le stock est faible
+
+
+            $produitsStockFaible = Produit::select('produits.*')
+            ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
+            ->selectRaw('
+                SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
+                SUM(CASE WHEN type_mouvement = "sortie" THEN quantite ELSE 0 END) as stock_actuel
+            ')
+            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
+            ->havingRaw('stock_actuel <= seuil_alerte')
+            ->get();
+            return view('dashboards.vendeur',
+            compact(
+                'chiffreAffairesvendeurs',
+                'chiffreAffairesSemaine',
+                        'chiffreAffaireMoisEnCours',
+                        'nombreVentes',
+                        'ventes',
+                        'derniersClients',
+                        'produitsStockFaible'
+            ));
         }
 
     }

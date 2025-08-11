@@ -38,7 +38,6 @@
                     <td>{{ $client->telephone }}</td>
                     <td>{{ $client->adresse }}</td>
                     <td>
-                        @can('gérer client')
                         <div class="btn-group gap-2">
                             @can('view client')
                             <a href="{{ route('clients.show', $client) }}" class="btn btn-sm btn-header1 rounded-3">

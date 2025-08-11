@@ -148,9 +148,43 @@
                             </tbody>
                         </table>
                     </div>
-                </div> <!-- end card-body--><!-- end col -->
+                </div>
+                 <!-- end card-body--><!-- end col -->
             </div>
-        </div> <!-- end card-->
+        </div>
+         <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header btn-delete">
+                                <h4 class="card-title">les produits en stock faible</h4>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-centered table-nowrap mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>N</th>
+                                                <th>Nom produit</th>
+                                                <th>Stock actuel</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($produitsStockFaible as $produit)
+                                                <tr>
+                                                    <td>{{ $produit->id }}</td>
+                                                    <td>{{ $produit->nom }}</td>
+                                                    <td>{{ $produit->stock_actuel }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+<!-- end card-->
      <!-- end row -->
 
 

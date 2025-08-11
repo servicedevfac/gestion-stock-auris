@@ -47,7 +47,6 @@
         {{ session()->get('error') }}
     </div>
     @endif
-
     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
         <thead class="card-heade  table-dark">
             <tr>

@@ -67,8 +67,11 @@ class ClientController extends Controller
  */
 public function show(Client $client)
 {
-        return view('admin.clients.show', compact('client'));
-    }
+    //la liste des ventes du client
+    $ventes = $client->ventes()->with('user')->paginate(10);
+
+    return view('admin.clients.show', compact('client', 'ventes'));
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -91,7 +94,6 @@ public function show(Client $client)
         ]);
 
         $client->update($request->all());
-
         return redirect()->route('clients.index')->with('success', 'Client mis à jour avec succès.');
     }
 
