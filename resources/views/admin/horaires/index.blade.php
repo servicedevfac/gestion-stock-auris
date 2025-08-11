@@ -1,5 +1,4 @@
 @extends('layouts.base')
-@section('title', 'Liste des horaires de ventes')
 
 @section('content')
 <div class="row mt-5">

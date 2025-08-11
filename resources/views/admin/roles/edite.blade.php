@@ -1,6 +1,5 @@
 @extends('layouts.base')
 
-@section('title', 'Modifier un rôle')
 
 @section('content')
 <div class="row mt-5">

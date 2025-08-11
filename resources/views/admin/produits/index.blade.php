@@ -1,14 +1,12 @@
 @extends('layouts.base')
 
-@section('title', 'Liste des produits')
-
 @section('content')
 <div class="row mt-5">
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
                 <h3 class="header-title text-white "><i class="fas fa-list me-2"></i>  Liste des produits</h3>
-                    @can('gérer produit')
+                    @can('create produit')
                     <a href="{{ route('produits.create') }}" class="btn btn-header fw-bold shadow-sm">
                         <i class="fas fa-plus me-1"></i> Nouveau produit
                     </a>
@@ -54,9 +52,9 @@
                                     </a>
                                 @endcan
                                 @can('edit produit')
-                                <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-success">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                    <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 @endcan
                                 @can('delete produit')
                                 <form id="delete-form-{{ $produit->id }}" action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
@@ -67,6 +65,7 @@
                                     </button>
                                 </form>
                                 @endcan
+
                             </td>
                         </tr>
                         @endforeach

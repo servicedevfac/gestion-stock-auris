@@ -3,6 +3,7 @@
 @section('content')
 
 
+
 <div class="row mt-5">
     <div class="col-lg-6 col-xl-3">
         <div class="card">
@@ -131,23 +132,56 @@
                                     <tr>
                                         <td>
                                             {{ $client->client->nom }}
-                            </td>
-                            <td>
-                                {{ $client->client->adresse }}
-                            </td>
-                            <td>
-                                {{ $client->client->telephone }}
-                            </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td>
+                                            {{ $client->client->adresse }}
+                                        </td>
+                                        <td>
+                                            {{ $client->client->telephone }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div> <!-- end card-body-->
-            <!-- end col -->
+                 <!-- end card-body--><!-- end col -->
+            </div>
         </div>
-    </div> <!-- end card-->
-    <!-- end row -->
+         <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header btn-delete">
+                                <h4 class="card-title">les produits en stock faible</h4>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-centered table-nowrap mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>N</th>
+                                                <th>Nom produit</th>
+                                                <th>Stock actuel</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($produitsStockFaible as $produit)
+                                                <tr>
+                                                    <td>{{ $produit->id }}</td>
+                                                    <td>{{ $produit->nom }}</td>
+                                                    <td>{{ $produit->stock_actuel }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+<!-- end card-->
+     <!-- end row -->
 
 </div>
 @endsection

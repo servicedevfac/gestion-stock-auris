@@ -1,5 +1,4 @@
 @extends('layouts.base')
-@section('title', 'Modifier le profil')
 @section('content')
 
     <div class="py-5">

@@ -116,7 +116,8 @@ public function store(Request $request)
             $stockActuel = $produitModel->mouvements()->where('type_mouvement', 'entree')->sum('quantite')
                 - $produitModel->mouvements()->where('type_mouvement', 'sortie')->sum('quantite');
             if ($produit['quantite'] > $stockActuel) {
-                return redirect()->back()->with('error', 'Stock insuffisant pour le produit : ' . $produitModel->nom);
+            return redirect()->back()->with('error', 'Stock insuffisant pour le produit : ' . $produitModel->nom)->withInput();
+
             }
         }
 

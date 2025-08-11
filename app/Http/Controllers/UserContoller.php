@@ -91,9 +91,16 @@ public function show(User $user)
 
 
 
+
     public function destroy(User $user)
-    {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé.');
+{
+    if ($user->ventes()->count() > 0) {
+        return back()->with('error', 'Impossible de supprimer cet utilisateur. Il a déjà effectué des ventes.');
     }
+
+    $user->delete();
+
+    return back()->with('success', 'Utilisateur supprimé avec succès.');
+}
+
 }
