@@ -18,7 +18,7 @@
                         </div>
 
                         <!-- Sidebar Menu Toggle Button -->
-                        <button class="button-toggle-menu waves-effect waves-dark rounded-circle">
+                        <button class="button-toggle-menu waves-effect waves-dark rounded-circle text-gray">
                             <i class="mdi mdi-menu"></i>
                         </button>
                     </div>
@@ -30,46 +30,53 @@
                             <i class="bx bx-moon font-size-24"></i>
                         </li>
 
-                        <li class="dropdown">
+   <li class="nav-item dropdown">
+    <a class="dropdown-toggle btn btn-header1 nav-user waves-effect waves-dark p-3" 
+       href="#" 
+       id="userDropdown"
+       role="button" 
+       data-bs-toggle="dropdown" 
+       aria-expanded="false">
+        <img src="{{ url('assets/images/users/avatar-1.jpg') }}" 
+             alt="user-image" 
+             class="rounded-circle">
+        <span class="ms-1 d-none d-md-inline-block">
+            {{ Auth::user()->nom }} <i class="mdi mdi-chevron-down"></i>
+        </span>
+    </a>
 
-                                <a class=" dropdown-toggle btn btn-header1 nav-user  waves-effect waves-dark  p-3" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                <img src="{{url('assets/images/users/avatar-1.jpg')}}" alt="user-image" class="rounded-circle">
-                                <span class="ms-1 d-none d-md-inline-block">
-                                    {{Auth::user()->nom}} <i class="mdi mdi-chevron-down"></i>
-                                </span>
-                            </a>
+    <ul class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="userDropdown">
+        <li class="dropdown-header noti-title">
+            <h6 class="text-overflow m-0">Welcome !</h6>
+        </li>
 
+        <li>
+            <a href="{{ route('profile.edit') }}" class="dropdown-item notify-item">
+                <i data-lucide="user" class="font-size-16 me-2"></i>
+                <span>Mon profil</span>
+            </a>
+        </li>
 
-                            <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
-                                <!-- item-->
-                                <div class="dropdown-header noti-title">
-                                    <h6 class="text-overflow m-0">Welcome !</h6>
-                                </div>
+        <li>
+            <a href="{{ route('admin.horaires.index') }}" class="dropdown-item notify-item">
+                <i data-lucide="settings" class="font-size-16 me-2"></i>
+                <span>Paramètre des horaires de ventes</span>
+            </a>
+        </li>
 
-                                <!-- item-->
-                                <a href="{{ route('profile.edit') }}" class="dropdown-item notify-item">
-                                    <i data-lucide="user" class="font-size-16 me-2"></i>
-                                    <span>Mon profile</span>
-                                </a>
+        <li><hr class="dropdown-divider"></li>
 
-                                <!-- item-->
-                                <a href="{{route('admin.horaires.index')}}" class="dropdown-item notify-item">
-                                    <i data-lucide="settings" class="font-size-16 me-2"></i>
-                                    <span>parametre des horaire de ventes</span>
-                                </a>
+        <li>
+            <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
+                @csrf
+                <button type="submit" class="dropdown-item notify-item">
+                    <i class="fas fa-sign-out-alt me-1"></i> Déconnexion
+                </button>
+            </form>
+        </li>
+    </ul>
+</li>
 
-                                <div class="dropdown-divider"></div>
-
-                                <a href="{{route('logout')}}" class="dropdown-item notify-item">
-                                    <form action="{{route('logout')}}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-lg btn-header1"><i class="fas fa-sign-out-alt me-1"></i> Deconnexion</button>
-                                    </form>
-
-                                </a>
-
-                            </div>
-                        </li>
 
                     </ul>
                 </div>

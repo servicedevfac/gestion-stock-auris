@@ -4,73 +4,100 @@
 
 
     <!-- end page title -->
+<div>@if($produitsStockFaible->count() > 0)
+        <div class="marquee">
+            Stock faible :
+            @foreach($produitsStockFaible as $produit)
+                {{ $produit->nom }} ({{ $produit->stock_actuel }}) &nbsp;&nbsp;|&nbsp;&nbsp;
+            @endforeach
+        </div>
+    @else
+        <p>Aucun produit en stock faible ✅</p>
+    @endif
+</div>
 
-    <div class="row mt-5">
-        <div class="col-lg-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffairesvendeurs }}</span>
-                        </div>
 
-                    </div> <!-- end row -->
-                    <div id="sparkline1" class="mt-3"></div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col-->
+    <div class="row mt-3">
+        <div class="col-lg-6">
+            <h4 class="page-title mb-0">Dashboard Vendeur</h4>
+        </div>
 
-        <div class="col-lg-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires du mois</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffaireMoisEnCours }}</span>
-                        </div>
-                    </div> <!-- end row -->
-
-                    <div id="sparkline2" class="mt-3"></div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-
-        <div class="col-lg-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Nombre de ventes</h6>
-                            <span class="h3 mb-0">{{ $nombreVentes }}</span>
-                        </div>
-                    </div> <!-- end row -->
-
-                    <div id="sparkline3" class="mt-3"></div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col-->
-
-        <div class="col-lg-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="text-uppercase font-size-12 text-muted mb-3">Chiffre d'affaires de la semaine</h6>
-                            <span class="h3 mb-0">{{ $chiffreAffairesSemaine }}</span>
-                        </div>
-                    </div> <!-- end row -->
-                    <div id="sparkline4" class="mt-3"></div>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col-->
     </div>
-    <!-- end row-->
+    <div class="row mt-3">
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card success h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Chiffre d'affaires
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} Fr</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">Chiffre d'affaires du mois
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} Fr</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Nombre de ventes
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($nombreVentes, 0, ',', ' ') }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Chiffre d'affaires de la semaine
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($chiffreAffairesSemaine, 0, ',', ' ') }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-    <!-- end row-->
-
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade  ">
@@ -89,7 +116,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($ventes as $vente)
-                                <tr>
+                                    <tr>
                                         <td>
                                             {{ $vente->code_recu }}
                                         </td>
@@ -102,7 +129,7 @@
                                         <td>
                                             {{ $vente->created_at->format('d M Y') }}
                                         </td>
-                                    @endforeach
+                                @endforeach
 
                                 </tr>
 
@@ -149,43 +176,40 @@
                         </table>
                     </div>
                 </div>
-                 <!-- end card-body--><!-- end col -->
+                <!-- end card-body--><!-- end col -->
             </div>
         </div>
-         <div class="col-xl-6">
-                        <div class="card">
-                            <div class="card-header btn-delete">
-                                <h4 class="card-title">les produits en stock faible</h4>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-centered table-nowrap mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>N</th>
-                                                <th>Nom produit</th>
-                                                <th>Stock actuel</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($produitsStockFaible as $produit)
-                                                <tr>
-                                                    <td>{{ $produit->id }}</td>
-                                                    <td>{{ $produit->nom }}</td>
-                                                    <td>{{ $produit->stock_actuel }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-
-                                </div>
-
-                            </div>
-                        </div>
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-header redoff">
+                    <h4 class="card-title">les produits en stock faible</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th>N</th>
+                                    <th>Nom produit</th>
+                                    <th>Stock actuel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($produitsStockFaible as $produit)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $produit->nom }}</td>
+                                        <td>{{ $produit->stock_actuel }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-<!-- end card-->
-     <!-- end row -->
+                </div>
+            </div>
+        </div>
+        <!-- end card-->
+        <!-- end row -->
 
 
 @endsection

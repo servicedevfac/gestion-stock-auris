@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detail_vente;
+
 use App\Models\Produit;
 use App\Models\Vente;
+use App\Models\Detail_vente;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
@@ -34,26 +35,6 @@ class DashboardController extends Controller
                     ? "strftime('%Y-%m', ventes.created_at)"
                     : "DATE_FORMAT(ventes.created_at, '%Y-%m')";
 
-                // Récupérer le total des ventes par produit et par mois
-                $data = DB::table('detail_ventes')
-                    ->join('ventes', 'detail_ventes.vente_id', '=', 'ventes.id')
-                    ->join('produits', 'detail_ventes.produit_id', '=', 'produits.id')
-                    ->select(
-                        DB::raw("$dateExpression as mois"),
-                        'produits.nom as produit',
-                        DB::raw('SUM(detail_ventes.quantite * detail_ventes.prix) as total')
-                    )
-                    ->groupBy('mois', 'produit')
-                    ->orderBy('mois')
-                    ->get();
-
-                // Transformer les données pour le graphique (tableau associatif mois/produit/total)
-                $chartData = [];
-                foreach ($data as $row) {
-                    // Extraire le mois (YYYY-MM) et le convertir en nom de mois en français
-                    $moisNom = Carbon::createFromFormat('Y-m', $row->mois)->locale('fr')->translatedFormat('F');
-                    $chartData[$moisNom][$row->produit] = $row->total;
-                }
 
                 // Récupérer les 5 derniers clients ayant effectué une vente
                 $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(5)->get();
@@ -98,18 +79,50 @@ class DashboardController extends Controller
 
 
 
+
+            $months = collect();
+        for ($i = 11; $i >= 0; $i--) {
+            $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
+        }
+
+        // Récupère le CA groupé par mois (assume champ `total` et `created_at`)
+        $sales = Vente::selectRaw("strftime('%Y-%m', created_at) as month, SUM(montant_total) as total")
+            ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->keyBy('month');
+
+        // Mappe sur les 12 mois en mettant 0 si absent
+        $labels = $months->map(function($m){
+            // option : rendre plus lisible → '2025-08' -> 'Août 2025'
+            return Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y');
+        });
+
+        $data = $months->map(function($m) use ($sales){
+            return $sales->has($m) ? (float) $sales[$m]->total : 0;
+        });
+
+
+
+
+
+
             return view('dashboards.admin', compact(
                 'ca_journalier',
                 'chiffreAffaires',
                 'nombreVentes',
+                'ventes',
+                'labels',
+                'data',
                 'derniersVentes',
                 'derniersClients',
-                'data',
                 'produitsStockFaible',
                 'chiffreAffaireMoisEnCours',
-                'chartData' // Passer les données du graphique
+                //'chartData' // Passer les données du graphique
             ));
         }
+
 
         if ($user->hasRole('vendeur')) {
             // Récupérer les 10 dernières ventes du vendeur

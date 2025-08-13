@@ -14,7 +14,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                <table id="datatable-buttons" class="table table-hover table-bordered dt-responsive nowrap w-100">
+                <table class="table table-hover table-bordered dt-responsive nowrap w-100">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
