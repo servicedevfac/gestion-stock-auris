@@ -30,7 +30,13 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
+       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+
+        .filtres { margin-bottom: 20px; }
+        .filtres input, .filtres button { margin-right: 10px; padding: 5px; }
+        #ventesChart { max-width: 800px; margin-bottom: 20px; }
     /* petit style pour le canvas */
 
         .card-heade { background-color: #02228b; color: #ffffff !important; }

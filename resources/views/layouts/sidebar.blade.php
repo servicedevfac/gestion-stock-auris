@@ -14,7 +14,6 @@
                     <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="24">
                 </a>
             </div>
-
             <!--- Menu -->
             <div data-simplebar>
                 <ul class="app-menu">
@@ -58,21 +57,21 @@
                     </a>
                     <div class="collapse" id="Produit">
                         <ul class="sub-menu">
-                            @can('create produit')
+
                             <li class="menu-item">
                                 <a href="{{ route('produits.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Produit</span>
                                 </a>
                             </li>
-                            @endcan
-                            @can('view produit')
+
+
 
                             <li class="menu-item">
                                 <a href="{{ route('produits.index') }}" class="menu-link">
                                     <span class="menu-text">Liste Produits</span>
                                 </a>
                              </li>
-                            @endcan
+
                         </ul>
                     </div>
                 </li>

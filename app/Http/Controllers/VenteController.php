@@ -19,43 +19,47 @@ use Illuminate\Support\Str;
 
 class VenteController extends Controller
 {
-    public function index(Request $request)
-    {
-        if(Auth::user()->hasRole('vendeur')) {
-
-            $ventes = Vente::where('user_id', Auth::user()->id)->paginate(15);
-        } else {
-
-        $ventes = Vente::with(['client', 'user'])->orderByDesc('created_at')->paginate(15);
-        }
-
-        // Filtrage par période
-        if ($request->periode && $request->date_debut && $request->date_fin) {
-            $dateDebut = $request->date_debut;
-            $dateFin = $request->date_fin;
-            $ventes = $ventes->whereBetween('created_at', [$dateDebut, $dateFin]);
-        }
-
-        // Recherche textuelle
-        if ($request->q) {
-            $q = $request->q;
-            $ventes = $ventes->where(function($query) use ($q) {
-                $query->where('code_recu', 'like', "%$q%")
-                      ->orWhereHas('client', function($sub) use ($q) {
-                          $sub->where('nom', 'like', "%$q%")
-                               ->orWhere('prenom', 'like', "%$q%")
-                               ->orWhere('email', 'like', "%$q%") ;
-                      })
-                      ->orWhereHas('user', function($sub) use ($q) {
-                          $sub->where('nom', 'like', "%$q%")
-                               ->orWhere('prenom', 'like', "%$q%")
-                               ->orWhere('email', 'like', "%$q%") ;
-                      });
-            });
-        }
-
-        return view('admin.ventes.index', compact('ventes'));
+  public function index(Request $request)
+{
+    if (Auth::user()->hasRole('vendeur')) {
+        $ventes = Vente::where('user_id', Auth::user()->id);
+    } else {
+        $ventes = Vente::with(['client', 'user'])->orderByDesc('created_at');
     }
+
+    // Filtrage par période
+    if ($request->periode && $request->date_debut && $request->date_fin) {
+        $dateDebut = $request->date_debut;
+        $dateFin = $request->date_fin;
+        $ventes = $ventes->whereBetween('created_at', [$dateDebut, $dateFin]);
+    }
+
+    // Recherche textuelle
+    if ($request->q) {
+        $q = $request->q;
+        $ventes = $ventes->where(function($query) use ($q) {
+            $query->where('code_recu', 'like', "%$q%")
+                  ->orWhereHas('client', function($sub) use ($q) {
+                      $sub->where('nom', 'like', "%$q%")
+                           ->orWhere('prenom', 'like', "%$q%")
+                           ->orWhere('email', 'like', "%$q%");
+                  })
+                  ->orWhereHas('user', function($sub) use ($q) {
+                      $sub->where('nom', 'like', "%$q%")
+                           ->orWhere('prenom', 'like', "%$q%")
+                           ->orWhere('email', 'like', "%$q%");
+                  });
+        });
+    }
+
+    // ⚡ On termine par la pagination
+    $ventes = $ventes->paginate(10);
+
+    return view('admin.ventes.index', compact('ventes'));
+}
+
+
+
 
     public function create()
     {
@@ -64,6 +68,7 @@ class VenteController extends Controller
         $produits = Produit::all();
         return view('admin.ventes.create', compact('clients', 'utilisateurs', 'produits'));
     }
+
 public function store(Request $request)
 {
 
@@ -148,7 +153,9 @@ public function store(Request $request)
         Storage::put('public/recus/' . $filename, $pdf->output());
         $vente->update(['pdf_recu' => 'recus/' . $filename]);
         DB::commit();
-        return redirect()->route('ventes.index')->with('success', 'Vente enregistrée avec succès.');
+       return redirect()->route('ventes.index')
+                 ->with('success', 'Vente enregistrée avec succès.')
+                 ->with('recu_url', asset('storage/public/recus/' . $filename));
 
     } catch (\Exception $e) {
         DB::rollBack();
@@ -223,7 +230,6 @@ public function store(Request $request)
                 'date_mouvement' => now(),
             ]);
         }
-
         DB::commit();
 
         return redirect()->route('ventes.index')->with('success', 'Vente annulée et stock restauré.');
@@ -232,10 +238,166 @@ public function store(Request $request)
         return back()->with('error', 'Erreur lors de l’annulation : ' . $e->getMessage());
     }
 }
+public function imprimerTicket($id)
+{
+    $vente = Vente::with(['client', 'details.produit', 'user'])->findOrFail($id);
+    return view('admin.ventes.recu_ticket', compact('vente'));
+}
 
 
 
+    public function ventesFiltrees(Request $request)
+    {
+        // Filtrage par période
+        $dateDebut = $request->date_debut ? Carbon::parse($request->date_debut)->startOfDay() : Carbon::now()->subMonth()->startOfDay();
+        $dateFin = $request->date_fin ? Carbon::parse($request->date_fin)->endOfDay() : Carbon::now()->endOfDay();
 
+        // Calcul de la différence en jours
+        $diffDays = $dateDebut->diffInDays($dateFin);
+        $driver = DB::getDriverName();
+
+        if ($driver === 'sqlite') {
+            // SQLite n'a pas DATE_FORMAT, on utilise strftime
+            if ($diffDays <= 31) {
+                $dateExpression = "strftime('%Y-%m-%d', created_at)"; // par jour
+            } elseif ($diffDays <= 365) {
+                $dateExpression = "strftime('%Y-%m', created_at)";    // par mois
+            } else {
+                $dateExpression = "strftime('%Y', created_at)";       // par année
+            }
+        } else {
+            // MySQL / MariaDB
+            if ($diffDays <= 31) {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y-%m-%d')";
+            } elseif ($diffDays <= 365) {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y-%m')";
+            } else {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y')";
+            }
+        }
+
+        $ventes = DB::table('ventes')
+            ->select(
+                DB::raw("$dateExpression as periode"),
+                DB::raw("SUM(montant_total) as total")
+            )
+            ->whereBetween('created_at', [$dateDebut, $dateFin]);
+
+        // Recherche textuelle (avec jointures)
+        if ($request->q) {
+            $q = $request->q;
+            $ventes->join('clients', 'ventes.client_id', '=', 'clients.id')
+                ->join('users', 'ventes.user_id', '=', 'users.id')
+                ->where(function($query) use ($q) {
+                    $query->where('code_recu', 'like', "%$q%")
+                        ->orWhere('clients.nom', 'like', "%$q%")
+                        ->orWhere('clients.prenom', 'like', "%$q%")
+                        ->orWhere('clients.email', 'like', "%$q%")
+                        ->orWhere('users.nom', 'like', "%$q%")
+                        ->orWhere('users.prenom', 'like', "%$q%")
+                        ->orWhere('users.email', 'like', "%$q%");
+                });
+        }
+
+        $ventes = $ventes
+            ->groupBy(DB::raw("$dateExpression"))
+            ->orderBy('periode', 'asc')
+            ->get();
+
+        // Convertir les données pour le graphique
+        $labels = $ventes->pluck('periode')->toArray();
+        $data = $ventes->pluck('total')->toArray();
+
+        // Déboguer les données
+        \Illuminate\Support\Facades\Log::info('Données filtrées:', ['labels' => $labels, 'data' => $data]);
+
+        return response()->json([
+            'labels' => $labels,
+            'data'   => $data
+        ]);
+    }
+
+    public function exportPDF(Request $request)
+    {
+        // Filtrage par période
+        $dateDebut = $request->date_debut ? Carbon::parse($request->date_debut)->startOfDay() : Carbon::now()->subMonth()->startOfDay();
+        $dateFin = $request->date_fin ? Carbon::parse($request->date_fin)->endOfDay() : Carbon::now()->endOfDay();
+
+        // Calcul de la différence en jours
+        $diffDays = $dateDebut->diffInDays($dateFin);
+        $driver = DB::getDriverName();
+
+        if ($driver === 'sqlite') {
+            // SQLite n'a pas DATE_FORMAT, on utilise strftime
+            if ($diffDays <= 31) {
+                $dateExpression = "strftime('%Y-%m-%d', created_at)"; // par jour
+            } elseif ($diffDays <= 365) {
+                $dateExpression = "strftime('%Y-%m', created_at)";    // par mois
+            } else {
+                $dateExpression = "strftime('%Y', created_at)";       // par année
+            }
+        } else {
+            // MySQL / MariaDB
+            if ($diffDays <= 31) {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y-%m-%d')";
+            } elseif ($diffDays <= 365) {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y-%m')";
+            } else {
+                $dateExpression = "DATE_FORMAT(created_at, '%Y')";
+            }
+        }
+
+        $ventes = DB::table('ventes')
+            ->select(
+                DB::raw("$dateExpression as periode"),
+                DB::raw("SUM(montant_total) as total")
+            )
+            ->whereBetween('created_at', [$dateDebut, $dateFin]);
+
+        // Recherche textuelle (avec jointures)
+        if ($request->q) {
+            $q = $request->q;
+            $ventes->join('clients', 'ventes.client_id', '=', 'clients.id')
+                ->join('users', 'ventes.user_id', '=', 'users.id')
+                ->where(function($query) use ($q) {
+                    $query->where('code_recu', 'like', "%$q%")
+                        ->orWhere('clients.nom', 'like', "%$q%")
+                        ->orWhere('clients.prenom', 'like', "%$q%")
+                        ->orWhere('clients.email', 'like', "%$q%")
+                        ->orWhere('users.nom', 'like', "%$q%")
+                        ->orWhere('users.prenom', 'like', "%$q%")
+                        ->orWhere('users.email', 'like', "%$q%");
+                });
+        }
+
+        $ventes = $ventes
+            ->groupBy(DB::raw("$dateExpression"))
+            ->orderBy('periode', 'asc')
+            ->get();
+
+        // Convertir les données pour le PDF
+        $labels = $ventes->pluck('periode')->toArray();
+        $data = $ventes->pluck('total')->toArray();
+
+        // Déboguer les données
+        \Illuminate\Support\Facades\Log::info('Données PDF:', ['labels' => $labels, 'data' => $data]);
+
+        $viewData = [
+            'labels' => $labels,
+            'data'   => $data,
+            'dateDebut' => $dateDebut->format('d/m/Y'),
+            'dateFin' => $dateFin->format('d/m/Y'),
+            'recherche' => $request->q
+        ];
+
+        try {
+            $pdf = Pdf::loadView('admin.ventes.graphique_pdf', $viewData);
+            return $pdf->download('graphique_ventes_' . now()->format('Y-m-d') . '.pdf');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Erreur génération PDF: ' . $e->getMessage());
+            return response()->json(['error' => 'Erreur lors de la génération du PDF: ' . $e->getMessage()], 500);
+        }
+    }
 
 }
 
