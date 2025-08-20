@@ -9,7 +9,8 @@ class Produit extends Model
         'nom',
         'prix',
         'seuil_alerte',
-
+        'alerte_envoyee',
+        'last_alerted_at',
     ];
 
  public function details()

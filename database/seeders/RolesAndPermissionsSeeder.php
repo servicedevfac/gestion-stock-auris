@@ -65,10 +65,10 @@ class RolesAndPermissionsSeeder extends Seeder
         }
         // Créer les rôles et leurs permissions
         $admin = Role::firstOrCreate(['name' => 'admin']);
-        $vendeur = Role::firstOrCreate(['name' => 'vendeur']);
+        $gestionnaire = Role::firstOrCreate(['name' => 'gestionnaire']);
         $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
         $superAdmin->givePermissionTo($permissions);
-        $vendeur->givePermissionTo([
+        $gestionnaire->givePermissionTo([
            'view client',
             'create client',
             'edit client',

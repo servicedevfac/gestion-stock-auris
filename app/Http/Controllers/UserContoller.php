@@ -11,14 +11,28 @@ use Spatie\Permission\Models\Role;
 class UserContoller extends Controller
 {    public function index()
     {
-        $users = User::orderByDesc('created_at')->paginate(15);
-        $roles=Role::all();
+
+        if(auth()->user()->hasRole('super admin')){
+            $roles = Role::all();
+            $users = User::orderByDesc('created_at')->paginate(10);
+        }else{
+            $roles = Role::where('name', '!=', 'super admin')->get();
+            $users = User::withoutRole('super admin')
+                        ->orderByDesc('created_at')
+                        ->paginate(10);
+        }
+
         return view('admin.users.index', compact('users','roles'));
     }
 
     public function create()
     {
-        $roles = Role::all();
+        if(auth()->user()->hasRole('super admin')){
+            $roles=Role::all();
+        }else{
+            $roles=Role::where('name','!=','super admin')->get();//
+        }
+
         return view('admin.users.create', compact('roles'));
     }
 
@@ -48,7 +62,12 @@ class UserContoller extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
+        if(auth()->user()->hasRole('super admin')){
+            $roles=Role::all();
+        }else{
+            $roles=Role::where('name','!=','super admin')->get();//
+        }
+
         return view('admin.users.edite', compact('user', 'roles'));
     }
 
@@ -102,5 +121,13 @@ public function show(User $user)
 
     return back()->with('success', 'Utilisateur supprimé avec succès.');
 }
+public function toggle(User $user)
+{
+    $user->actif = !$user->actif;
+    $user->save();
+    return back()->with('success', $user->actif ? 'Utilisateur activé' : 'Utilisateur bloqué');
+}
+
+
 
 }

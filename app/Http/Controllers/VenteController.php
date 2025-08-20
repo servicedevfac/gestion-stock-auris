@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Detail_vente;
-use App\Models\Horaire;
 use App\Models\MouvementStock;
 use App\Models\Produit;
 use App\Models\User;
 use App\Models\Vente;
+use App\Notifications\StockAlerte;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+
 
 class VenteController extends Controller
 {
@@ -69,18 +70,132 @@ class VenteController extends Controller
         return view('admin.ventes.create', compact('clients', 'utilisateurs', 'produits'));
     }
 
+// public function store(Request $request)
+// {
+
+//     $request->validate([
+//         'client_id' => 'required|exists:clients,id',
+//         'montant_total' => 'required|numeric|min:0',
+//         'remise' => 'nullable|numeric|min:0',
+//         'date_vente' => 'required|date',
+//         'mode_paiement' => 'required|string|max:50',
+//     ]);
+
+//             $date = now();
+//             $annee = $date->format('Y');
+//             $mois = $date->format('m');
+//             $jour= $date->format('d');
+//             // Vérifier le dernier code reçu pour générer le nouveau code
+//                         $dernierVente = Vente::whereYear('created_at', $annee)
+//                 ->whereMonth('created_at', $mois)
+//                 ->orderByDesc('id')
+//                 ->first();
+//             $numero = 1;
+//             if ($dernierVente && preg_match('/RECU_\\d{6}_(\\d{4})/', $dernierVente->code_recu, $matches)) {
+//                 $numero = intval($matches[1]) + 1;
+//             }
+//             $code_recu = 'RECU_' . $annee . $mois . '_' . str_pad($numero, 4, '0', STR_PAD_LEFT);
+
+//             // Vérifier l'unicité du code_recu
+//             while (Vente::where('code_recu', $code_recu)->exists()) {
+//                 $numero++;
+//                 $code_recu = 'RECU_' . $annee . $mois . '_' . str_pad($numero, 4, '0', STR_PAD_LEFT);
+//             }
+//             DB::beginTransaction();
+
+//             try {
+//                 // Créer la vente principale
+//                 $vente = Vente::create([
+//             'client_id' => $request->client_id,
+//             'user_id' => Auth::user()->id,
+//             'date_vente' => $request->date_vente,
+//             'montant_total' => $request->montant_total,
+//             'remise' => $request->remise,
+//             'mode_paiement' => $request->mode_paiement,
+//             'code_recu' => isset($code_recu) ? $code_recu : '',
+//         ]);
+
+
+//         // Vérification du stock pour chaque produit
+//         foreach ($request->produits as $produit) {
+//             $produitModel = Produit::find($produit['produit_id']);
+//             $stockActuel = $produitModel->mouvements()->where('type_mouvement', 'entree')->sum('quantite')
+//                 - $produitModel->mouvements()->where('type_mouvement', 'sortie')->sum('quantite');
+//             if ($produit['quantite'] > $stockActuel) {
+//                 notify()->error('Stock insuffisant pour le produit : ' . $produitModel->nom);
+//                 return redirect()->back()->withInput();
+
+//             }
+//         }
+
+//         // Générer le PDF après la création des détails
+//         foreach ($request->produits as $produit) {
+//             $total = $produit['quantite'] * $produit['prix'];
+//             Detail_Vente::create([
+//                 'vente_id' => $vente->id,
+//                 'produit_id' => $produit['produit_id'],
+//                 'quantite' => $produit['quantite'],
+//                 'prix' => $produit['prix'],
+//                 'total' => $total,
+//             ]);
+//             $stock=MouvementStock::create([
+//                 'produit_id' => $produit['produit_id'],
+//                 'user_id' => Auth::user()->id,
+//                 'quantite' => $produit['quantite'],
+//                 'motif' => 'Vente',
+//                 'type_mouvement' => 'sortie',
+//                 'date_mouvement' => $request->date_vente,
+//             ]);
+
+//         }
+
+//         $vente->load(['client', 'user', 'details.produit']);
+//         $pdf = Pdf::loadView('admin.ventes.recu_pdf', ['vente' => $vente]);
+//         $filename = 'recu_vente_'.$vente->client->nom.'_'.$vente->code_recu.'.pdf';
+//         Storage::put('public/recus/' . $filename, $pdf->output());
+//         $vente->update(['pdf_recu' => 'recus/' . $filename]);
+//         if ($produit->quantite <= $produit->seuil_alerte) {
+//             // Notifier l’admin (ou plusieurs utilisateurs)
+//             $admins = User::where('role', 'admin')->get();
+//             Notification::send($admins, new StockAlerte($produit));
+//         }
+//         DB::commit();
+//        return redirect()->route('ventes.index')
+//                  ->with('success', 'Vente enregistrée avec succès.')
+//                  ->with('recu_url', asset('storage/public/recus/' . $filename));
+
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+
+//         return back()->with('error', 'Erreur : ' . $e->getMessage());
+//     }
+//     }
+
+
+
+// ... dans la classe VenteController
+private function stockActuel(Produit $produit): int
+{
+    $entrees = $produit->mouvements()->where('type_mouvement', 'entree')->sum('quantite');
+    $sorties = $produit->mouvements()->where('type_mouvement', 'sortie')->sum('quantite');
+    return (int) ($entrees - $sorties);
+}
+
 public function store(Request $request)
 {
-
     $request->validate([
         'client_id' => 'required|exists:clients,id',
         'montant_total' => 'required|numeric|min:0',
         'remise' => 'nullable|numeric|min:0',
         'date_vente' => 'required|date',
         'mode_paiement' => 'required|string|max:50',
+        'produits' => 'required|array|min:1',
+        'produits.*.produit_id' => 'required|exists:produits,id',
+        'produits.*.quantite' => 'required|integer|min:1',
+        'produits.*.prix' => 'required|numeric|min:0',
     ]);
 
-            $date = now();
+      $date = now();
             $annee = $date->format('Y');
             $mois = $date->format('m');
             $jour= $date->format('d');
@@ -100,70 +215,109 @@ public function store(Request $request)
                 $numero++;
                 $code_recu = 'RECU_' . $annee . $mois . '_' . str_pad($numero, 4, '0', STR_PAD_LEFT);
             }
-            DB::beginTransaction();
 
-            try {
-                // Créer la vente principale
-                $vente = Vente::create([
-            'client_id' => $request->client_id,
-            'user_id' => Auth::user()->id,
-            'date_vente' => $request->date_vente,
+    // ... génération $code_recu identique ...
+
+    DB::beginTransaction();
+    try {
+        $vente = Vente::create([
+            'client_id'     => $request->client_id,
+            'user_id'       => Auth::id(),
+            'date_vente'    => $request->date_vente,
             'montant_total' => $request->montant_total,
-            'remise' => $request->remise,
+            'remise'        => $request->remise,
             'mode_paiement' => $request->mode_paiement,
-            'code_recu' => isset($code_recu) ? $code_recu : '',
+            'code_recu'     => $code_recu,
         ]);
 
-
-        // Vérification du stock pour chaque produit
-        foreach ($request->produits as $produit) {
-            $produitModel = Produit::find($produit['produit_id']);
-            $stockActuel = $produitModel->mouvements()->where('type_mouvement', 'entree')->sum('quantite')
-                - $produitModel->mouvements()->where('type_mouvement', 'sortie')->sum('quantite');
-            if ($produit['quantite'] > $stockActuel) {
-            return redirect()->back()->with('error', 'Stock insuffisant pour le produit : ' . $produitModel->nom)->withInput();
-
+        // 1) Vérif stock AVANT (tu avais déjà, je garde et fiabilise un peu)
+        foreach ($request->produits as $p) {
+            $prod = Produit::findOrFail($p['produit_id']);
+            $stockActuel = $this->stockActuel($prod);
+            if ((int)$p['quantite'] > $stockActuel) {
+                // message toast + retour formulaire
+                notify()->error('Stock insuffisant pour le produit : ' . $prod->nom);
+                DB::rollBack();
+                return back()->withInput();
             }
         }
 
-        // Générer le PDF après la création des détails
-        foreach ($request->produits as $produit) {
-            $total = $produit['quantite'] * $produit['prix'];
+        // 2) Création lignes + mouvements + collecte des produits à alerter
+        $itemsAlerte = [];   // pour le mail groupé
+        $produitsAFlag = []; // pour mettre alerte_envoyee = true
+
+        foreach ($request->produits as $p) {
+            $total = (int)$p['quantite'] * (float)$p['prix'];
+
             Detail_Vente::create([
-                'vente_id' => $vente->id,
-                'produit_id' => $produit['produit_id'],
-                'quantite' => $produit['quantite'],
-                'prix' => $produit['prix'],
-                'total' => $total,
-            ]);
-            $stock=MouvementStock::create([
-                'produit_id' => $produit['produit_id'],
-                'user_id' => Auth::user()->id,
-                'quantite' => $produit['quantite'],
-                'motif' => 'Vente',
-                'type_mouvement' => 'sortie',
-                'date_mouvement' => $request->date_vente,
+                'vente_id'   => $vente->id,
+                'produit_id' => $p['produit_id'],
+                'quantite'   => $p['quantite'],
+                'prix'       => $p['prix'],
+                'total'      => $total,
             ]);
 
+            MouvementStock::create([
+                'produit_id'    => $p['produit_id'],
+                'user_id'       => Auth::id(),
+                'quantite'      => $p['quantite'],
+                'motif'         => 'Vente',
+                'type_mouvement'=> 'sortie',
+                'date_mouvement'=> $request->date_vente,
+            ]);
+
+            // Recalculer le stock APRES sortie
+            $prod = Produit::findOrFail($p['produit_id']);
+            $stockActuel = $this->stockActuel($prod);
+
+            // Si seuil franchi et pas déjà alerté → on programme l’alerte
+            if (isset($prod->seuil_alerte) && $stockActuel <= (int)$prod->seuil_alerte && !$prod->alerte_envoyee) {
+                $itemsAlerte[] = [
+                    'nom'   => $prod->nom,
+                    'stock' => $stockActuel,
+                    'seuil' => (int)$prod->seuil_alerte,
+                    'url'   => url('/produits/'.$prod->id),
+                ];
+                $produitsAFlag[] = $prod->id;
+            }
         }
 
+        // 3) PDF
         $vente->load(['client', 'user', 'details.produit']);
         $pdf = Pdf::loadView('admin.ventes.recu_pdf', ['vente' => $vente]);
         $filename = 'recu_vente_'.$vente->client->nom.'_'.$vente->code_recu.'.pdf';
         Storage::put('public/recus/' . $filename, $pdf->output());
         $vente->update(['pdf_recu' => 'recus/' . $filename]);
+
+        // 4) Envoi mail groupé aux admins si nécessaire
+        if (!empty($itemsAlerte)) {
+            // Spatie roles (tu l’utilises déjà avec hasRole)
+            $admins = User::role('admin')->get(); // ou ->where('is_admin', true)->get();
+            Notification::sendNow($admins, new StockAlerte($itemsAlerte));
+
+            // Marquer les produits comme alertés (anti-spam)
+            Produit::whereIn('id', $produitsAFlag)->update([
+                'alerte_envoyee' => true,
+                'last_alerted_at'=> now(),
+            ]);
+        }
+
         DB::commit();
-       return redirect()->route('ventes.index')
-                 ->with('success', 'Vente enregistrée avec succès.')
-                 ->with('recu_url', asset('storage/public/recus/' . $filename));
+
+        return redirect()
+            ->route('ventes.index')
+            ->with('success', 'Vente enregistrée avec succès.')
+            // chemin public/storage → ne pas doubler "public"
+            ->with('recu_url', asset('storage/recus/' . $filename));
 
     } catch (\Exception $e) {
         DB::rollBack();
         return back()->with('error', 'Erreur : ' . $e->getMessage());
     }
-    }
+}
 
-    public function show(Vente $vente)
+
+public function show(Vente $vente)
     {
         $vente->load(['client', 'user', 'details.produit']);
         return view('admin.ventes.detail_vente', compact('vente'));

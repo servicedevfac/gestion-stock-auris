@@ -37,6 +37,7 @@
         <div class="mb-3">
             <label>Type de mouvement</label>
             <select name="type_mouvement" class="form-control" required>
+                <option value="">-- Choisir un type de mouvement --</option>
                 <option value="entree">Entrée</option>
                 <option value="sortie">Sortie</option>
             </select>
@@ -49,7 +50,12 @@
 
         <div class="mb-3">
             <label>Motif</label>
-            <input type="text" name="motif" class="form-control" required>
+            <select name="motif" class="form-control" required>
+                <option value="">-- Choisir un motif --</option>
+                <option value="reapprovisionnement">Reapprovisionnement</option>
+                <option value="defaut">Défaillance</option>
+                <option value="autre">Autre</option>
+            </select>
         </div>
 
         <div class="mb-3">

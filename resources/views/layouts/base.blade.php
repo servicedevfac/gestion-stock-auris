@@ -12,8 +12,9 @@
     {{-- bootstrap5 --}}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+@notifyCss
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ url('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url('assets/images/logo-sm.png') }}">
 
     <!-- Vendor CSS -->
     <link href="{{ url('assets/libs/morris.js/morris.css') }}" rel="stylesheet" type="text/css" />
@@ -83,7 +84,7 @@
                     @if (session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
-
+                     <x-notify::notify />
                     @yield('content')
                 </div>
             </div>
@@ -107,6 +108,7 @@
         </footer>
     </div>
 
+    @notifyJs
 
     <!-- JS Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -116,7 +118,6 @@
     <script src="{{ url('assets/js/vendor.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url('assets/js/app.min.js') }}"></script>
-
     <script>
         $(document).ready(function () {
             $('.btn-delete').on('click', function () {
@@ -126,6 +127,8 @@
                     text: "Cette action est irréversible !",
                     icon: 'warning',
                     showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Oui, supprimer !',
                     cancelButtonText: 'Annuler'
                 }).then((result) => {

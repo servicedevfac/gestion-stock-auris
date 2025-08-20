@@ -14,13 +14,10 @@
             <p>Aucun produit en stock faible ✅</p>
         @endif
     </div>
-
-
     <div class="row mt-3">
         <div class="col-lg-6">
             <h4 class="page-title mb-0">Dashboard Administrateur</h4>
         </div>
-
     </div>
     <div class="row mt-3">
         <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
@@ -89,7 +86,7 @@
                                 Chiffre de la journée
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($nombreVentes, 0, ',', ' ') }} Fr
+                                {{ number_format($nombreVentes, 0, ',', ' ') }} Ventes
                             </div>
                         </div>
                         <div class="col-auto">
@@ -100,8 +97,6 @@
             </div>
         </div>
         <!-- end col-->
-
-
     </div>
     <!-- end row-->
 
@@ -123,12 +118,12 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade">
-                    <h4 class="card-title">Derniers clients ayant acheté</h4>
+                    <h4 class="card-title">Derniers 10 clients ayant acheté</h4>
                 </div>
                 <div class="card-ody">
                     <div class="table-responsive">
                         <table class="table table-centered table-striped table-nowrap mb-0">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>Nom</th>
                                     <th>Téléphone</th>
@@ -165,26 +160,24 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade">
-                    <h4 class="card-title">les 5 dernieres ventes</h4>
+                    <h4 class="card-title">les 10 dernieres ventes</h4>
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-centered table-nowrap mb-0">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
-                                    <th>Code de Recu</th>
+                                    <th>Client</th>
                                     <th>Date de vente </th>
-                                    <th>Remise</th>
                                     <th>Montant Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($derniersVentes as $vente)
                                     <tr>
-                                        <td>{{ $vente->code_recu }}</td>
+                                        <td>{{ $vente->client->nom }}</td>
                                         <td>{{ $vente->created_at }}</td>
-                                        <td>{{ $vente->remise}}</td>
                                         <td>{{ $vente->montant_total }}</td>
                                 @endforeach
                                 </tr>
@@ -206,11 +199,13 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-centered table-nowrap mb-0">
-                            <thead>
+                            <thead class="table-dark">
                                 <tr>
                                     <th>N</th>
                                     <th>Nom produit</th>
                                     <th>Stock actuel</th>
+                                    <th>Stock minimal</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -219,6 +214,10 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $produit->nom }}</td>
                                         <td>{{ $produit->stock_actuel }}</td>
+                                        <td>{{ $produit->seuil_alerte }}</td>
+                                        <td>
+                                            <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header1 btn-sm">Reaprovisionner</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -342,6 +341,6 @@
             // crée le chart
             const caLineChart = new Chart(ctx, config);
         </script>
-       
+
 
     @endsection

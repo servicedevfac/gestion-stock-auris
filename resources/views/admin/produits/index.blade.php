@@ -46,24 +46,28 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($produit->date)->format('d/m/Y') }}</td>
                             <td>
-
+                                    @can('view produit')
                                     <a href="{{ route('produits.show', $produit->id) }}" class="btn btn-sm btn-header1">
                                         <i class="fas fa-eye"></i>
                                     </a>
-
+                                    @endcan
+                                    @can('edit produit')
 
                                     <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-success">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    @endcan
 
-
-                                <form id="delete-form-{{ $produit->id }}" action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
+                                    @can('delete produit')
+                                 <form id="delete-form-{{ $produit->id }}" action="{{ route('produits.destroy', $produit) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-sm btn-danger btn-delete" data-form-id="delete-form-{{ $produit->id }}">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                @endcan
+
 
 
                             </td>

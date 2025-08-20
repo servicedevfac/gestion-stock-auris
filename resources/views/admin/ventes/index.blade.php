@@ -81,22 +81,24 @@
                     @else
                         <span class="text-muted">Pas de reçu</span>
                     @endif
-                    <a href="{{ route('ventes.ticket', $vente->id) }}" target="_blank" class="btn btn-sm btn-header1 btn-lg">
-   🖨️
-</a>
+                    <a href="{{ route('ventes.ticket', $vente->id) }}" target="_blank" class="btn  btn-header1 btn-lg"><i class="fas fa-print"></i></a>
                 </td>
                 <td style="display:flex;flex-direction:row;justify-content:center; gap: 5px; ">
                     @can('view vente')
                         <a href="{{ route('ventes.show', $vente->id) }}" class="btn btn-header1 text-white-bold btn-lg rounded-3"><i class="fas fa-eye"></i></a>
                     @endcan
-                    @if (Auth::user()->can('edit vente'))
-
-                    <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST">
-                    @csrf
-                    <button type="button" class="btn btn-delete btn-lg" onclick="confirmerAnnulation({{ $vente->id }})"><i class="fas fa-cancel"></i></button>
+                        @can('edit vente')
+                    <form id="form-annuler-{{ $vente->id }}" action="{{ route('ventes.annuler', $vente->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="button"
+                            class="btn btn-delete btn-lg btn-toggle"
+                            data-form-id="form-annuler-{{ $vente->id }}"
+                            title="Annuler">
+                            <i class="fas fa-ban"></i>
+                        </button>
                     </form>
+        @endcan
 
-                    @endif
                 </td>
             </tr>
             @endforeach
@@ -411,44 +413,29 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('typeGraph').addEventListener('change', loadData);
 });
 </script>
-
-
-
-{{-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Récupérer les filtres depuis des inputs (optionnel)
-    let dateDebut = document.querySelector('#date_debut').value;
-    let dateFin = document.querySelector('#date_fin').value;
-    let recherche = document.querySelector('#q').value;
-
-    fetch(`/ventes-filtrees?date_debut=${dateDebut}&date_fin=${dateFin}&q=${recherche}`)
-        .then(response => response.json())
-        .then(data => {
-            const ctx = document.getElementById('ventesChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line', // ou 'bar', 'pie', etc.
-                data: {
-                    labels: data.labels, // les périodes
-                    datasets: [{
-                        label: 'Montant des ventes',
-                        data: data.data,   // les totaux
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        })
-        .catch(error => console.error('Erreur:', error));
+<script>
+// Confirmation SweetAlert pour les boutons "Annuler"
+document.querySelectorAll('.btn-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const formId = this.dataset.formId;
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Cette action est irréversible !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, annuler !',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(formId).submit();
+            }
+        });
+    });
 });
-</script> --}}
+</script>
+
+
+
 @endsection

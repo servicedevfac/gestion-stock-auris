@@ -69,7 +69,20 @@ class UtilisateurController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->ventes()->count() > 0) {
+            return back()->with('error', 'Impossible de supprimer cet utilisateur. Il a déjà effectué des ventes.');
+        }
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Utilisateur supprimé.');
+    }
+    public function block(User $user)
+    {
+        $user->update(['is_blocked' => true]);
+        return redirect()->route('users.index')->with('success', 'Utilisateur bloqué.');
+    }
+    public function unblock(User $user)
+    {
+        $user->update(['is_blocked' => false]);
+        return redirect()->route('users.index')->with('success', 'Utilisateur débloqué.');
     }
 }

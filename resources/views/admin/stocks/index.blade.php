@@ -51,7 +51,7 @@
                                     <form action="{{ route('mouvementStocks.destroy', $mouvement->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                        <button type="submit" class="btn btn-sm btn-delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

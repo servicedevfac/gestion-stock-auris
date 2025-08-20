@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/horaires/edit', [HoraireController::class, 'edit'])->name('admin.horaires.edit');
     Route::post('/horaires', [HoraireController::class, 'update'])->name('admin.horaires.update');
     Route::resource('users', UserContoller::class);
+    Route::post('/users/{user}/toggle', [UserContoller::class, 'toggle'])->name('users.toggle');
 });
 // Groupe pour les super administrateurs
 Route::middleware(['web', 'verified', 'auth', 'is.super.admin'])->group(function () {
