@@ -12,16 +12,16 @@
     {{-- bootstrap5 --}}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@notifyCss
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ url('assets/images/logo-sm.png') }}">
+<!-- Favicon -->
+<link rel="shortcut icon" href="{{ url('assets/images/logo-sm.png') }}">
 
-    <!-- Vendor CSS -->
-    <link href="{{ url('assets/libs/morris.js/morris.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" />
-    <link href="{{ url('assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet" />
+<!-- Vendor CSS -->
+<link href="{{ url('assets/libs/morris.js/morris.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ url('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ url('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ url('assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ url('assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet" />
+@notifyCss
 
     <!-- App CSS -->
     <link href="{{ url('assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
@@ -65,8 +65,7 @@
             100% { transform: translateX(-100%); }
         }
     </style>
-
-    <!-- App Config -->
+ <!-- App Config -->
     <script src="{{ url('assets/js/config.js') }}"></script>
 </head>
 <body>
@@ -84,7 +83,7 @@
                     @if (session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
-                     <x-notify::notify />
+                    
                     @yield('content')
                 </div>
             </div>

@@ -26,6 +26,7 @@
                             <th>Motif</th>
                             <th>Date du mouvement</th>
                             <th>Action</th>
+
                         </tr>
                     </thead>
 
@@ -57,7 +58,7 @@
                                     </form>
                                 @endcan
                             </td>
-                                    @endif
+                                @endif
                         </tr>
                         @endforeach
                     </tbody>

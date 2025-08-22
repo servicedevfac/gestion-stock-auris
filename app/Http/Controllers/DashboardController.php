@@ -48,7 +48,7 @@ class DashboardController extends Controller
                     ->sum('montant_total');
 
                 // Calculer le chiffre d'affaires total
-                $chiffreAffaires = Vente::where('statut', 'valide')->sum('montant_total');
+                $chiffreAffaires = Vente::where('statut', 'valide')->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
 
                 // Compter le nombre total de ventes
                 $nombreVentes = Vente::where('statut', 'valide')->count();
@@ -115,7 +115,7 @@ class DashboardController extends Controller
         }
 
 
-        if ($user->hasRole('vendeur')) {
+        if ($user->hasRole('gestionnaire')) {
             // Récupérer les 10 dernières ventes du vendeur
             $ventes = Vente::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')

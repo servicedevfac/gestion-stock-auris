@@ -9,8 +9,10 @@
 
 @section('content')
 
-
 <div class="row mt-5">
+    <div style="z-index: 2000;">
+        <x-notify::notify/>
+    </div>
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
@@ -208,7 +210,7 @@
     // Init Select2 client
     $('#client-select').select2({
         placeholder: 'Rechercher un client...',
-        minimumInputLength: 2,
+       // minimumInputLength: 1,
         ajax: {
             url: '{{ route("clients.search") }}',
             dataType: 'json',
@@ -217,7 +219,7 @@
             processResults: data => ({
                 results: data.map(client => ({
                     id: client.id,
-                    text: client.nom
+                    text: client.nom + ' '+client.prenom+' Telephone:'+client.telephone
                 }))
             }),
             cache: true

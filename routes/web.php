@@ -14,7 +14,7 @@ use App\Http\Controllers\VenteController;
 use Illuminate\Support\Facades\Route;
 
 // Page de connexion par défaut
-Route::get('/', fn () => view('auth.login'));
+Route::get('/', fn () => view('auth.login'))->middleware('guest');
 // Groupe pour utilisateurs authentifiés
 Route::middleware('auth')->group(function () {
     Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');

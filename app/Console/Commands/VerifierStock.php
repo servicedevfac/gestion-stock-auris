@@ -21,26 +21,55 @@ class VerifierStock extends Command
         // Récupérer tous les admins ou utilisateurs à notifier
         $admins = User::role('admin')->get(); // ou User::where('role', 'admin')->get();
 
-        // Récupérer tous les produits dont l'alerte n'a pas été envoyée
-      $produits = Produit::all(); // récupérer tous les produits
+        // Récupérer tous les produits
+        $produits = Produit::all();
 
-            foreach ($produits as $produit) {
-                if ($produit->stock_actuel <= $produit->seuil_alerte && $produit->alerte_envoyee == false) {
-                    Notification::sendNow($admins, new StockAlerte($produit));
+        // Collecter tous les produits avec un stock inférieur au seuil d'alerte
+        $produitsEnAlerte = [];
+        $produitsIds = [];
 
-                    $produit->alerte_envoyee = true;
-                    $produit->last_alerted_at = now();
-                    $produit->save();
+        foreach ($produits as $produit) {
+            if ($produit->stock_actuel <= $produit->seuil_alerte) {
+                // Créer un tableau avec les données du produit
+                $produitData = $produit->toArray();
+                // Ajouter explicitement les clés nécessaires pour la notification
+                $produitData['stock'] = $produit->stock_actuel;
+                $produitData['seuil'] = $produit->seuil_alerte;
+                $produitData['url'] = url('/produits/' . $produit->id);
+                $produitsEnAlerte[] = $produitData;
+                $produitsIds[] = $produit->id;
 
-                    echo "Alerte envoyée pour : {$produit->nom}\n";
-                } else {
-                    // Si le stock est suffisant, on peut réinitialiser l'alerte
-                    $produit->alerte_envoyee = false;
-                    $produit->last_alerted_at = null;
-                    $produit->save();
-                    echo "Stock OK pour : {$produit->nom}\n";
-                }
+                echo "Produit en alerte : {$produit->nom}\n";
+            } else {
+                echo "Stock OK pour : {$produit->nom}\n";
             }
+        }
+
+        // Envoyer une seule notification si des produits sont en alerte
+        if (count($produitsEnAlerte) > 0) {
+            try {
+                Notification::sendNow($admins, new StockAlerte($produitsEnAlerte));
+
+                // Mettre à jour le statut d'alerte pour tous les produits concernés
+                Produit::whereIn('id', $produitsIds)->update([
+                    'alerte_envoyee' => true,
+                    'last_alerted_at' => now()
+                ]);
+
+                $this->info('Alerte envoyée pour ' . count($produitsEnAlerte) . ' produit(s).');
+            } catch (\Exception $e) {
+                $this->error("Erreur lors de l'envoi de l'alerte: {$e->getMessage()}");
+                $this->info("Les alertes seront enregistrées sans envoi d'email.");
+
+                // Mettre à jour le statut d'alerte même en cas d'erreur
+                Produit::whereIn('id', $produitsIds)->update([
+                    'alerte_envoyee' => true,
+                    'last_alerted_at' => now()
+                ]);
+            }
+        } else {
+            $this->info('Aucun produit n\'a atteint le seuil d\'alerte.');
+        }
 
 
 

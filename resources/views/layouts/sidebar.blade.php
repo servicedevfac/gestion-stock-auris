@@ -3,13 +3,13 @@
             <!-- Brand Logo -->
             <div class="logo-box">
                 <!-- Brand Logo Light -->
-                <a href="index.html" class="logo-light">
+                <a href="{{url(path: 'dashboard')}}" class="logo-light">
                     <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="70">
                     <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="40">
                 </a>
 
                 <!-- Brand Logo Dark -->
-                <a href="index.html" class="logo-dark">
+                <a href="{{url(path: 'dashboard')}}" class="logo-dark">
                     <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="70">
                     <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="40">
                 </a>
@@ -57,21 +57,20 @@
                     </a>
                     <div class="collapse" id="Produit">
                         <ul class="sub-menu">
-
+                            @can('create produit')
                             <li class="menu-item">
                                 <a href="{{ route('produits.create') }}" class="menu-link">
                                     <span class="menu-text">Creer Produit</span>
                                 </a>
                             </li>
-
-
-
+                            @endcan
+                            @can('view produit')
                             <li class="menu-item">
                                 <a href="{{ route('produits.index') }}" class="menu-link">
                                     <span class="menu-text">Liste Produits</span>
                                 </a>
                              </li>
-
+                            @endcan
                         </ul>
                     </div>
                 </li>

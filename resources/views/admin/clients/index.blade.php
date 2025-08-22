@@ -15,9 +15,18 @@
                 @endcan
             </div>
 
+
             <div class="card-body">
-
-
+                <!-- Formulaire de recherche -->
+                <form method="GET" action="" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" placeholder="Rechercher un client..." value="{{ request('search') }}">
+                        <button class="btn btn-header1" type="submit">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+                <!-- Fin formulaire de recherche -->
     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
         <thead class="table-dark">
             <tr class="align-item-center">

@@ -5,15 +5,15 @@
                         <!-- Brand Logo -->
                         <div class="logo-box">
                             <!-- Brand Logo Light -->
-                            <a href="index.html" class="logo-light">
-                                <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="20">
-                                <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="20">
+                            <a href="{{url(path: 'dashboard')}}" class="logo-light">
+                                <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" style="height: 100px;">
+                                <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" style="height: 70px;">
                             </a>
 
                             <!-- Brand Logo Dark -->
-                            <a href="index.html" class="logo-dark">
-                                <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="20">
-                                <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="20">
+                            <a href="{{url(path: 'dashboard')}}" class="logo-dark">
+                                <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" style="height: 100px !important;">
+                                <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" style="height: 70px;">
                             </a>
                         </div>
 
@@ -31,14 +31,14 @@
                         </li>
 
    <li class="nav-item dropdown">
-    <a class="dropdown-toggle btn btn-header1 nav-user waves-effect waves-dark p-3" 
-       href="#" 
+    <a class="dropdown-toggle btn btn-header1 nav-user waves-effect waves-dark p-3"
+       href="#"
        id="userDropdown"
-       role="button" 
-       data-bs-toggle="dropdown" 
+       role="button"
+       data-bs-toggle="dropdown"
        aria-expanded="false">
-        <img src="{{ url('assets/images/users/avatar-1.jpg') }}" 
-             alt="user-image" 
+        <img src="{{ url('assets/images/users/avatar-1.jpg') }}"
+             alt="user-image"
              class="rounded-circle">
         <span class="ms-1 d-none d-md-inline-block">
             {{ Auth::user()->nom }} <i class="mdi mdi-chevron-down"></i>

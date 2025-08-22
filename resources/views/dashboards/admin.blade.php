@@ -20,32 +20,35 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
-            <div class="card stat-card colj h-100 py-2">
+
+        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+            <div class="card stat-card card-heade h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="font-weight-bold text-white text-uppercase mb-1">
-                                Chiffre d'affaires
+
+                            <div class="font-weight-bold  text-uppercase mb-1">
+                                Chiffre d'affaires de la journée
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-white text-gray-800">
-                                {{ number_format($chiffreAffaires, 0, ',', ' ') }} Fr
+                                {{ number_format($ca_journalier, 0, ',', ' ') }} Fr
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill fa-2x text-gray-300 colj"></i>
+                            <i class="fas fa-money-bill fa-2x text-gray-300 text-colj"></i>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
-            <div class="card stat-card  success  h-100 py-2">
+        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+            <div class="card   stat-card  success  h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre du mois en cours
+                                Chiffre d'affaires du mois en cours
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} Fr
@@ -58,32 +61,34 @@
                 </div>
             </div>
         </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
-            <div class="card stat-card card-heade h-100 py-2">
+
+
+        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+            <div class="card  colj stat-card success  h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="font-weight-bold  text-uppercase mb-1">
-                                Chiffre de la journée
+                            <div class="font-weight-bold text-white text-uppercase mb-1">
+                                Chiffre d'affaires annuelles
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-white text-gray-800">
-                                {{ number_format($ca_journalier, 0, ',', ' ') }} Fr
+                                {{ number_format($chiffreAffaires, 0, ',', ' ') }} Fr
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill fa-2x text-gray-300 text-colj"></i>
+                            <i class="fas fa-money-bill fa-2x text-gray-300 colj"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;">
             <div class="card stat-card c h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre de la journée
+                                Nombre de ventes annuelles
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($nombreVentes, 0, ',', ' ') }} Ventes
@@ -98,7 +103,6 @@
         </div>
         <!-- end col-->
     </div>
-    <!-- end row-->
 
     <div class="row mt-3">
         <div class="col-12">
@@ -113,6 +117,7 @@
         </div>
 
     </div> <!-- end row-->
+    <!-- end row-->
 
     <div class="row mt-3">
         <div class="col-xl-6">
@@ -216,7 +221,8 @@
                                         <td>{{ $produit->stock_actuel }}</td>
                                         <td>{{ $produit->seuil_alerte }}</td>
                                         <td>
-                                            <a href="{{ route('mouvementStocks.create') }}" class="btn btn-header1 btn-sm">Reaprovisionner</a>
+                                            <a href="{{ route('mouvementStocks.create') }}"
+                                                class="btn btn-header1 btn-sm">Reaprovisionner</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -303,7 +309,7 @@
                                 label: function (context) {
                                     let value = context.raw;
                                     // format monétaire simple (adapter selon locale)
-                                   return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(value);
+                                    return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(value);
                                 }
                             }
                         }
