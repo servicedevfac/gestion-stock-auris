@@ -18,6 +18,13 @@ class UserContoller extends Controller
 
     public function create()
     {
+        $roles = Role::query();
+
+        // Si l'utilisateur connecté N'EST PAS super admin
+        if (!auth()->user()->hasRole('super admin')) {
+            $roles->where('name', '!=', 'super admin');
+        }
+
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
     }

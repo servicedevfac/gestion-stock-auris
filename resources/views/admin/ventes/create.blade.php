@@ -1,14 +1,5 @@
 @extends('layouts.base')
 
-
-@section('head')
-<!-- Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<style>
-
-</style>
-@endsection
-
 @section('content')
 
 
@@ -23,11 +14,11 @@
             </div>
             <div class="card-body">
                 @if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
                 <p>Enregistrez une nouvelle vente en remplissant le formulaire ci-dessous.</p>
 
                 <form method="POST" action="{{ route('ventes.store') }}" novalidate>
@@ -58,9 +49,9 @@
                                     <select name="produits[0][produit_id]" class="form-control produit-select" required>
                                         <option value="">-- Produit --</option>
                                         @foreach($produits as $produit)
-                                            <option value="{{ $produit->id }}" data-prix="{{ $produit->prix }}">
-                                                {{ $produit->nom }}
-                                            </option>
+                                        <option value="{{ $produit->id }}" data-prix="{{ $produit->prix }}">
+                                            {{ $produit->nom }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -110,15 +101,16 @@
             </div>
         </div>
     </div>
+</div>
 
 @endsection
 
-@section('scripts')
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script>
-    let index = 1;
+    @section('scripts')
+   
+
+    <script>
+        let index = 1;
 
         function recalculerTotals() {
             let total = 0;
@@ -131,99 +123,102 @@
                 total += ligneTotal;
             });
 
-        const remise = parseFloat(document.getElementById('remise')?.value || 0);
-        let montantApayer = total - remise;
-        if(montantApayer < 0) montantApayer = 0;
-        document.getElementById('montant_total').value = montantApayer.toFixed(0);
-    }
+            const remise = parseFloat(document.getElementById('remise') ? .value || 0);
+            let montantApayer = total - remise;
+            if (montantApayer < 0) montantApayer = 0;
+            document.getElementById('montant_total').value = montantApayer.toFixed(0);
+        }
 
         document.getElementById('ajouter-ligne').addEventListener('click', function() {
             const table = document.getElementById('ligne-produits');
             const firstRow = table.querySelector('tr');
             const nouvelleLigne = firstRow.cloneNode(true);
 
-        // Réinitialiser les valeurs de la nouvelle ligne
-        nouvelleLigne.querySelectorAll('input, select').forEach(el => {
-            if (el.name && el.name.includes('produits')) {
-                const base = el.name.split('[')[0];
-                const champ = el.name.substring(el.name.indexOf(']') + 1);
-                el.name = `${base}[${index}]${champ}`;
-            }
-            if (el.classList.contains('prix') || el.classList.contains('total')) {
-                el.value = '';
-            }
-            if (el.classList.contains('quantite')) {
-                el.value = 1;
-            }
-            if (el.tagName === 'SELECT') {
-                el.selectedIndex = 0;
-            }
+            // Réinitialiser les valeurs de la nouvelle ligne
+            nouvelleLigne.querySelectorAll('input, select').forEach(el => {
+                if (el.name && el.name.includes('produits')) {
+                    const base = el.name.split('[')[0];
+                    const champ = el.name.substring(el.name.indexOf(']') + 1);
+                    el.name = `${base}[${index}]${champ}`;
+                }
+                if (el.classList.contains('prix') || el.classList.contains('total')) {
+                    el.value = '';
+                }
+                if (el.classList.contains('quantite')) {
+                    el.value = 1;
+                }
+                if (el.tagName === 'SELECT') {
+                    el.selectedIndex = 0;
+                }
+            });
+
+            // Supprimer la nouvelle ligne (bouton)
+            nouvelleLigne.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
+                const rows = document.querySelectorAll('#ligne-produits tr');
+                if (rows.length > 1) {
+                    e.target.closest('tr').remove();
+                    recalculerTotals();
+                }
+            });
+
+            // Au changement produit, remplir le prix
+            nouvelleLigne.querySelector('.produit-select').addEventListener('change', function(e) {
+                const prix = e.target.selectedOptions[0].getAttribute('data-prix');
+                const row = e.target.closest('tr');
+                row.querySelector('.prix').value = prix;
+                recalculerTotals();
+            });
+
+            // Modifier quantité recalcul
+            nouvelleLigne.querySelector('.quantite').addEventListener('input', recalculerTotals);
+
+            table.appendChild(nouvelleLigne);
+            index++;
+            recalculerTotals();
         });
 
-        // Supprimer la nouvelle ligne (bouton)
-        nouvelleLigne.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
+        // Initialiser la première ligne : supprimer, changement produit, quantité
+        document.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
             const rows = document.querySelectorAll('#ligne-produits tr');
             if (rows.length > 1) {
                 e.target.closest('tr').remove();
                 recalculerTotals();
             }
         });
-
-        // Au changement produit, remplir le prix
-        nouvelleLigne.querySelector('.produit-select').addEventListener('change', function(e) {
+        document.querySelector('.produit-select').addEventListener('change', function(e) {
             const prix = e.target.selectedOptions[0].getAttribute('data-prix');
             const row = e.target.closest('tr');
             row.querySelector('.prix').value = prix;
             recalculerTotals();
         });
+        document.querySelector('.quantite').addEventListener('input', recalculerTotals);
 
-        // Modifier quantité recalcul
-        nouvelleLigne.querySelector('.quantite').addEventListener('input', recalculerTotals);
-
-        table.appendChild(nouvelleLigne);
-        index++;
-        recalculerTotals();
-    });
-
-    // Initialiser la première ligne : supprimer, changement produit, quantité
-    document.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
-        const rows = document.querySelectorAll('#ligne-produits tr');
-        if (rows.length > 1) {
-            e.target.closest('tr').remove();
-            recalculerTotals();
-        }
-    });
-    document.querySelector('.produit-select').addEventListener('change', function(e) {
-        const prix = e.target.selectedOptions[0].getAttribute('data-prix');
-        const row = e.target.closest('tr');
-        row.querySelector('.prix').value = prix;
-        recalculerTotals();
-    });
-    document.querySelector('.quantite').addEventListener('input', recalculerTotals);
-
-    // Remise en temps réel
-    document.getElementById('remise').addEventListener('input', recalculerTotals);
+        // Remise en temps réel
+        document.getElementById('remise').addEventListener('input', recalculerTotals);
 
         // Calcul initial
         recalculerTotals();
 
-    // Init Select2 client
-    $('#client-select').select2({
-        placeholder: 'Rechercher un client...',
-        minimumInputLength: 2,
-        ajax: {
-            url: '{{ route("clients.search") }}',
-            dataType: 'json',
-            delay: 250,
-            data: params => ({ q: params.term }),
-            processResults: data => ({
-                results: data.map(client => ({
-                    id: client.id,
-                    text: client.nom
-                }))
-            }),
-            cache: true
-        }
+        // Init Select2 client
+        $('#client-select').select2({
+            placeholder: 'Rechercher un client...'
+            , minimumInputLength: 2
+            , ajax: {
+                url: '{{ route("clients.search") }}'
+    , dataType: 'json'
+    , delay: 250
+    , data: params => ({
+    q: params.term
+    })
+    , processResults: data => ({
+    results: data.map(client => ({
+    id: client.id
+    , text: client.nom
+    }))
+    })
+    , cache: true
+    }
     });
-</script>
-@endsection
+
+    </script>
+    @endsection

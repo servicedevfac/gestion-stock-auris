@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Detail_vente;
 use App\Models\Produit;
+use App\Models\User;
 use App\Models\Vente;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
