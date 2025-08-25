@@ -80,24 +80,38 @@ class DashboardController extends Controller
             $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
         }
 
-        // Récupère le CA groupé par mois (assume champ `total` et `created_at`)
-        $sales = Vente::selectRaw("strftime('%Y-%m', created_at) as month, SUM(montant_total) as total")
-            ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-            ->where('statut', 'valide')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get()
-            ->keyBy('month');
+       $driver = DB::getDriverName();
 
-        // Mappe sur les 12 mois en mettant 0 si absent
-        $labels = $months->map(function($m){
-            // option : rendre plus lisible → '2025-08' -> 'Août 2025'
-            return Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y');
-        });
+    $dateExpr = match ($driver) {
+        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
+        'sqlite' => "strftime('%Y-%m', created_at)",
+        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
+        default  => "DATE_FORMAT(created_at, '%Y-%m')",
+    };
 
-        $data = $months->map(function($m) use ($sales){
-            return $sales->has($m) ? (float) $sales[$m]->total : 0;
-        });
+    $sales = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->where('statut', 'valide')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // génère les 12 derniers mois
+    $months = collect(range(0, 11))
+        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
+        ->reverse();
+
+    // labels lisibles
+    $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
+
+    // données
+    $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+
+    // réindexe pour JS
+    $labels = $labels->values();
+    $data = $data->values();
+//dd($labels, $data);
 
             return view('dashboards.admin', compact(
                 'ca_journalier',

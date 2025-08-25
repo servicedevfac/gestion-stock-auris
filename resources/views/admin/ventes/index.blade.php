@@ -1,5 +1,77 @@
 @extends('layouts.base')
 @section('content')
+<div class="col-12 mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header card-heade d-flex justify-content-between align-items-center">
+            <h3 class="text-white">📊 Graphique des ventes</h3>
+        </div>
+        <div class="card-body">
+
+            <style>
+                .filtres {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                    align-items: center;
+                }
+                .filtres input, .filtres button, .filtres select {
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    border: 1px solid #ddd;
+                }
+                .filtres button {
+                    cursor: pointer;
+                    font-weight: bold;
+                }
+                #btnFiltrer { background-color: #007bff; color: white; border: none; }
+                #btnReset { background-color: #6c757d; color: white; border: none; }
+                #btnPDF { background-color: #dc3545; color: white; border: none; }
+                #btnExportImage { background-color: #28a745; color: white; border: none; }
+                #btnExportExcel { background-color: #17a2b8; color: white; border: none; }
+                #ventesChart { max-width: 100%; height: auto; margin: 0 auto; }
+                .chart-container { position: relative; width: 100%; padding-bottom: 20px; }
+            </style>
+
+            <div class="filtres">
+                <select id="periode-select">
+                    <option value="jour">Jour</option>
+                    <option value="semaine">Semaine</option>
+                    <option value="mois" selected>Mois</option>
+                    <option value="annee">Année</option>
+                </select>
+                <input type="date" id="date_debut" value="{{ \Carbon\Carbon::now()->subMonth()->format('Y-m-d') }}">
+                <input type="date" id="date_fin" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                <input type="text" id="q" placeholder="Recherche...">
+
+                <button id="btnFiltrer">Filtrer</button>
+                <button id="btnReset">Réinitialiser</button>
+                <button id="btnPDF">📊 PDF Graphique</button>
+
+                <button id="btnExportExcel">Exporter Excel</button>
+                <select id="qualiteExport">
+                    <option value="1">Qualité normale</option>
+                    <option value="2">Qualité moyenne</option>
+                    <option value="3" selected>Qualité haute</option>
+                    <option value="4">Qualité très haute</option>
+                </select>
+                <button id="btnExportImage">Exporter Graphique</button>
+
+                <select id="typeGraph">
+                    <option value="line" selected>Courbe</option>
+                    <option value="bar">Histogramme</option>
+                    <option value="pie">Camembert</option>
+                </select>
+            </div>
+<div class="chart-container" style="background: white; padding: 20px; border-radius: 8px;">
+    <div style="width: 100%; max-width: 900px; margin: auto;">
+        <canvas id="ventesChart" width="900" height="400"></canvas>
+    </div>
+</div>
+
+</div>
+</div>
+
 <div class="row mt-5">
     <div class="col-12">
         <div class="card shadow-sm border-0">
@@ -109,77 +181,7 @@
     </div>
 </div>
 
-<div class="col-12 mt-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header card-heade d-flex justify-content-between align-items-center">
-            <h3 class="text-white">📊 Graphique des ventes</h3>
-        </div>
-        <div class="card-body">
 
-            <style>
-                .filtres {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 10px;
-                    margin-bottom: 20px;
-                    align-items: center;
-                }
-                .filtres input, .filtres button, .filtres select {
-                    padding: 8px 12px;
-                    border-radius: 4px;
-                    border: 1px solid #ddd;
-                }
-                .filtres button {
-                    cursor: pointer;
-                    font-weight: bold;
-                }
-                #btnFiltrer { background-color: #007bff; color: white; border: none; }
-                #btnReset { background-color: #6c757d; color: white; border: none; }
-                #btnPDF { background-color: #dc3545; color: white; border: none; }
-                #btnExportImage { background-color: #28a745; color: white; border: none; }
-                #btnExportExcel { background-color: #17a2b8; color: white; border: none; }
-                #ventesChart { max-width: 100%; height: auto; margin: 0 auto; }
-                .chart-container { position: relative; width: 100%; padding-bottom: 20px; }
-            </style>
-
-            <div class="filtres">
-                <select id="periode-select">
-                    <option value="jour">Jour</option>
-                    <option value="semaine">Semaine</option>
-                    <option value="mois" selected>Mois</option>
-                    <option value="annee">Année</option>
-                </select>
-                <input type="date" id="date_debut" value="{{ \Carbon\Carbon::now()->subMonth()->format('Y-m-d') }}">
-                <input type="date" id="date_fin" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                <input type="text" id="q" placeholder="Recherche...">
-
-                <button id="btnFiltrer">Filtrer</button>
-                <button id="btnReset">Réinitialiser</button>
-                <button id="btnPDF">📊 PDF Graphique</button>
-
-                <button id="btnExportExcel">Exporter Excel</button>
-                <select id="qualiteExport">
-                    <option value="1">Qualité normale</option>
-                    <option value="2">Qualité moyenne</option>
-                    <option value="3" selected>Qualité haute</option>
-                    <option value="4">Qualité très haute</option>
-                </select>
-                <button id="btnExportImage">Exporter Graphique</button>
-
-                <select id="typeGraph">
-                    <option value="line" selected>Courbe</option>
-                    <option value="bar">Histogramme</option>
-                    <option value="pie">Camembert</option>
-                </select>
-            </div>
-<div class="chart-container" style="background: white; padding: 20px; border-radius: 8px;">
-    <div style="width: 100%; max-width: 900px; margin: auto;">
-        <canvas id="ventesChart" width="900" height="400"></canvas>
-    </div>
-</div>
-
-</div>
-</div>
 @endsection
 
 @section('scripts')

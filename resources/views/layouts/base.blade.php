@@ -45,7 +45,7 @@
         .btn-header:hover { background-color: #e0e0e0; color: #02228b; border: 1px solid #02228b; font-weight: bold; }
         .btn-header1 { background-color: #02228b; color: #ffffff; border: #02228b 1px solid; }
         .btn-header1:hover { background-color: #e0e0e0; color: #02228b; border: 1px solid #02228b; font-weight: bold; }
-        .btn-header2 { background-color: #E6BA23; color: #ffffff; border: #E6BA23 1px solid; }
+        .btn-header2 { background-color: #e6b823; color: #ffffff; border: #E6BA23 1px solid; }
         .colj { background-color: #e6ba23; color: #ffffff; }
         .btn-delete, .redoff { background-color: #dd1313; color: #ffffff; border: none; }
         .btn-delete:hover { background-color: #e60000; color: #ffffff; border: none; font-weight: bold; }
@@ -83,7 +83,7 @@
                     @if (session('error'))
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
-                    
+
                     @yield('content')
                 </div>
             </div>

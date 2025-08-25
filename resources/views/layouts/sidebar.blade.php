@@ -21,7 +21,7 @@
                     <li class="menu-item">
                         <a href="{{route('dashboard')}}" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="airplay "></i></span>
-                            <span class="menu-text"> Dashboards </span>
+                            <span class="menu-text"> Dashboard </span>
                         </a>
                     </li>
                     <li class="menu-item">
@@ -52,7 +52,7 @@
                     <li class="menu-item">
                     <a href="#Produit" data-bs-toggle="collapse" class="menu-link waves-effect">
                         <span class="menu-icon"><i data-lucide="package-search"></i></span>
-                        <span class="menu-text"> Produit  </span>
+                        <span class="menu-text"> Produits  </span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="Produit">

@@ -37,9 +37,9 @@
        role="button"
        data-bs-toggle="dropdown"
        aria-expanded="false">
-        <img src="{{ url('assets/images/users/avatar-1.jpg') }}"
+        {{-- <img src="{{ url('assets/images/users/avatar-1.jpg') }}"
              alt="user-image"
-             class="rounded-circle">
+             class="rounded-circle"> --}}
         <span class="ms-1 d-none d-md-inline-block">
             {{ Auth::user()->nom }} <i class="mdi mdi-chevron-down"></i>
         </span>
@@ -50,12 +50,12 @@
             <h6 class="text-overflow m-0">Welcome !</h6>
         </li>
 
-        <li>
+        {{-- <li>
             <a href="{{ route('profile.edit') }}" class="dropdown-item notify-item">
                 <i data-lucide="user" class="font-size-16 me-2"></i>
                 <span>Mon profil</span>
             </a>
-        </li>
+        </li> --}}
 
         <li>
             <a href="{{ route('admin.horaires.index') }}" class="dropdown-item notify-item">

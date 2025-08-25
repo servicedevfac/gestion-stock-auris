@@ -120,6 +120,49 @@
     <!-- end row-->
 
     <div class="row mt-3">
+
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header redoff">
+                    <h4 class="card-title">les produits en stock faible</h4>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered table-nowrap mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>N</th>
+                                    <th>Nom produit</th>
+                                    <th>Stock actuel</th>
+                                    <th>Stock minimal</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($produitsStockFaible as $produit)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $produit->nom }}</td>
+                                        <td>{{ $produit->stock_actuel }}</td>
+                                        <td>{{ $produit->seuil_alerte }}</td>
+                                        <td>
+                                            <a href="{{ route('mouvementStocks.create') }}"
+                                                class="btn btn-header1 btn-sm">Reapprovisionner</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade">
@@ -195,48 +238,6 @@
             </div>
         </div>
 
-        <div class="col-xl-6">
-            <div class="card">
-                <div class="card-header redoff">
-                    <h4 class="card-title">les produits en stock faible</h4>
-                </div>
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-centered table-nowrap mb-0">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>N</th>
-                                    <th>Nom produit</th>
-                                    <th>Stock actuel</th>
-                                    <th>Stock minimal</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($produitsStockFaible as $produit)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $produit->nom }}</td>
-                                        <td>{{ $produit->stock_actuel }}</td>
-                                        <td>{{ $produit->seuil_alerte }}</td>
-                                        <td>
-                                            <a href="{{ route('mouvementStocks.create') }}"
-                                                class="btn btn-header1 btn-sm">Reaprovisionner</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
 
 @endsection
     @section('scripts')
@@ -272,81 +273,66 @@
                 ymax: 'auto'
             });
         </script> --}}
-        <script>
-            // transfère les données PHP vers JS (sécurisé)
-            const labels = @json($labels); // ex: ["Mai 2024", "Jun 2024", ...]
-            const data = @json($data);   // ex: [1200.50, 2300, ... ]
 
-            const ctx = document.getElementById('caLineChart').getContext('2d');
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @json($labels);
+    const data = @json($data);
 
-            const config = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Chiffre d\'affaires',
-                        data: data,
-                        fill: true,              // remplissage sous la courbe
-                        tension: 0.3,            // lissage de la courbe (0 = segments droits, 1 = très courbé)
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        borderWidth: 2,
-                        // Si tu veux changer l'apparence, tu peux ajouter borderColor / backgroundColor ici
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            callbacks: {
-                                label: function (context) {
-                                    let value = context.raw;
-                                    // format monétaire simple (adapter selon locale)
-                                    return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(value);
-                                }
-                            }
-                        }
-                    },
-                    interaction: {
-                        mode: 'nearest',
-                        intersect: false
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            title: {
-                                display: true,
-                                text: 'Mois'
-                            }
-                        },
-                        y: {
-                            display: true,
-                            title: {
-                                display: true,
-                                text: 'Montant'
-                            },
-                            beginAtZero: true,
-                            ticks: {
-                                // formattage ticks (optionnel)
-                                callback: function (value) {
-                                    return new Intl.NumberFormat('fr-FR', { notation: 'compact' }).format(value);
-                                }
-                            }
+    const ctx = document.getElementById('caLineChart').getContext('2d');
+
+    const caLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chiffre d\'affaires',
+                data: data,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2,
+                borderColor: '#02228b',
+                backgroundColor: '#e6b82359',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top' },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(context.raw);
                         }
                     }
                 }
-            };
+            },
+            interaction: { mode: 'nearest', intersect: false },
+            scales: {
+                x: {
+                    display: true,
+                    title: { display: true, text: 'Mois' }
+                },
+                y: {
+                    display: true,
+                    title: { display: true, text: 'Montant' },
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR', { notation: 'compact' }).format(value);
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 
-            // crée le chart
-            const caLineChart = new Chart(ctx, config);
-        </script>
 
 
     @endsection

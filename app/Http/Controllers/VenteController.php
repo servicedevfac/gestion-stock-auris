@@ -230,16 +230,21 @@ public function store(Request $request)
             'code_recu'     => $code_recu,
         ]);
 
-        // 1) Vérif stock AVANT (tu avais déjà, je garde et fiabilise un peu)
+                // 1) Vérif stock AVANT (tu avais déjà, je garde et fiabilise un peu)
+        $erreurs = [];
+
         foreach ($request->produits as $p) {
             $prod = Produit::findOrFail($p['produit_id']);
             $stockActuel = $this->stockActuel($prod);
+
             if ((int)$p['quantite'] > $stockActuel) {
-                // message toast + retour formulaire
-                notify()->error('Stock insuffisant pour le produit : ' . $prod->nom);
-                DB::rollBack();
-                return back()->withInput();
+                $erreurs[] = "Stock insuffisant pour le produit : {$prod->nom} stock disponible:{$prod->stock_actuel}";
             }
+        }
+
+        if (!empty($erreurs)) {
+            DB::rollBack();
+            return back()->withInput()->withErrors($erreurs);
         }
 
         // 2) Création lignes + mouvements + collecte des produits à alerter
@@ -398,8 +403,6 @@ public function imprimerTicket($id)
     return view('admin.ventes.recu_ticket', compact('vente'));
 }
 
-
-
     public function ventesFiltrees(Request $request)
     {
         // Filtrage par période
@@ -434,7 +437,7 @@ public function imprimerTicket($id)
             ->select(
                 DB::raw("$dateExpression as periode"),
                 DB::raw("SUM(montant_total) as total")
-            )
+            )->where('statut', 'valide')
             ->whereBetween('created_at', [$dateDebut, $dateFin]);
 
         // Recherche textuelle (avec jointures)
@@ -501,11 +504,11 @@ public function imprimerTicket($id)
             }
         }
 
-        $ventes = DB::table('ventes')
-            ->select(
+        $ventes = DB::table('ventes')->select(
                 DB::raw("$dateExpression as periode"),
                 DB::raw("SUM(montant_total) as total")
             )
+            ->where('statut', 'valide')
             ->whereBetween('created_at', [$dateDebut, $dateFin]);
 
         // Recherche textuelle (avec jointures)

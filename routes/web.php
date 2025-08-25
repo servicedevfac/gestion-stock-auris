@@ -19,9 +19,9 @@ Route::get('/', fn () => view('auth.login'))->middleware('guest');
 Route::middleware('auth')->group(function () {
     Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');
     // Profil utilisateur
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/ventes/{id}/ticket', [VenteController::class, 'imprimerTicket'])->name('ventes.ticket');
 
 

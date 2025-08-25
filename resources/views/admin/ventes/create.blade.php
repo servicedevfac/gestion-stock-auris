@@ -8,11 +8,17 @@
 @endsection
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $err)
+                <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="row mt-5">
-    <div style="z-index: 2000;">
-        <x-notify::notify/>
-    </div>
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header card-heade d-flex justify-content-between align-items-center">
