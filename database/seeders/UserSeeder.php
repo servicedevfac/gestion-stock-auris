@@ -32,14 +32,14 @@ class UserSeeder extends Seeder
         ]);
         $superadmin->assignRole('super admin');
 
-        // Utilisateur vendeur
-        $vendeur = User::firstOrCreate([
-            'email' => 'vendeur@example.com',
+        // Utilisateur gestionnaire
+        $gestionnaire = User::firstOrCreate([
+            'email' => 'gestionnaire@example.com',
         ], [
-            'nom' => 'Jean Vendeur',
+            'nom' => 'Jean Gestionnaire',
             'password' => Hash::make('password'),
         ]);
-        $vendeur->assignRole('vendeur');
+        $gestionnaire->assignRole('gestionnaire');
 
     }
     }

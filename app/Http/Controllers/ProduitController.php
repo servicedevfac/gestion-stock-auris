@@ -38,7 +38,7 @@ public function index()
 
     public function show(Produit $produit)
     {
-        return view('admin.produits.show', compact('produit'));
+        return view("admin.produits.show", compact('produit'));
     }
 
     public function edit(Produit $produit)

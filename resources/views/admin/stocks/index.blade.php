@@ -14,20 +14,21 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="datatable-buttons" class="table table-hover table-bordered dt-responsive nowrap w-100">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Produit</th>
-                                <th>Utilisateur</th>
-                                <th>Type de mouvement</th>
-                                <th>Quantité</th>
-                                <th>Stock après mouvement</th>
-                                <th>Motif</th>
-                                <th>Date du mouvement</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                <table class="table table-hover table-bordered dt-responsive nowrap w-100">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Produit</th>
+                            <th>Utilisateur</th>
+                            <th>Type de mouvement</th>
+                            <th>Quantité</th>
+                            <th>Stock après mouvement</th>
+                            <th>Motif</th>
+                            <th>Date du mouvement</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
 
                     <tbody>
                         @foreach ($mouvements as $mouvement)
@@ -51,13 +52,13 @@
                                     <form action="{{ route('mouvementStocks.destroy', $mouvement->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                        <button type="submit" class="btn btn-sm btn-delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
                                 @endcan
                             </td>
-                                    @endif
+                                @endif
                         </tr>
                         @endforeach
                     </tbody>

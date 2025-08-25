@@ -10,9 +10,20 @@ use Illuminate\Support\Str;
 class ClientController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::paginate(15);
+        $query = Client::query();
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nom', 'like', "%$search%")
+                  ->orWhere('prenom', 'like', "%$search%")
+                  ->orWhere('telephone', 'like', "%$search%")
+                  ->orWhere('adresse', 'like', "%$search%")
+                  ->orWhere('code_client', 'like', "%$search%") ;
+            });
+        }
+        $clients = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.clients.index', compact('clients'));
     }
 
@@ -108,9 +119,12 @@ public function show(Client $client)
     }
     
     public function search(Request $request)
-    {
-        $search = $request->get('q');
-        $clients = Client::where('nom', 'like', "%$search%")->get(['id', 'nom']);
-        return response()->json($clients);
-    }
+{
+    $search = $request->get('q');
+    $clients = Client::where('nom', 'like', "%$search%")
+        ->orWhere('prenom', 'like', "%$search%")
+        ->orWhere('telephone', 'like', "%$search%")
+        ->get(['id', 'nom','prenom' ,'telephone']);
+    return response()->json($clients);
+}
 }

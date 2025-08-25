@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detail_vente;
+
 use App\Models\Produit;
 use App\Models\User;
 use App\Models\Vente;
+use App\Models\Detail_vente;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,36 +30,15 @@ class DashboardController extends Controller
                 $driver = DB::getDriverName();
 
                 // Récupérer les 5 dernières ventes (par date de création décroissante)
-                $derniersVentes = Vente::where('statut', 'valide')->orderBy('created_at', 'desc')->take(5)->get();
+                $derniersVentes = Vente::where('statut', 'valide')->orderBy('created_at', 'desc')->take(10)->get();
 
                 // Définir l'expression de format de date selon le driver utilisé
                 $dateExpression = $driver === 'sqlite'
                     ? "strftime('%Y-%m', ventes.created_at)"
                     : "DATE_FORMAT(ventes.created_at, '%Y-%m')";
 
-                // Récupérer le total des ventes par produit et par mois
-                $data = DB::table('detail_ventes')
-                    ->join('ventes', 'detail_ventes.vente_id', '=', 'ventes.id')
-                    ->join('produits', 'detail_ventes.produit_id', '=', 'produits.id')
-                    ->select(
-                        DB::raw("$dateExpression as mois"),
-                        'produits.nom as produit',
-                        DB::raw('SUM(detail_ventes.quantite * detail_ventes.prix) as total')
-                    )
-                    ->groupBy('mois', 'produit')
-                    ->orderBy('mois')
-                    ->get();
-
-                // Transformer les données pour le graphique (tableau associatif mois/produit/total)
-                $chartData = [];
-                foreach ($data as $row) {
-                    // Extraire le mois (YYYY-MM) et le convertir en nom de mois en français
-                    $moisNom = Carbon::createFromFormat('Y-m', $row->mois)->locale('fr')->translatedFormat('F');
-                    $chartData[$moisNom][$row->produit] = $row->total;
-                }
-
                 // Récupérer les 5 derniers clients ayant effectué une vente
-                $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(5)->get();
+                $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(10)->get();
 
                 // Calculer le chiffre d'affaires du jour
                 $ca_journalier = DB::table('ventes')->whereDate('created_at', Carbon::today())->sum('montant_total');
@@ -70,13 +50,13 @@ class DashboardController extends Controller
                     ->sum('montant_total');
 
                 // Calculer le chiffre d'affaires total
-                $chiffreAffaires = Vente::where('statut', 'valide')->sum('montant_total');
+                $chiffreAffaires = Vente::where('statut', 'valide')->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
 
                 // Compter le nombre total de ventes
                 $nombreVentes = Vente::where('statut', 'valide')->count();
 
                 // Récupérer le chiffre d'affaires groupé par mois
-                $chiffreAffaireParMois = DB::table('ventes')
+                $chiffreAffaireParMois = DB::table('ventes')->where('statut', 'valide')
                     ->select(
                         DB::raw($driver === 'sqlite'
                             ? "strftime('%Y-%m', created_at) as mois"
@@ -97,23 +77,61 @@ class DashboardController extends Controller
             ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
+            $months = collect();
+        for ($i = 11; $i >= 0; $i--) {
+            $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
+        }
 
+       $driver = DB::getDriverName();
 
+    $dateExpr = match ($driver) {
+        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
+        'sqlite' => "strftime('%Y-%m', created_at)",
+        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
+        default  => "DATE_FORMAT(created_at, '%Y-%m')",
+    };
+
+    $sales = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->where('statut', 'valide')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // génère les 12 derniers mois
+    $months = collect(range(0, 11))
+        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
+        ->reverse();
+
+    // labels lisibles
+    $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
+
+    // données
+    $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+
+    // réindexe pour JS
+    $labels = $labels->values();
+    $data = $data->values();
+//dd($labels, $data);
 
             return view('dashboards.admin', compact(
                 'ca_journalier',
                 'chiffreAffaires',
                 'nombreVentes',
+                'ventes',
+                'labels',
+                'data',
                 'derniersVentes',
                 'derniersClients',
-                'data',
                 'produitsStockFaible',
                 'chiffreAffaireMoisEnCours',
-                'chartData' // Passer les données du graphique
+                //'chartData' // Passer les données du graphique
             ));
         }
 
-        if ($user->hasRole('vendeur')) {
+
+        if ($user->hasRole('gestionnaire')) {
             // Récupérer les 10 dernières ventes du vendeur
             $ventes = Vente::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
@@ -161,6 +179,19 @@ class DashboardController extends Controller
             ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
+
+            foreach ($produitsStockFaible as $produit) {
+                if ($produit->alerte_envoyee) {
+                    // Réinitialiser l'alerte si le stock est reconstitué
+                    $produit=Produit::find($produit->id);
+                    $produit->update([
+                        'alerte_envoyee' => false,
+                        'last_alerted_at' => null
+                    ]);
+                }
+            }
+
+
             return view('dashboards.vendeur',
             compact(
                 'chiffreAffairesvendeurs',

@@ -1,7 +1,22 @@
 @extends('layouts.base')
 
-@section('content')
 
+@section('head')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+@endsection
+
+@section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $err)
+                <li>{{ $err }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="row mt-5">
     <div class="col-12">
@@ -199,25 +214,23 @@
         // Calcul initial
         recalculerTotals();
 
-        // Init Select2 client
-        $('#client-select').select2({
-            placeholder: 'Rechercher un client...'
-            , minimumInputLength: 2
-            , ajax: {
-                url: '{{ route("clients.search") }}'
-    , dataType: 'json'
-    , delay: 250
-    , data: params => ({
-    q: params.term
-    })
-    , processResults: data => ({
-    results: data.map(client => ({
-    id: client.id
-    , text: client.nom
-    }))
-    })
-    , cache: true
-    }
+    // Init Select2 client
+    $('#client-select').select2({
+        placeholder: 'Rechercher un client...',
+       // minimumInputLength: 1,
+        ajax: {
+            url: '{{ route("clients.search") }}',
+            dataType: 'json',
+            delay: 250,
+            data: params => ({ q: params.term }),
+            processResults: data => ({
+                results: data.map(client => ({
+                    id: client.id,
+                    text: client.nom + ' '+client.prenom+' Telephone:'+client.telephone
+                }))
+            }),
+            cache: true
+        }
     });
 
     </script>

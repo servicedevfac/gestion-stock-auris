@@ -6,7 +6,7 @@ Author: Myra Studio
 Email: myrathemes@gmail.com
 File: Main Css File
 */
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"); */
 :root {
   --bs-sidebar-width: 250px;
   --bs-sidebar-width-sm: 80px;
@@ -42,7 +42,7 @@ html[data-bs-theme=dark] {
 
 [data-menu-color=dark] {
   --bs-menu-bg: #02228b;
-  --bs-menu-item-color: #9097a7;
+  --bs-menu-item-color: #ffffff;
   --bs-menu-item-hover-color: #c8cddc;
   --bs-menu-item-active-color: #ffffff;
 }
@@ -50,7 +50,7 @@ html[data-bs-theme=dark] {
 [data-menu-color=dark][data-bs-theme=dark],
 [data-bs-theme=dark][data-menu-color=light] {
   --bs-menu-bg: #02228b;
-  --bs-menu-item-color: #9097a7;
+  --bs-menu-item-color: #403c3c
   --bs-menu-item-hover-color: #c8cddc;
   --bs-menu-item-active-color: #ffffff;
 }
@@ -210,6 +210,11 @@ html[data-bs-theme=dark] {
   --bs-form-invalid-color: #dc3545;
   --bs-form-invalid-border-color: #dc3545;
 }
+*{
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+
+}
 
 [data-bs-theme=dark] {
   color-scheme: dark;
@@ -304,7 +309,7 @@ hr {
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   margin-top: 0;
   margin-bottom: 0.5rem;
-  font-family: "DM Sans", sans-serif;
+  font-family: "poppins", sans-serif;
   font-weight: 600;
   line-height: 1.1;
   color: var(--bs-heading-color);
@@ -14516,7 +14521,7 @@ html[data-bs-theme=dark] #light-dark-mode .bx-moon::before {
 
 .button-toggle-menu {
   border: none;
-  color: var(--bs-topbar-item-color);
+  color: var(--bs-topbar-item-color) !important;
   width: 40px;
   height: 40px;
   background-color: transparent;
@@ -14616,7 +14621,7 @@ html[data-bs-theme=dark] #light-dark-mode .bx-moon::before {
   font-size: calc(var(--bs-menu-item-font-size) * 0.75);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--bs-menu-item-color);
+  color: #ffffff;
   font-weight: 500;
   padding: var(--bs-menu-link-padding-y) calc(var(--bs-menu-link-padding-x) + var(--bs-menu-item-padding-x));
 }
@@ -17165,7 +17170,7 @@ h6 {
 }
 
 .morris-chart text {
-  font-family: "DM Sans", sans-serif !important;
+  font-family: "poppins" !important;
   fill: var(--bs-body-color);
 }
 
@@ -17181,12 +17186,12 @@ h6 {
   background: #132843;
   border: 1px solid var(--bs-light);
   color: #ffffff;
-  font-family: "DM Sans", sans-serif !important;
+  font-family: "poppins", sans-serif !important;
 }
 .morris-hover.morris-default-style .morris-hover-row-label {
   font-weight: bold;
   margin: 0.25em 0;
-  font-family: "DM Sans", sans-serif !important;
+  font-family: "poppins", sans-serif !important;
 }
 .morris-hover.morris-default-style .morris-hover-point {
   white-space: nowrap;
@@ -18649,7 +18654,7 @@ div.dataTables_scrollBody > table > :not(:first-child) {
 
 .ms-optgroup-label {
   font-weight: 500;
-  font-family: "DM Sans", sans-serif;
+  font-family: "poppins", sans-serif;
   color: var(--bs-dark) !important;
   font-size: 13px;
 }
@@ -18934,7 +18939,7 @@ span.flatpickr-weekday,
   border: none;
   background: var(--bs-dark);
   color: var(--bs-secondary-bg-subtle);
-  font-family: "DM Sans", sans-serif;
+  font-family: "poppins", sans-serif;
   font-size: 0.875rem;
   padding: 5px 8px;
 }
