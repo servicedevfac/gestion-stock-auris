@@ -19,7 +19,7 @@ class DashboardController extends Controller
 
         $user = Auth::user();
         // Afficher le dashboard correspondant au rôle de l'utilisateur
-        if ($user->hasRole('admin') || $user->hasRole('super admin')) {
+        if ($user->hasRole('Administrateur') || $user->hasRole('super admin')) {
             // Récupérer l'utilisateur actuellement authentifié
                 // Récupérer toutes les ventes
                 $ventes = Vente::all();
@@ -39,16 +39,17 @@ class DashboardController extends Controller
                 $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(10)->get();
 
                 // Calculer le chiffre d'affaires du jour
-                $ca_journalier = DB::table('ventes')->whereDate('created_at', Carbon::today())->sum('montant_total');
+                $ca_journalier = DB::table('ventes')->where('est_paye', true)->whereDate('created_at', Carbon::today())->sum('montant_total');
 
                 // Calculer le chiffre d'affaires du mois en cours
-                $chiffreAffaireMoisEnCours = DB::table('ventes')->where('statut', 'valide')
+                $chiffreAffaireMoisEnCours = DB::table('ventes')->where('statut', 'valide')->where('est_paye', true)
                     ->whereYear('created_at', Carbon::now()->year)
                     ->whereMonth('created_at', Carbon::now()->month)
                     ->sum('montant_total');
 
                 // Calculer le chiffre d'affaires total
-                $chiffreAffaires = Vente::where('statut', 'valide')->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
+                $chiffreAffaires = Vente::where('statut', 'valide')->where('est_paye', true)->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
+                $totalVentesNonPayes = Vente::where('statut', 'valide')->where('est_paye', false)->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
 
                 // Compter le nombre total de ventes
                 $nombreVentes = Vente::where('statut', 'valide')->count();
@@ -92,6 +93,15 @@ class DashboardController extends Controller
     $sales = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
         ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
         ->where('statut', 'valide')
+        ->where('est_paye',false)
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+    $sales1 = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->where('statut', 'valide')
+        ->where('est_paye', true)
         ->groupBy('month')
         ->orderBy('month')
         ->get()
@@ -107,19 +117,26 @@ class DashboardController extends Controller
 
     // données
     $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+    $data1 = $months->map(fn($m) => $sales1->has($m) ? (float) $sales1[$m]->total : 0);
+
+
 
     // réindexe pour JS
     $labels = $labels->values();
     $data = $data->values();
+    $data1 = $data1->values();
+    $totalVentesPayes = $ventes->where('est_paye', true)->sum('montant_total');
 //dd($labels, $data);
 
             return view('dashboards.admin', compact(
                 'ca_journalier',
                 'chiffreAffaires',
                 'nombreVentes',
+                'totalVentesNonPayes',
                 'ventes',
                 'labels',
                 'data',
+                'data1',
                 'derniersVentes',
                 'derniersClients',
                 'produitsStockFaible',
@@ -129,7 +146,7 @@ class DashboardController extends Controller
         }
 
 
-        if ($user->hasRole('gestionnaire')) {
+        if ($user->hasRole('Gestionnaire')||$user->hasRole('Commercial')) {
             // Récupérer les 10 dernières ventes du vendeur
             $ventes = Vente::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
@@ -159,7 +176,6 @@ class DashboardController extends Controller
             $nombreVentes = Vente::where('statut', 'valide')
                 ->where('user_id', $user->id)
                 ->count();
-            // ca de la semaine
             $chiffreAffairesSemaine = DB::table('ventes')
                 ->where('statut', 'valide')
                 ->where('user_id', $user->id)
@@ -178,17 +194,40 @@ class DashboardController extends Controller
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
 
-            foreach ($produitsStockFaible as $produit) {
-                if ($produit->alerte_envoyee) {
-                    // Réinitialiser l'alerte si le stock est reconstitué
-                    $produit=Produit::find($produit->id);
-                    $produit->update([
-                        'alerte_envoyee' => false,
-                        'last_alerted_at' => null
-                    ]);
-                }
-            }
+              $driver = DB::getDriverName();
 
+    $dateExpr = match ($driver) {
+        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
+        'sqlite' => "strftime('%Y-%m', created_at)",
+        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
+        default  => "DATE_FORMAT(created_at, '%Y-%m')",
+    };
+
+        $sales = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
+        ->where('user_id', $user->id)
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->where('statut', 'valide')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // génère les 12 derniers mois
+    $months = collect(range(0, 11))
+        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
+        ->reverse();
+
+    // labels lisibles
+    $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
+
+    // données
+    $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+
+    // réindexe pour JS
+    $labels = $labels->values();
+    $data = $data->values();
+
+    $totalVentesPayes = $ventes->where('est_paye', true)->sum('montant_total');
 
             return view('dashboards.vendeur',
             compact(
@@ -197,10 +236,15 @@ class DashboardController extends Controller
                         'chiffreAffaireMoisEnCours',
                         'nombreVentes',
                         'ventes',
+                        'data',
+                        'labels',
                         'derniersClients',
-                        'produitsStockFaible'
+                        'produitsStockFaible',
+                        'totalVentesPayes'
             ));
         }
+
+
 
     }
 }

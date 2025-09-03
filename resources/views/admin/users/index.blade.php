@@ -16,7 +16,7 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Numero</th>
+                                <th>N°</th>
                                 <th>Nom</th>
                                 <th>Prénom</th>
                                 <th>Rôle</th>

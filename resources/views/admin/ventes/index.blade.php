@@ -34,28 +34,28 @@
             </style>
 
             <div class="filtres">
-                <select id="periode-select">
+                {{-- <select id="periode-select">
                     <option value="jour">Jour</option>
                     <option value="semaine">Semaine</option>
                     <option value="mois" selected>Mois</option>
                     <option value="annee">Année</option>
-                </select>
+                </select> --}}
                 <input type="date" id="date_debut" value="{{ \Carbon\Carbon::now()->subMonth()->format('Y-m-d') }}">
                 <input type="date" id="date_fin" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                <input type="text" id="q" placeholder="Recherche...">
+                <input type="text" class="d-none" id="q" placeholder="Recherche...">
 
                 <button id="btnFiltrer">Filtrer</button>
                 <button id="btnReset">Réinitialiser</button>
-                <button id="btnPDF">📊 PDF Graphique</button>
+                <button id="btnPDF">📊 Exporter en PDF</button>
 
-                <button id="btnExportExcel">Exporter Excel</button>
+                <button id="btnExportExcel">Exporter en Excel</button>
                 <select id="qualiteExport">
                     <option value="1">Qualité normale</option>
                     <option value="2">Qualité moyenne</option>
                     <option value="3" selected>Qualité haute</option>
                     <option value="4">Qualité très haute</option>
                 </select>
-                <button id="btnExportImage">Exporter Graphique</button>
+                <button id="btnExportImage">Exporter en png</button>
 
                 <select id="typeGraph">
                     <option value="line" selected>Courbe</option>
@@ -85,34 +85,25 @@
             </div>
             <div class="card-body">
     <form method="GET" action="" class="mb-3">
-        <div class="row">
-            <div class="col-md-3">
-                <label>Période</label>
-                <select name="periode" class="form-control" id="periode-select">
+        <div class="filtres">
+                <select name="periode"  id="periode-select">
                     <option value="jour" @if(request('periode')=='jour') selected @endif>Jour</option>
                     <option value="semaine" @if(request('periode')=='semaine') selected @endif>Semaine</option>
                     <option value="mois" @if(request('periode')=='mois') selected @endif>Mois</option>
                     <option value="annee" @if(request('periode')=='annee') selected @endif>Année</option>
                 </select>
-            </div>
-            <div class="col-md-3">
                 <label>Date de début</label>
-                <input type="date" name="date_debut" class="form-control" value="{{ request('date_debut') }}">
-            </div>
-            <div class="col-md-3">
+                <input type="date" name="date_debut"  value="{{ request('date_debut') }}">
                 <label>Date de fin</label>
-                <input type="date" name="date_fin" class="form-control" value="{{ request('date_fin') }}">
-            </div>
-            <div class="col-md-3">
+                <input type="date" name="date_fin"  value="{{ request('date_fin') }}">
                 <label>Recherche</label>
-                <input type="text" name="q" class="form-control" placeholder="Client, code reçu, utilisateur..." value="{{ request('q') }}">
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-md-12 d-flex justify-content-end">
+                <input type="text" name="q"  placeholder="Client, code reçu, utilisateur..." value="{{ request('q') }}">
+                <a href="{{ route('ventes.exportlist.pdf', request()->query()) }}" class="btn btn-danger"> Exporter en PDF</a>
+                <a href="{{ route('export')}}" class="btn btn-success"> Exporter en excel</a>
+
                 <button  id="btn-filtrer" type="submit" class="btn btn-primary">Filtrer</button>
             </div>
-        </div>
+
     </form>
     @if (session()->has('error'))
     <div class="alert alert-danger">
@@ -122,12 +113,12 @@
     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
         <thead class="card-heade  table-dark">
             <tr>
-                <th>Numéro</th>
+                <th>N°</th>
                 <th>Code reçu</th>
                 <th>Client</th>
                 <th>Date</th>
                 <th>Montant total</th>
-                <th>Remise</th>
+                <th>Etat de paiement</th>
                 <th>Recu de vente</th>
                <th>Actions</th>
 
@@ -136,7 +127,7 @@
         </thead>
         <tbody>
             @foreach($ventes as $vente)
-            <tr @if ($vente->statut=='valide') style="background-color:#d4edda;"
+            <tr class="align-middle text-center" @if ($vente->statut=='valide') style="background-color:#d4edda;"
             @elseif ($vente->statut=='annulee') style="background-color:#f8d7da ;"
 
             @else style="background-color:#e2e3e5 ;"
@@ -146,7 +137,11 @@
                 <td>{{ $vente->client->nom ?? '' }}</td>
                 <td>{{ $vente->created_at }}</td>
                 <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
-                <td>{{ number_format($vente->remise, 0, ',', ' ') }} FCFA</td>
+                <td >@if ($vente->est_paye)
+                    <span class="text-white badge bg-success">Payé</span>
+                @else
+                    <span class="text-white badge bg-danger">Non payé</span>
+                @endif</td>
                 <td>
                     @if($vente->code_recu)
                         <a href="{{ asset('storage/recus/recu_vente_'.$vente->client->nom.'_'.$vente->code_recu.'.pdf') }}" class="btn btn-header1 btn-lg" target="_blank"><i class="fas fa-file-pdf"></i></a>
@@ -199,18 +194,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatFCFA(val) {
         return new Intl.NumberFormat('fr-FR').format(val) + " FCFA";
     }
-
     function createChart(labels, values, type="line") {
         if(window.ventesChart && typeof window.ventesChart.destroy === 'function') {
             window.ventesChart.destroy();
         }
-
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(54, 162, 235, 0.6)');
         gradient.addColorStop(1, 'rgba(54, 162, 235, 0)');
-
         const total = values.reduce((a,b)=>a+b,0);
-
         window.ventesChart = new Chart(ctx, {
             type: type,
             data: {

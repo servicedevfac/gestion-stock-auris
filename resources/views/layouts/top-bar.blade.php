@@ -56,6 +56,12 @@
                 <span>Mon profil</span>
             </a>
         </li> --}}
+        <li>
+            <a href="{{ route('user-logins.index') }}" class="dropdown-item notify-item">
+                <i data-lucide="user" class="font-size-16 me-2"></i>
+                <span>historique des connexions</span>
+            </a>
+        </li>
 
         <li>
             <a href="{{ route('admin.horaires.index') }}" class="dropdown-item notify-item">

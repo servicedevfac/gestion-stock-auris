@@ -12,12 +12,15 @@
                 </a>
                 @endcan
             </div>
+            <div class="d-flex justify-content-end">
+                <a href="{{ route('mouvementStocks.export-excel') }}" class="btn btn-success">Exporter en excel</a>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                 <table class="table table-hover table-bordered dt-responsive nowrap w-100">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
+                            <th>N°</th>
                             <th>Produit</th>
                             <th>Utilisateur</th>
                             <th>Type de mouvement</th>
@@ -33,7 +36,7 @@
                     <tbody>
                         @foreach ($mouvements as $mouvement)
                         <tr>
-                            <td>{{ $mouvement->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $mouvement->produit->nom }}</td>
                             <td>{{ $mouvement->user->nom }}</td>
                             <td>{{ $mouvement->type_mouvement }}</td>
@@ -42,7 +45,7 @@
                             <td>{{ $mouvement->motif }}</td>
                             <td>{{ \Carbon\Carbon::parse($mouvement->date_mouvement)->format('d/m/Y') }}</td>
                              <td>
-                                 @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('admin'))
+                                 @if (Auth::user()->hasRole('super admin')| Auth::user()->hasRole('Administrateur'))
                                 @can('edit stock')
                                 <a href="{{ route('mouvementStocks.edit', $mouvement->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-edit"></i>
@@ -65,7 +68,6 @@
 
                 </table>
                  <div>
-                        {{ $mouvements->links() }}
                     </div>
                 </div> <!-- end table-responsive -->
             </div> <!-- end card-body -->

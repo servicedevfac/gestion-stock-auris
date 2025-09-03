@@ -24,6 +24,10 @@
                         <button class="btn btn-header1" type="submit">
                             <i class="fas fa-search"></i> Rechercher
                         </button>
+                        <a href="{{ route('clients.exportclien.pdf', request()->query()) }}" class="btn btn-danger">
+                            <i class="fas fa-download me-1"></i> Exporter PDF
+                        </a>
+
                     </div>
                 </form>
                 <!-- Fin formulaire de recherche -->

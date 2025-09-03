@@ -9,5 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // Planification des tâches avec Laravel 11
-Schedule::command('stock:alert')->everyMinute();
+Schedule::command('stock:alert')->everySixHours();
 Schedule::command('inspire')->hourly();

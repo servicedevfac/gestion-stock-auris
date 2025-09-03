@@ -18,6 +18,6 @@ class issuperAdmin
         if (!auth()->check() || !auth()->user()->hasRole('super admin')) {
             abort(403, 'Accès réservé aux super administrateurs.');
         }
-        return response()->view('errors.403');
+        return $next($request);
     }
 }

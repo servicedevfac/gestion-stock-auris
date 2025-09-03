@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('ventes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->dropForeign(['user_id']);
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');// Empêche la suppression si ventes liées
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');// Empêche la suppression si ventes liées
             $table->string('code_recu')->unique()->nullable();
             $table->integer('montant_total');
             $table->integer('remise')->nullable();

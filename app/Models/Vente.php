@@ -17,6 +17,7 @@ class Vente extends Model
         'pdf_recu',
         'code_recu',
         'statut',// Ajouté pour permettre l'enregistrement du code reçu
+        'est_paye',
     ];
 
     public function client()

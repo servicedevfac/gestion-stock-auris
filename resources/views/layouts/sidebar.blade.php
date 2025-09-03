@@ -4,7 +4,7 @@
             <div class="logo-box">
                 <!-- Brand Logo Light -->
                 <a href="{{url(path: 'dashboard')}}" class="logo-light">
-                    <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="70">
+                    <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" height="250" width="">
                     <img src="{{url('assets/images/logo-sm.png')}}" alt="small logo" class="logo-sm" height="40">
                 </a>
 
@@ -15,13 +15,13 @@
                 </a>
             </div>
             <!--- Menu -->
-            <div data-simplebar>
+            <div data-simplebar >
                 <ul class="app-menu">
                     <li class="menu-title">Menu</li>
                     <li class="menu-item">
                         <a href="{{route('dashboard')}}" class="menu-link waves-effect">
                             <span class="menu-icon"><i data-lucide="airplay "></i></span>
-                            <span class="menu-text"> Dashboard </span>
+                            <span class="menu-text"> Tableau de bord </span>
                         </a>
                     </li>
                     <li class="menu-item">

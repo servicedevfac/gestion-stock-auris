@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -45,7 +46,7 @@ class ClientController extends Controller
     // Transaction pour éviter les doublons
     DB::transaction(function () use ($request) {
         $now = now(); // récupère la date actuelle (avec fuseau horaire Laravel)
-        $prefix = 'CLI-' . $now->format('Ym') . '-'; // ex : CLI-202507-
+        $prefix = 'CLT-' . $now->format('my') . '-'; // ex : CLI-202507-
 
         // On cherche le dernier client du mois en cours
         $lastClient = Client::where('code_client', 'like', $prefix.'%')
@@ -126,4 +127,28 @@ public function show(Client $client)
         ->get(['id', 'nom','prenom' ,'telephone']);
     return response()->json($clients);
 }
+
+public function exportPdfListClients(Request $request)
+{
+    $clients = Client::query();
+    // 🔍 Recherche textuelle
+    if ($request->q) {
+        $q = $request->q;
+        $clients = $clients->where(function ($query) use ($q) {
+            $query->where('nom', 'like', "%$q%")
+                  ->orWhere('prenom', 'like', "%$q%")
+                  ->orWhere('email', 'like', "%$q%")
+                  ->orWhere('telephone', 'like', "%$q%");
+        });
+    }
+
+    $clients = $clients->get(); // ⚡ pas de pagination
+    // Génération du PDF
+    $pdf =PDF::loadView('admin.clients.pdf', compact('clients'));
+    return $pdf->download('clients_recherche.pdf');
+}
+
+
+
+
 }

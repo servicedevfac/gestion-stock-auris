@@ -2,9 +2,8 @@
 @section('content')
 
 
-
     <!-- end page title -->
-<div>@if($produitsStockFaible->count() > 0)
+    <div>@if($produitsStockFaible->count() > 0)
         <div class="marquee">
             Stock faible :
             @foreach($produitsStockFaible as $produit)
@@ -12,16 +11,15 @@
             @endforeach
         </div>
     @else
-        <p>Aucun produit en stock faible ✅</p>
-    @endif
-</div>
+            <p>Aucun produit en stock faible ✅</p>
+        @endif
+    </div>
 
 
     <div class="row mt-3">
         <div class="col-lg-6">
-            <h4 class="page-title mb-0">Dashboard Vendeur</h4>
+            <h4 class="page-title mb-0"> Tableau de bord gestionnaire </h4>
         </div>
-
     </div>
     <div class="row mt-3">
         <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
@@ -33,7 +31,8 @@
                                 Chiffre d'affaires
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} Fr</div>
+                                {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} XOF
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
@@ -50,7 +49,8 @@
                             <div class="font-weight-bold text-black text-uppercase mb-1">Chiffre d'affaires du mois
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} Fr</div>
+                                {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} XOF
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
@@ -65,13 +65,14 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Nombre de ventes
+                                Chiffre d'affaires de la semaine
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($nombreVentes, 0, ',', ' ') }}</div>
+                                {{ number_format($chiffreAffairesSemaine, 0, ',', ' ') }} XOF
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-shopping-cart fa-2x text-gray-300 text-success"></i>
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300 text-success"></i>
                         </div>
                     </div>
                 </div>
@@ -83,21 +84,64 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires de la semaine
+                                Nombre de ventes
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($chiffreAffairesSemaine, 0, ',', ' ') }}</div>
+                                {{ number_format($nombreVentes, 0, ',', ' ') }} Ventes
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300 text-success"></i>
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300 text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+         <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header card-heade">
+                    <h4 class="card-title">Chiffre d'affaires des 12 derniers mois </h4>
+                </div>
+                <div class="chart-container">
+                    <canvas id="caLineChart" width="800" height="350"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row mt-4">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header redoff">
+                    <h4 class="card-title">les produits en stock faible</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered table-nowrap mb-0">
+                            <thead>
+                                <tr>
+                                    <th>N</th>
+                                    <th>Nom produit</th>
+                                    <th>Stock actuel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($produitsStockFaible as $produit)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $produit->nom }}</td>
+                                        <td>{{ $produit->stock_actuel }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade  ">
@@ -129,9 +173,8 @@
                                         <td>
                                             {{ $vente->created_at->format('d M Y') }}
                                         </td>
+                                    </tr>
                                 @endforeach
-
-                                </tr>
 
                             </tbody>
                         </table>
@@ -144,10 +187,9 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header card-heade ">
-                    <h4 class="card-title">Clients desVentes récentes</h4>
+                    <h4 class="card-title">Clients récents</h4>
 
                 </div>
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-centered table-nowrap mb-0">
@@ -176,40 +218,72 @@
                         </table>
                     </div>
                 </div>
-                <!-- end card-body--><!-- end col -->
+                <!-- end card--><!-- end col -->
             </div>
         </div>
-        <div class="col-xl-6">
-            <div class="card">
-                <div class="card-header redoff">
-                    <h4 class="card-title">les produits en stock faible</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-centered table-nowrap mb-0">
-                            <thead>
-                                <tr>
-                                    <th>N</th>
-                                    <th>Nom produit</th>
-                                    <th>Stock actuel</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($produitsStockFaible as $produit)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $produit->nom }}</td>
-                                        <td>{{ $produit->stock_actuel }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- end card-->
         <!-- end row -->
 
+    </div>
+@endsection
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = @json($labels);
+    const data = @json($data);
 
+    const ctx = document.getElementById('caLineChart').getContext('2d');
+
+    const caLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chiffre d\'affaires',
+                data: data,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2,
+                borderColor: '#02228b',
+                backgroundColor: '#e6b82359',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'top' },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(context.raw);
+                        }
+                    }
+                }
+            },
+            interaction: { mode: 'nearest', intersect: false },
+            scales: {
+                x: {
+                    display: true,
+                    title: { display: true, text: 'Mois' }
+                },
+                y: {
+                    display: true,
+                    title: { display: true, text: 'Montant' },
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR', { notation: 'compact' }).format(value);
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

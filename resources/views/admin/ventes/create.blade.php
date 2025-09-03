@@ -58,24 +58,32 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody id="ligne-produits">
-                            <tr>
-                                <td>
-                                    <select name="produits[0][produit_id]" class="form-control produit-select" required>
-                                        <option value="">-- Produit --</option>
-                                        @foreach($produits as $produit)
-                                            <option value="{{ $produit->id }}" data-prix="{{ $produit->prix }}">
-                                                {{ $produit->nom }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td><input type="number" name="produits[0][prix]" class="form-control prix" readonly></td>
-                                <td><input type="number" name="produits[0][quantite]" class="form-control quantite" min="1" value="1" required></td>
-                                <td><input type="number" class="form-control total" readonly></td>
-                                <td><button type="button" class="btn btn-delete btn-sm supprimer-ligne"><i class="fas fa-trash"></i></button></td>
-                            </tr>
-                        </tbody>
+                       <tbody id="ligne-produits">
+    @php $oldProduits = old('produits', [['produit_id' => '', 'prix' => '', 'quantite' => 1]]) @endphp
+
+    @foreach($oldProduits as $i => $produit)
+        <tr>
+            <td>
+                <select name="produits[{{ $i }}][produit_id]" class="form-control produit-select" required>
+                    <option value="">-- Produit --</option>
+                    @foreach($produits as $p)
+                        <option value="{{ $p->id }}"
+                            data-prix="{{ $p->prix }}"
+                            {{ $produit['produit_id'] == $p->id ? 'selected' : '' }}>
+                            {{ $p->nom }}
+                        </option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type="number" name="produits[{{ $i }}][prix]" class="form-control prix"
+                value="{{ $produit['prix'] ?? '' }}" readonly></td>
+            <td><input type="number" name="produits[{{ $i }}][quantite]" class="form-control quantite"
+                value="{{ $produit['quantite'] ?? 1 }}" min="1" required></td>
+            <td><input type="number" class="form-control total" value="0" readonly></td>
+            <td><button type="button" class="btn btn-delete btn-sm supprimer-ligne"><i class="fas fa-trash"></i></button></td>
+        </tr>
+    @endforeach
+</tbody>
                     </table>
 
                     <button type="button" class="btn btn-header1" id="ajouter-ligne">
@@ -106,8 +114,15 @@
                                 <option value="espèces">Espèces</option>
                                 <option value="mobile money">Mobile Money</option>
                                 <option value="carte">Carte</option>
+                                <option value="crédit">Crédit</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" name="est_paye" id="est_paye border-2" checked>
+                        <label class="form-check-label" for="est_paye">
+                            Est payé
+                        </label>
                     </div>
                     <button type="submit" class="btn btn-header1 btn-lg mt-4">
                         <i class="fas fa-save me-2"></i> Enregistrer la vente

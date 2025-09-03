@@ -19,7 +19,7 @@ class VerifierStock extends Command
         $this->info('Vérification des stocks...');
 
         // Récupérer tous les admins ou utilisateurs à notifier
-        $admins = User::role('admin')->get(); // ou User::where('role', 'admin')->get();
+        $admins = User::role('Administrateur')->get(); // ou User::where('role', 'admin')->get();
 
         // Récupérer tous les produits
         $produits = Produit::all();

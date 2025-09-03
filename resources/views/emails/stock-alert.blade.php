@@ -81,10 +81,12 @@
             <div class="stock-info">Stock actuel: <strong>{{ $produit['stock'] }}</strong></div>
             <div class="threshold-info">Seuil d'alerte: {{ $produit['seuil'] }}</div>
 
-            @if(isset($produit['url']))
+            @if(isset($produit['url']) && isset($produit['id']))
             <a href="http://localhost:8000/produits/{{ $produit['id'] }}" class="action-button view-button">Voir le produit</a>
+            @elseif(isset($produit['url']))
+            <a href="{{ $produit }}" class="action-button view-button">Voir le produit</a>
             @endif
-            <a href="http://localhost:8000/mouvement-stocks/create" class="action-button restock-button">Réapprovisionner</a>
+            <a href="http://localhost:8000/mouvementStocks/create" class="action-button restock-button">Réapprovisionner</a>
         </div>
         @endforeach
         <p><strong>Veuillez réapprovisionner ces produits dès que possible.</strong></p>

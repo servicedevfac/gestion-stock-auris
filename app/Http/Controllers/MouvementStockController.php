@@ -21,7 +21,7 @@ class MouvementStockController extends Controller
         $produits = Produit::all(); // Récupère tous les produits pour le champ
         $users = User::all(); // Récupère tous les utilisateurs pour le champ
 
-        $mouvements = MouvementStock::orderBy('created_at', 'desc')->paginate(10);
+        $mouvements = MouvementStock::orderBy('created_at', 'desc')->take(200)->get();
         return view('admin.stocks.index', compact('mouvements', 'produits', 'users'));
 
     }
@@ -69,7 +69,7 @@ public function store(Request $request)
 
     //Vérifier le stock et envoyer la notification si seuil atteint
     if ( $produit->stockActuel < $produit->seuil_alerte && $produit->alerte_envoyee==false) {
-        $admins = User::role('admin')->get();
+        $admins = User::role('Administrateur')->get();
         Notification::send($admins, new StockAlerte($produit));
 
         $produit->alerte_envoyee = true;
@@ -130,6 +130,7 @@ public function edit(MouvementStock $mouvementStock)
     return redirect()->route('mouvementStocks.index')
         ->with('error', 'La suppression des mouvements de stock est interdite.');
 }
+
 
     /**
      * Affiche une liste filtrée des mouvements de stock selon les critères.

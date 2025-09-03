@@ -21,7 +21,7 @@
 <link href="{{ url('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" />
 <link href="{{ url('assets/libs/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" />
 <link href="{{ url('assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet" />
-@notifyCss
+
 
     <!-- App CSS -->
     <link href="{{ url('assets/css/style.min.css') }}" rel="stylesheet" type="text/css">
@@ -107,7 +107,7 @@
         </footer>
     </div>
 
-    @notifyJs
+
 
     <!-- JS Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

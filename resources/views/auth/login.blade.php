@@ -11,26 +11,39 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
-      background-size: cover;
+      background: #02226b;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Segoe UI', sans-serif;
     }
+ .bg {
+  background: url('{{ url('assets/images/bg.png') }}') no-repeat center center fixed;
+  /* background-size: cover; */
+  height: 100vh;
+  width: 100vw;
+  position: fixed;   /* 👈 important */
+  top: 0;
+  left: 0;
+  z-index: -1;       /* 👈 passe derrière */
+}
 
-    .glass-card {
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      color: #fff;
-    }
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  color: #fff;
+  position: relative;  /* 👈 reste au-dessus */
+  z-index: 1;
+}
+
+
 
     .glass-card h2 {
       font-weight: 600;
@@ -85,6 +98,7 @@
   </style>
 </head>
 <body>
+    <div class="bg"></div>
   <div class="glass-card">
     <h2><i class="fas fa-boxes me-2"></i>Gest_Stock-Auris</h2>
     <form method="POST" action="{{ route('login') }}">
@@ -111,8 +125,9 @@
         <i class="fas fa-sign-in-alt me-2"></i>Se connecter
       </button>
 
-      <!-- Liens
+    
     </form>
   </div>
+
 </body>
 </html>

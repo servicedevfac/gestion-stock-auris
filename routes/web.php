@@ -7,6 +7,7 @@ use App\Http\Controllers\HoraireController;
 use App\Http\Controllers\MouvementStockController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\UserLoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserContoller; // ✅ Correction du nom
@@ -29,19 +30,36 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Clients (hors suppression)
+    Route::get('/clients/export-pdf', [ClientController::class, 'exportPdfListClients'])->name('clients.exportclien.pdf');
     Route::resource('clients', ClientController::class)->except('destroy');
 
     // Produits (uniquement index)
     Route::get('produits', [ProduitController::class, 'index'])->name('produits.index');
+    Route::post('/ventes/{vente}/payer', [VenteController::class, 'payer'])->name('ventes.payer');
+
+
+
+
+
+
+
 
     // Mouvements de stock (uniquement index)
     Route::get('mouvementStocks', [MouvementStockController::class, 'index'])->name('mouvementStocks.index');
+     Route::get('/user-logins', [UserLoginController::class, 'index'])->name('user-logins.index');
+    Route::get('/user-logins/{user}', [UserLoginController::class, 'show'])->name('user-logins.show');
     // Exportation Excel
-    Route::post('/simple-exel/expot', [ExportationEcontroller::class, 'exportation'])->name('export');
+    Route::get('/simple-exel/expot', [ExportationEcontroller::class, 'exportation'])->name('export');
+    Route::get('/mouvementStocks/export-excel',[ExportationEcontroller::class, 'exportMouvementStock'])->name('mouvementStocks.export-excel');
+    Route::get('/ventes-export-pdf', [VenteController::class, 'exportPDF'])->name('ventes.export.pdf');
+    Route::get('/ventes/export/pdf', [VenteController::class, 'exportPdflist'])->name('ventes.exportlist.pdf');
+     Route::get('/export/products/{format?}', [ExportationEcontroller::class, 'exportProducts'])
+        ->name('export.products')
+        ->where('format', 'excel|pdf');
+
     // Ventes (affichage + création)
     Route::get('/ventes', [VenteController::class, 'index'])->name('ventes.index');
     Route::get('/ventes-filtrees', [VenteController::class, 'ventesFiltrees'])->name('ventes.filtrees');
-    Route::get('/ventes-export-pdf', [VenteController::class, 'exportPDF'])->name('ventes.export.pdf');
     Route::get('/ventes/create', [VenteController::class, 'create'])->name('ventes.create')->middleware('verifier.heure.vente');
     Route::post('/ventes', [VenteController::class, 'store'])->name('ventes.store')->middleware('verifier.heure.vente');
     Route::get('/ventes/{vente}', [VenteController::class, 'show'])->name('ventes.show');
@@ -63,7 +81,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/toggle', [UserContoller::class, 'toggle'])->name('users.toggle');
 });
 // Groupe pour les super administrateurs
-Route::middleware(['web', 'verified', 'auth', 'is.super.admin'])->group(function () {
+Route::middleware(['web', 'verified', 'auth', 'is.superAdmin'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::get('/admin/horaires/historique', [HoraireController::class, 'historique'])->name('admin.horaires.historique');

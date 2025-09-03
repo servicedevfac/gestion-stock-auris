@@ -17,7 +17,7 @@
                  <table class="table table-hover table-bordered dt-responsive nowrap w-100">
                     <thead class="table-dark">
                         <tr>
-                            <th>Numéro</th>
+                            <th>N°</th>
                             <th>Nom</th>
                             <th>Permission</th>
                             <th>Actions</th>

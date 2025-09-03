@@ -63,9 +63,10 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($permissions as $perm) {
             Permission::firstOrCreate(['name' => $perm]);
         }
-        // Créer les rôles et leurs permissions
-        $admin = Role::firstOrCreate(['name' => 'admin']);
-        $gestionnaire = Role::firstOrCreate(['name' => 'gestionnaire']);
+        
+        $admin = Role::firstOrCreate(['name' => 'Administrateur']);
+        $gestionnaire = Role::firstOrCreate(['name' => 'Gestionnaire']);
+        $Commerciale = Role::firstOrCreate(['name' => 'Commerciale']);
         $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
         $superAdmin->givePermissionTo($permissions);
         $gestionnaire->givePermissionTo([
@@ -103,6 +104,15 @@ class RolesAndPermissionsSeeder extends Seeder
             'delete produit',
             'exporter produit',
             ]);
+        $Commerciale->givePermissionTo([
+           'view client',
+            'create client',
+            'edit client',
+            'view produit',
+            'view vente',
+            'create vente',
+            'view stock',
+        ]);
     }
 }
 
