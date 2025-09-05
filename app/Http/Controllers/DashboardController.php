@@ -73,9 +73,10 @@ class DashboardController extends Controller
                 SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
                 SUM(CASE WHEN type_mouvement = "sortie" THEN quantite ELSE 0 END) as stock_actuel
             ')
-            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
+            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
+
             $months = collect();
         for ($i = 11; $i >= 0; $i--) {
             $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
