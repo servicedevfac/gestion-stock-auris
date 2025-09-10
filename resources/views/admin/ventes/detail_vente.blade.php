@@ -31,7 +31,7 @@
                     @if (!$vente->est_paye)
                         <form action="{{ route('ventes.payer', $vente->id) }}" method="POST">
                             @csrf
-                            @method('POST')
+
                             <div class="mb-3">
                                 <label for="mode_paiement" class="form-label">Mode de paiement</label>
                                 <select name="mode_paiement" id="mode_paiement" class="form-select" required>
@@ -42,10 +42,16 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-success">Valider le paiement</button>
-                        </form>
+                            <div class="mb-3">
+                                <label for="montant_paye" class="form-label">Montant payé (avance)</label>
+                                <input type="number" name="montant_paye" id="montant_paye" class="form-control"
+                                    max="{{ $vente->reste_a_payer ?? $vente->montant_total }}" required>
+                            </div>
 
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </form>
                     @endif
+
                 </div>
 
             </div>

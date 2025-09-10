@@ -113,16 +113,15 @@
     <table class="table table-hover table-bordered dt-responsive nowrap w-100">
         <thead class="card-heade  table-dark">
             <tr>
-                <th>N°</th>
-                <th>Code reçu</th>
+                <th>#</th>
                 <th>Client</th>
                 <th>Date</th>
-                <th>Montant total</th>
-                <th>Etat de paiement</th>
-                <th>Recu de vente</th>
-               <th>Actions</th>
-
-
+                <th>Montant total (FCFA)</th>
+                <th>Mode de paiement</th>
+                <th>Montant payé (FCFA)</th>
+                <th>Reste à payer (FCFA)</th>
+                <th>Statut</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -133,10 +132,12 @@
             @else style="background-color:#e2e3e5 ;"
             @endif>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $vente->code_recu }}</td>
-                <td>{{ $vente->client->nom ?? '' }}</td>
+                <td>{{ $vente->client->nom }}</td>
                 <td>{{ $vente->created_at }}</td>
                 <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
+                <td>{{ $vente->mode_paiement }}</td>
+                <td>{{ number_format($vente->montant_paye, 0, ',', ' ') }} FCFA</td>
+                <td>{{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA</td>  
                 <td >@if ($vente->est_paye)
                     <span class="text-white badge bg-success">Payé</span>
                 @else

@@ -49,9 +49,8 @@
             font-weight: bold;
         }
 
-        .center {
-            text-align: center;
-        }
+        .right { text-align: right; }
+        .center { text-align: center; }
 
         @media print {
             body {
@@ -65,8 +64,8 @@
 <body>
     <div class="header">
         <img src="{{ asset('assets/images/logo-light.png') }}"
-     alt="Logo"
-     style="width: 100px; height: auto; display: block; margin: 0 auto;">
+             alt="Logo"
+             style="width: 100px; height: auto; display: block; margin: 0 auto;">
 
         <p>Adresse | Téléphone</p>
         <hr>
@@ -84,8 +83,8 @@
                 <tr>
                     <th>Produit</th>
                     <th class="center">Qté</th>
-                    <th class="center">Prix</th>
-                    <th class="center">Total</th>
+                    <th class="right">Prix</th>
+                    <th class="right">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -93,8 +92,8 @@
                 <tr>
                     <td>{{ $detail->produit->nom }}</td>
                     <td class="center">{{ $detail->quantite }}</td>
-                    <td class="center">{{ number_format($detail->prix,0,',',' ') }}</td>
-                    <td class="center">{{ number_format($detail->total,0,',',' ') }}</td>
+                    <td class="right">{{ number_format($detail->prix,0,',',' ') }}</td>
+                    <td class="right">{{ number_format($detail->total,0,',',' ') }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -104,16 +103,32 @@
     <div class="totals">
         <table>
             <tr>
-                <td>Montant total:</td>
-                <td class="center"> {{ number_format($vente->details->sum('total'), 0, ',', ' ') }} FCFA</td>
+                <td>Total brut:</td>
+                <td class="right">{{ number_format($vente->details->sum('total'), 0, ',', ' ') }} FCFA</td>
             </tr>
             <tr>
                 <td>Remise:</td>
-                <td class="center">{{ number_format($vente->remise ?? 0,0,',',' ') }} FCFA</td>
+                <td class="right">{{ number_format($vente->remise ?? 0,0,',',' ') }} FCFA</td>
             </tr>
             <tr>
-                <td>À payer:</td>
-                <td class="center">{{ number_format($vente->details->sum('total') - ($vente->remise ?? 0),0,',',' ') }} FCFA</td>
+                <td><strong>Total net:</strong></td>
+                <td class="right">
+                    {{ number_format($vente->details->sum('total') - ($vente->remise ?? 0),0,',',' ') }} FCFA
+                </td>
+            </tr>
+            <tr>
+                <td>Avance:</td>
+                <td class="right">{{ number_format($vente->montant_paye ?? 0,0,',',' ') }} FCFA</td>
+            </tr>
+            <tr>
+                <td>Reste à payer:</td>
+                <td class="right">
+                    {{ number_format(($vente->details->sum('total') - ($vente->remise ?? 0)) - ($vente->montant_paye ?? 0),0,',',' ') }} FCFA
+                </td>
+            </tr>
+            <tr>
+                <td>Mode paiement:</td>
+                <td class="right">{{ ucfirst($vente->mode_paiement ?? 'Espèces') }}</td>
             </tr>
         </table>
     </div>
@@ -124,7 +139,7 @@
     </div>
 
     <script>
-        // Ouvre directement la fenêtre d'impression pour tester
+        // Ouvre directement la fenêtre d'impression
         window.onload = function() {
             window.print();
         }

@@ -8,7 +8,7 @@
             @foreach($produitsStockFaible as $produit)
                 {{ $produit->nom }} ({{ $produit->stock_actuel }}) &nbsp;&nbsp;|&nbsp;&nbsp;
             @endforeach
-            veillez à réapprovisionner ces produits.
+            veillez à approvisionner ces produits.
         </div>
     @else
             <p>Aucun produit en stock faible ✅</p>
@@ -20,15 +20,13 @@
         </div>
     </div>
     <div class="row mt-3">
-
-        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+        <div class="col" style="flex: 0 0 20%; max-width: 20%">
             <div class="card stat-card card-heade h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-
                             <div class="font-weight-bold  text-uppercase mb-1">
-                                Chiffre d'affaires de la journée
+                                Chiffre d'affaires payés de la journée
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-white text-gray-800">
                                 {{ number_format($ca_journalier, 0, ',', ' ') }} XOF
@@ -37,12 +35,11 @@
                         <div class="col-auto">
                             <i class="fas fa-money-bill fa-2x text-gray-300 text-colj"></i>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+        <div class="col" style="flex: 0 0 20%; max-width: 20%">
             <div class="card   stat-card  success  h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -61,9 +58,7 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="col" style="flex: 0 0 25%; max-width: 25%">
+        <div class="col" style="flex: 0 0 20%; max-width: 20%">
             <div class="card  colj stat-card success  h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -82,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;">
+        <div class="col" style="flex: 0 0 20%; max-width: 20%;">
             <div class="card stat-card c h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -92,6 +87,25 @@
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($totalVentesNonPayes, 0, ',', ' ') }} XOF
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300 text-colj"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 20%; max-width: 20%;">
+            <div class="card stat-card c h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Chiffre d'affaires total
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($chiffreAffairesGlobaux, 0, ',', ' ') }} XOF
                             </div>
                         </div>
                         <div class="col-auto">
@@ -281,8 +295,8 @@
             labels: labels,
             datasets: [
                 {
-                    label: 'Chiffre d\'affaires non payés',
-                    data: data,
+                    label: 'Chiffre d\'affaires payés',
+                    data: data1,
                     borderColor: '#02228b',
                     backgroundColor: '#e6b82359',
                     fill: true,
@@ -292,8 +306,8 @@
                     borderWidth: 2,
                 },
                 {
-                    label: 'Chiffre d\'affaire  payé',
-                    data: data1,
+                    label: 'Chiffre d\'affaire non payé',
+                    data: data,
                     borderColor: '#e62323',
                     backgroundColor: '#e6232359',
                     fill: true,

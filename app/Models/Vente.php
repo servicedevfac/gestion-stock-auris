@@ -18,6 +18,8 @@ class Vente extends Model
         'code_recu',
         'statut',// Ajouté pour permettre l'enregistrement du code reçu
         'est_paye',
+        'reste_a_payer',
+        'montant_paye',
     ];
 
     public function client()

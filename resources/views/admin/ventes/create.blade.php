@@ -114,12 +114,19 @@
                                 <option value="espèces">Espèces</option>
                                 <option value="mobile money">Mobile Money</option>
                                 <option value="carte">Carte</option>
-                                <option value="crédit">Crédit</option>
                             </select>
+                            {{-- Champ Avance (uniquement si crédit) --}}
+                            <div class="col-md-6 mt-3 d-none" id="avance_section">
+                                <label for="montant_paye" class="form-label">Avance versée (FCFA)</label>
+                                <input type="number" step="0.01" min="0" name="montant_paye" id="montant_paye"
+                                    class="form-control" placeholder="Saisir le montant avancé">
+                            </div>
                         </div>
+
+
                     </div>
                     <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" name="est_paye" id="est_paye border-2" checked>
+                        <input class="form-check-input border-2" type="checkbox" name="est_paye" id="est_paye" readonly >
                         <label class="form-check-label" for="est_paye">
                             Est payé
                         </label>
@@ -134,117 +141,144 @@
 
 @endsection
 
+
+
 @section('scripts')
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    let index = 1;
+let index = 1;
 
-    function recalculerTotals() {
-        let total = 0;
-
-        document.querySelectorAll('#ligne-produits tr').forEach(row => {
-            const prix = parseFloat(row.querySelector('.prix')?.value || 0);
-            const quantite = parseFloat(row.querySelector('.quantite')?.value || 0);
-            const ligneTotal = prix * quantite;
-            row.querySelector('.total').value = ligneTotal.toFixed(0);
-            total += ligneTotal;
-        });
-
-        const remise = parseFloat(document.getElementById('remise')?.value || 0);
-        let montantApayer = total - remise;
-        if(montantApayer < 0) montantApayer = 0;
-        document.getElementById('montant_total').value = montantApayer.toFixed(0);
-    }
-
-    document.getElementById('ajouter-ligne').addEventListener('click', function() {
-        const table = document.getElementById('ligne-produits');
-        const firstRow = table.querySelector('tr');
-        const nouvelleLigne = firstRow.cloneNode(true);
-
-        // Réinitialiser les valeurs de la nouvelle ligne
-        nouvelleLigne.querySelectorAll('input, select').forEach(el => {
-            if (el.name && el.name.includes('produits')) {
-                const base = el.name.split('[')[0];
-                const champ = el.name.substring(el.name.indexOf(']') + 1);
-                el.name = `${base}[${index}]${champ}`;
-            }
-            if (el.classList.contains('prix') || el.classList.contains('total')) {
-                el.value = '';
-            }
-            if (el.classList.contains('quantite')) {
-                el.value = 1;
-            }
-            if (el.tagName === 'SELECT') {
-                el.selectedIndex = 0;
-            }
-        });
-
-        // Supprimer la nouvelle ligne (bouton)
-        nouvelleLigne.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
-            const rows = document.querySelectorAll('#ligne-produits tr');
-            if (rows.length > 1) {
-                e.target.closest('tr').remove();
-                recalculerTotals();
-            }
-        });
-
-        // Au changement produit, remplir le prix
-        nouvelleLigne.querySelector('.produit-select').addEventListener('change', function(e) {
-            const prix = e.target.selectedOptions[0].getAttribute('data-prix');
-            const row = e.target.closest('tr');
-            row.querySelector('.prix').value = prix;
-            recalculerTotals();
-        });
-
-        // Modifier quantité recalcul
-        nouvelleLigne.querySelector('.quantite').addEventListener('input', recalculerTotals);
-
-        table.appendChild(nouvelleLigne);
-        index++;
-        recalculerTotals();
+// --- Fonction pour recalculer les totaux ---
+function recalculerTotals() {
+    let total = 0;
+    document.querySelectorAll('#ligne-produits tr').forEach(row => {
+        const prix = parseFloat(row.querySelector('.prix')?.value || 0);
+        const quantite = parseFloat(row.querySelector('.quantite')?.value || 0);
+        const ligneTotal = prix * quantite;
+        row.querySelector('.total').value = ligneTotal.toFixed(0);
+        total += ligneTotal;
     });
 
-    // Initialiser la première ligne : supprimer, changement produit, quantité
-    document.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
+    const remise = parseFloat(document.getElementById('remise')?.value || 0);
+    let montantApayer = total - remise;
+    if (montantApayer < 0) montantApayer = 0;
+    document.getElementById('montant_total').value = montantApayer.toFixed(0);
+
+    // Vérifier avance vs total
+    const avance = parseFloat(document.getElementById('montant_paye')?.value || 0);
+    const estPaye = document.getElementById('est_paye');
+    const sectionAvance = document.getElementById('avance_section');
+
+    if (avance >= montantApayer && montantApayer > 0) {
+        estPaye.checked = true;
+        sectionAvance.classList.add('d-none');
+    } else {
+        estPaye.checked = false;
+        sectionAvance.classList.remove('d-none');
+    }
+}
+
+// --- Fonction pour initialiser une ligne ---
+function initLigne(row) {
+    // Supprimer ligne
+    row.querySelector('.supprimer-ligne').addEventListener('click', function(e) {
         const rows = document.querySelectorAll('#ligne-produits tr');
         if (rows.length > 1) {
             e.target.closest('tr').remove();
             recalculerTotals();
         }
     });
-    document.querySelector('.produit-select').addEventListener('change', function(e) {
-        const prix = e.target.selectedOptions[0].getAttribute('data-prix');
-        const row = e.target.closest('tr');
+
+    // Changement produit => remplir prix
+    row.querySelector('.produit-select').addEventListener('change', function(e) {
+        const prix = e.target.selectedOptions[0]?.getAttribute('data-prix') || 0;
         row.querySelector('.prix').value = prix;
         recalculerTotals();
     });
-    document.querySelector('.quantite').addEventListener('input', recalculerTotals);
 
-    // Remise en temps réel
-    document.getElementById('remise').addEventListener('input', recalculerTotals);
+    // Quantité modifiée
+    row.querySelector('.quantite').addEventListener('input', recalculerTotals);
+}
 
-    // Calcul initial
-    recalculerTotals();
+// --- Ajouter une nouvelle ligne ---
+document.getElementById('ajouter-ligne').addEventListener('click', function() {
+    const table = document.getElementById('ligne-produits');
+    const firstRow = table.querySelector('tr');
+    const nouvelleLigne = firstRow.cloneNode(true);
 
-    // Init Select2 client
-    $('#client-select').select2({
-        placeholder: 'Rechercher un client...',
-       // minimumInputLength: 1,
-        ajax: {
-            url: '{{ route("clients.search") }}',
-            dataType: 'json',
-            delay: 250,
-            data: params => ({ q: params.term }),
-            processResults: data => ({
-                results: data.map(client => ({
-                    id: client.id,
-                    text: client.nom + ' '+client.prenom+' Telephone:'+client.telephone
-                }))
-            }),
-            cache: true
+    // Réinitialiser valeurs et index
+    nouvelleLigne.querySelectorAll('input, select').forEach(el => {
+        if (el.name && el.name.includes('produits')) {
+            const base = el.name.split('[')[0];
+            const champ = el.name.substring(el.name.indexOf(']') + 1);
+            el.name = `${base}[${index}]${champ}`;
         }
+        if (el.classList.contains('prix') || el.classList.contains('total')) el.value = '';
+        if (el.classList.contains('quantite')) el.value = 1;
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
     });
+
+    initLigne(nouvelleLigne);
+    table.appendChild(nouvelleLigne);
+    index++;
+    recalculerTotals();
+});
+
+// --- Initialisation première ligne ---
+initLigne(document.querySelector('#ligne-produits tr'));
+
+// --- Remise en temps réel ---
+document.getElementById('remise').addEventListener('input', recalculerTotals);
+
+// --- Select2 client ---
+$('#client-select').select2({
+    placeholder: 'Rechercher un client...',
+    ajax: {
+        url: '{{ route("clients.search") }}',
+        dataType: 'json',
+        delay: 250,
+        data: params => ({ q: params.term }),
+        processResults: data => ({
+            results: data.map(client => ({
+                id: client.id,
+                text: client.nom + ' ' + client.prenom + ' ' + client.telephone
+            }))
+        }),
+        cache: true
+    }
+});
+
+// --- Avance modifiée ---
+document.getElementById('montant_paye').addEventListener('input', recalculerTotals);
+
+// --- Checkbox est_paye contrôle affichage avance ---
+document.getElementById('est_paye').addEventListener('change', function() {
+    const sectionAvance = document.getElementById('avance_section');
+    const avanceInput = document.getElementById('montant_paye');
+    const montantTotal = parseFloat(document.getElementById('montant_total').value || 0);
+
+    if (this.checked) {
+        // Si payé => cacher champ avance
+        sectionAvance.classList.add('d-none');
+        avanceInput.value = montantTotal;
+    } else {
+        // Si non payé => afficher champ avance
+        sectionAvance.classList.remove('d-none');
+        avanceInput.value = 0;
+    }
+    recalculerTotals();
+});
+
+// --- Initialiser affichage au chargement ---
+window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('est_paye').dispatchEvent(new Event('change'));
+    recalculerTotals();
+});
 </script>
 @endsection
+
+
+
+

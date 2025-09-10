@@ -118,17 +118,30 @@ class VenteController extends Controller
 
         DB::beginTransaction();
         try {
-            $vente = Vente::create([
-                'client_id' => $request->client_id,
-                'user_id' => Auth::id(),
-                'date_vente' => $request->date_vente,
-                'montant_total' => $request->montant_total,
-                'remise' => $request->remise,
-                'mode_paiement' => $request->mode_paiement,
-                'code_recu' => $code_recu,
-                'est_paye' => $request->has('est_paye') ? true : false,
+                                // Calcul du montant payé et reste à payer
+                    $montantTotal = $request->montant_total;
+                    $montantPaye = $request->montant_paye ?? 0; // Valeur envoyée ou 0 par défaut
+                    $resteAPayer = $montantTotal - $montantPaye;
 
-            ]);
+                    // Sécurité : éviter les valeurs négatives
+                    if ($resteAPayer < 0) {
+                        $resteAPayer = 0;
+                    }
+                    $estPaye = ($resteAPayer == 0);
+
+                    $vente = Vente::create([
+                        'client_id' => $request->client_id,
+                        'user_id' => Auth::id(),
+                        'date_vente' => $request->date_vente,
+                        'montant_total' => $montantTotal,
+                        'remise' => $request->remise,
+                        'mode_paiement' => $request->mode_paiement,
+                        'code_recu' => $code_recu,
+                        'est_paye' => $estPaye,
+                        'montant_paye' => $montantPaye,
+                        'reste_a_payer' => $resteAPayer,
+                    ]);
+
             // 1) Vérif stock AVANT (tu avais déjà, je garde et fiabilise un peu)
             $erreurs = [];
             foreach ($request->produits as $p) {
@@ -187,16 +200,14 @@ class VenteController extends Controller
             // 3) PDF
             $vente->load(['client', 'user', 'details.produit']);
             $pdf = Pdf::loadView('admin.ventes.recu_pdf', ['vente' => $vente]);
-            $filename = 'recu_vente_' . $vente->client->nom . '_' . $vente->code_recu . '.pdf';
+            $filename = 'recu_vente_'. $vente->client->nom . '_' . $vente->code_recu . '.pdf';
             Storage::put('public/recus/' . $filename, $pdf->output());
             $vente->update(['pdf_recu' => 'recus/' . $filename]);
-
             // 4) Envoi mail groupé aux admins si nécessaire
             if (!empty($itemsAlerte)) {
                 // Spatie roles (tu l’utilises déjà avec hasRole)
                 $admins = User::role('Administrateur')->get(); // ou ->where('is_admin', true)->get();
                 Notification::sendNow($admins, new StockAlerte($itemsAlerte));
-
                 // Marquer les produits comme alertés (anti-spam)
                 Produit::whereIn('id', $produitsAFlag)->update([
                     'alerte_envoyee' => true,
@@ -522,15 +533,27 @@ public function payer(Request $request, $id)
 
     $request->validate([
         'mode_paiement' => 'required|string|max:50',
+        'montant_paye' => 'required|numeric|min:0',
     ]);
 
-    if (!$vente->est_paye) {
+    $montant = $request->montant_paye;
+
+    // Calcul du reste
+    $reste = $vente->montant_total - ($vente->montant_paye + $montant);
+
+    // Mise à jour
+    $vente->montant_paye += $montant;
+    $vente->reste_a_payer = max($reste, 0);
+    $vente->mode_paiement = $request->mode_paiement;
+
+    // Si le client a tout payé → marquer comme payé
+    if ($vente->montant_paye >= $vente->montant_total) {
         $vente->est_paye = true;
-        $vente->mode_paiement = $request->mode_paiement;
-        $vente->save();
     }
 
-    return redirect()->back()->with('success', 'La vente a été marquée comme payée en ' . $vente->mode_paiement . '.');
+    $vente->save();
+
+    return redirect()->back()->with('success', "Paiement enregistré : {$montant} FCFA. Reste à payer : {$vente->reste_a_payer} FCFA.");
 }
 
 

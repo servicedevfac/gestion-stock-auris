@@ -21,21 +21,21 @@
             <h4 class="page-title mb-0"> Tableau de bord gestionnaire </h4>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
-            <div class="card stat-card success h-100 py-2">
+    <div class="row mt-3 ">
+        <div class="col mb-2" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card succes   h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires
+                                 Chiffre d'affaires payés de la journée
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} XOF
+                                {{ number_format($ca_journalier, 0, ',', ' ') }} XOF
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300 text-success  "></i>
                         </div>
                     </div>
                 </div>
@@ -46,13 +46,53 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="font-weight-bold text-black text-uppercase mb-1">Chiffre d'affaires du mois
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                               Chiffre d'affaires payés du mois en cours
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} XOF
                             </div>
                         </div>
                         <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300 text-success  "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Chiffre d'affaires annuelles payés
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} XOF
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300 text-success  "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                chiffre d'affaire global
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{number_format($chiffreAffairesvendeursglobal, 0, ',', ' ')}} XOF
+
+                            </div>
+                        </div>
+                        <div class="col-auto">
                             <i class="fas fa-money-bill fa-2x text-gray-300 text-success"></i>
                         </div>
                     </div>
@@ -65,14 +105,15 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires de la semaine
+                                Chiffre d'affaires impayés de la journée
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($chiffreAffairesSemaine, 0, ',', ' ') }} XOF
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
+                                {{number_format($ca_journalierNonPaye, 0, ',', ' ')}} XOF
+
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300 text-success"></i>
+                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
                         </div>
                     </div>
                 </div>
@@ -84,14 +125,52 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Nombre de ventes
+                                chiffre d'affaire impayé du mois en cours
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ number_format($nombreVentes, 0, ',', ' ') }} Ventes
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
+                                 {{number_format($chiffreAffaireMoisEnCourNonPaye, 0, ',', ' ')}} XOF
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-shopping-cart fa-2x text-gray-300 text-success"></i>
+                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                chiffre d'affaire annuel non payé
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
+                                {{number_format($chiffreAffairesvendeursimpaye, 0, ',', ' ')}} XOF
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                chiffre d'affaire annuel non payé
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
+                                {{number_format($chiffreAffairesvendeursimpaye, 0, ',', ' ')}} XOF
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
                         </div>
                     </div>
                 </div>
@@ -232,6 +311,7 @@
 <script>
     const labels = @json($labels);
     const data = @json($data);
+    const data1 = @json($data1);
 
     const ctx = document.getElementById('caLineChart').getContext('2d');
 
@@ -239,17 +319,30 @@
         type: 'line',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Chiffre d\'affaires',
-                data: data,
-                fill: true,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                borderWidth: 2,
-                borderColor: '#02228b',
-                backgroundColor: '#e6b82359',
-            }]
+            datasets: [
+               {
+                    label: 'Chiffre d\'affaires payés',
+                    data: data,
+                    borderColor: '#02228b',
+                    backgroundColor: '#e6b82359',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                },
+                {
+                    label: 'Chiffre d\'affaire non payé',
+                    data: data1,
+                    borderColor: '#e62323',
+                    backgroundColor: '#e6232359',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                }
+            ]
         },
         options: {
             responsive: true,
