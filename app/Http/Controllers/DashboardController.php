@@ -190,7 +190,7 @@ class DashboardController extends Controller
                 ->sum('montant_total');
             // Récupérer les données pour les produits dont le stock est faible
 
-            $produitsStockFaible = Produit::select('produits.*')
+            $produitsStockFaible = Produit::select('id', 'nom', 'prix', 'seuil_alerte', 'created_at', 'updated_at')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
                 SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -

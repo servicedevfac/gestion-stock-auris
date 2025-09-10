@@ -52,7 +52,7 @@
             margin-right: 10px;
         }
         .view-button {
-            background-color: #2196F3;
+            background-color: #02228b;
         }
         .restock-button {
             background-color: #4CAF50;
