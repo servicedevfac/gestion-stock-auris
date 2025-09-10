@@ -39,7 +39,7 @@ class DashboardController extends Controller
                 $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(10)->get();
 
                 // Calculer le chiffre d'affaires du jour
-                $ca_journalier = DB::table('ventes')->where('est_paye', true)->whereDate('created_at', Carbon::today())->sum('montant_paye');
+                $ca_journalier = DB::table('ventes')->where('statut', 'valide')->whereDate('created_at', Carbon::today())->sum('montant_paye');
 
                 // Calculer le chiffre d'affaires du mois en cours
                 $chiffreAffaireMoisEnCours = DB::table('ventes')->where('statut', 'valide')
