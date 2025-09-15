@@ -26,7 +26,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold  text-uppercase mb-1">
-                                Chiffre d'affaires payés de la journée
+                                Montant encaissé de la journée
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-white text-gray-800">
                                 {{ number_format($ca_journalier, 0, ',', ' ') }} XOF
@@ -45,7 +45,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires payés du mois en cours
+                                Montant encaissé du mois en cours
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} XOF
@@ -64,7 +64,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-white text-uppercase mb-1">
-                                Chiffre d'affaires annuelles payés
+                                Montant encaissé  annuelles
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-white text-gray-800">
                                 {{ number_format($chiffreAffaires, 0, ',', ' ') }} XOF
@@ -83,7 +83,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires non payés
+                                Reste à payer
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($totalVentesNonPayes, 0, ',', ' ') }} XOF
@@ -252,53 +252,39 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
-        {{--
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-        <script>
-            const chartData = @json($chartData); // maintenant toujours rempli de 0 au minimum
-            const moisLabels = Object.keys(chartData);
-            const produits = [...new Set(Object.values(chartData).flatMap(item => Object.keys(item)))];
 
-            const morrisData = moisLabels.map(mois => {
-                const row = { y: mois };
-                produits.forEach(produit => {
-                    row[produit] = chartData[mois][produit] ?? 0;
-                });
-                return row;
-            });
-
-            new Morris.Bar({
-                element: 'chart',
-                data: morrisData,
-                xkey: 'y',
-                ykeys: produits,
-                labels: produits,
-                hideHover: 'auto',
-                resize: true,
-                barColors: ['#0b62a4', '#7a92a3', '#4da74d', '#afd8f8'],
-                ymin: 0,
-                ymax: 'auto'
-            });
-        </script> --}}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const labels = @json($labels);
     const data = @json($data);   // Ligne 1 : CA
     const data1 = @json($data1); // Ligne 2 : Bénéfice ou autre
+    const reste=@json($dataReste);
 
     const ctx = document.getElementById('caLineChart').getContext('2d');
 
     const caLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [
                 {
-                    label: 'Chiffre d\'affaires payés',
+                    label: 'Chiffre d\'affaire ',
+                    data: data,
+                    backgroundColor: 'blue',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                },
+                                {
+                    label: 'Montant encaissé',
                     data: data1,
-                    borderColor: '#02228b',
-                    backgroundColor: '#e6b82359',
+                   backgroundColor: 'green',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     fill: true,
                     tension: 0.3,
                     pointRadius: 4,
@@ -306,17 +292,17 @@
                     borderWidth: 2,
                 },
                 {
-                    label: 'Chiffre d\'affaire non payé',
-                    data: data,
-                    borderColor: '#e62323',
-                    backgroundColor: '#e6232359',
+                    label: 'Reste à payer',
+                    data: reste,
+                    backgroundColor: 'red',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     fill: true,
                     tension: 0.3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
                     borderWidth: 2,
                 }
-            ]
+            ],
         },
         options: {
             responsive: true,
@@ -354,6 +340,73 @@
     });
 </script>
 
+{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('ventesPaiementsChart');
+
+    const ventesPaiementsChart = new Chart(ctx, {
+        type: 'bar', // tu peux changer en 'line'
+        data: {
+            labels: @json($labels),
+            datasets: [
+                {
+                    label: 'Ventes',
+                    data: @json($data),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Paiements',
+                    data: @json($data1),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Reste à encaisser',
+                    data: @json($dataReste),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Ventes vs Paiements vs Restes à encaisser (12 derniers mois)'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Montant (FCFA)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mois'
+                    }
+                }
+            }
+        }
+    });
+</script> --}}
 
 
 

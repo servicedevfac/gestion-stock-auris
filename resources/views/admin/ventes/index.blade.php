@@ -133,11 +133,11 @@
             @endif>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $vente->client->nom }}</td>
-                <td>{{ $vente->created_at }}</td>
+                <td>{{ $vente->updated_at }}</td>
                 <td>{{ number_format($vente->montant_total, 0, ',', ' ') }} FCFA</td>
                 <td>{{ $vente->mode_paiement }}</td>
                 <td>{{ number_format($vente->montant_paye, 0, ',', ' ') }} FCFA</td>
-                <td>{{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA</td>  
+                <td>{{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA</td>
                 <td >@if ($vente->est_paye)
                     <span class="text-white badge bg-success">Payé</span>
                 @else

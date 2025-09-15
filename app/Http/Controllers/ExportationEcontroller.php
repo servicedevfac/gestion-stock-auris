@@ -210,12 +210,21 @@ class ExportationEcontroller extends Controller
     {
         $pdf = app()->make('dompdf.wrapper');
 
+
         $html = '<style>
             table { width: 100%; border-collapse: collapse; }
             th { background-color: #02228b; color: white; }
             th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-            .low-stock { background-color: #FFB6C1; }
+            .low-stock { background-color: #FFB6C1;
+            p{
+                font-size: 12px;
+                margin-bottom:50px;
+            }
+
+        }
         </style>';
+        $html .='<p style="margin-bottom: 125px;">Édité le : ' . now()->format(format: 'd/m/Y H:i') . ' </p>';
+
 
         $html .= '<h2>Liste des Produits</h2>';
         $html .= '<table><tr>';

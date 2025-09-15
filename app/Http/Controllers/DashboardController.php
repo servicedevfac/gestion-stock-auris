@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Paiement;
 use App\Models\Produit;
 use App\Models\Vente;
 use App\Models\Detail_vente;
@@ -39,18 +40,21 @@ class DashboardController extends Controller
                 $derniersClients = Vente::with('client')->orderBy('created_at', 'desc')->select('client_id')->distinct()->take(10)->get();
 
                 // Calculer le chiffre d'affaires du jour
-                $ca_journalier = DB::table('ventes')->where('statut', 'valide')->whereDate('created_at', Carbon::today())->sum('montant_paye');
+                $ca_journalier = Paiement::whereDate('created_at', Carbon::today())->sum('montant');
+                $ca_journalierNonPaye = DB::table('ventes')
+                ->where('user_id', $user->id)
+                ->where('statut', 'valide')
+                ->whereDate('created_at', Carbon::today())
+                ->sum('montant_total')-$ca_journalier;
 
-                // Calculer le chiffre d'affaires du mois en cours
-                $chiffreAffaireMoisEnCours = DB::table('ventes')->where('statut', 'valide')
-                    ->whereYear('created_at', Carbon::now()->year)
-                    ->whereMonth('created_at', Carbon::now()->month)
-                    ->sum('montant_paye');
+               $chiffreAffaireMoisEnCours = Paiement::whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->sum('montant');
 
                 // Calculer le chiffre d'affaires total
-                $chiffreAffaires = Vente::where('statut', 'valide')->where('est_paye', true)->whereYear('created_at', Carbon::now()->year)->sum('montant_paye');
-                $chiffreAffairesGlobaux = Vente::where('statut', 'valide')->where('est_paye', true)->whereYear('created_at', Carbon::now()->year)->sum('montant_total');
-                $totalVentesNonPayes = Vente::where('statut', 'valide')->where('est_paye', false)->sum('reste_a_payer');
+                $chiffreAffaires = Paiement::whereYear('created_at', Carbon::now()->year)->sum('montant');
+                $chiffreAffairesGlobaux = Vente::whereYear('created_at', Carbon::now()->year)->sum('montant_total');
+                $totalVentesNonPayes = $chiffreAffairesGlobaux - Paiement::sum('montant');
 
                 $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
@@ -62,36 +66,7 @@ class DashboardController extends Controller
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
 
-            $months = collect();
-        for ($i = 11; $i >= 0; $i--) {
-            $months->push(Carbon::now()->subMonths($i)->format('Y-m'));
-        }
-
-       $driver = DB::getDriverName();
-
-    $dateExpr = match ($driver) {
-        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
-        'sqlite' => "strftime('%Y-%m', created_at)",
-        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
-        default  => "DATE_FORMAT(created_at, '%Y-%m')",
-    };
-
-    $sales = Vente::selectRaw("$dateExpr as month, SUM(reste_a_payer) as total")
-        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-        ->where('statut', 'valide')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
-    $sales1 = Vente::selectRaw("$dateExpr as month, SUM(montant_paye) as total")
-        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-        ->where('statut', 'valide')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
-
-    // génère les 12 derniers mois
+    //
     $months = collect(range(0, 11))
         ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
         ->reverse();
@@ -99,17 +74,51 @@ class DashboardController extends Controller
     // labels lisibles
     $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
 
-    // données
-    $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+    // détecter le driver (MySQL, PostgreSQL, SQLite)
+    $driver = DB::getDriverName();
+    $dateExpr = match ($driver) {
+        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
+        'sqlite' => "strftime('%Y-%m', created_at)",
+        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
+        default  => "DATE_FORMAT(created_at, '%Y-%m')",
+    };
+
+    // ventes par mois
+    $sale = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->where('statut', 'valide')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // paiements par mois
+    $sales1 = Paiement::selectRaw("$dateExpr as month, SUM(montant) as total")
+        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
+
+    // données ventes par mois
+    $data = $months->map(fn($m) => $sale->has($m) ? (float) $sale[$m]->total : 0);
+
+    // données paiements par mois
     $data1 = $months->map(fn($m) => $sales1->has($m) ? (float) $sales1[$m]->total : 0);
 
-    // réindexe pour JS
-    $labels = $labels->values();
-    $data = $data->values();
-    $data1 = $data1->values();
+    // reste à encaisser par mois
+    $dataReste = $months->map(fn($m) =>
+        ($sale->has($m) ? (float) $sale[$m]->total : 0) -
+        ($sales1->has($m) ? (float) $sales1[$m]->total : 0));
+        $labels = $labels->values();
+        $data   = $data->values();
+        $data1  = $data1->values();
+        $dataReste = $dataReste->values();
+
+
+
     $totalVentesPayes = $ventes->where('est_paye', true)->sum('montant_total');
 //dd($labels, $data);
-
             return view('dashboards.admin', compact(
                 'ca_journalier',
                 'chiffreAffaires',
@@ -117,6 +126,7 @@ class DashboardController extends Controller
                 'ventes',
                 'labels',
                 'data',
+                'dataReste',
                 'data1',
                 'chiffreAffairesGlobaux',
                 'derniersVentes',
@@ -190,7 +200,7 @@ class DashboardController extends Controller
                 ->sum('montant_total');
             // Récupérer les données pour les produits dont le stock est faible
 
-            $produitsStockFaible = Produit::select('id', 'nom', 'prix', 'seuil_alerte', 'created_at', 'updated_at')
+            $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
                 SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
@@ -199,9 +209,12 @@ class DashboardController extends Controller
             ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
             ->get();
+            $months = collect(range(0, 11))
+        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
+        ->reverse();
+          $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
 
               $driver = DB::getDriverName();
-
     $dateExpr = match ($driver) {
         'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
         'sqlite' => "strftime('%Y-%m', created_at)",
@@ -209,36 +222,45 @@ class DashboardController extends Controller
         default  => "DATE_FORMAT(created_at, '%Y-%m')",
     };
 
-        $sales = Vente::selectRaw("$dateExpr as month, SUM(montant_paye) as total")
-        ->where('user_id', $user->id)
+    // ventes par mois
+    $sale = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
         ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
         ->where('statut', 'valide')
+         ->where('user_id', $user->id)
         ->groupBy('month')
         ->orderBy('month')
         ->get()
         ->keyBy('month');
-        $sales1 = Vente::selectRaw("$dateExpr as month, SUM(reste_a_payer) as total")
-        ->where('user_id', $user->id)
-        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-        ->where('statut', 'valide')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
-        $months = collect(range(0, 11))
-        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
-        ->reverse();
 
-    // labels lisibles
-    $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
+    // paiements par mois
+  $userId = $user->id;
 
-    // données
-    $data = $months->map(fn($m) => $sales->has($m) ? (float) $sales[$m]->total : 0);
+$sales1 = Paiement::whereHas('vente', function ($q) use ($userId) {
+        $q->where('user_id', $userId);
+    })
+    ->selectRaw("$dateExpr as month, SUM(montant) as total")
+    ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+    ->groupBy('month')
+    ->orderBy('month')
+    ->get()
+    ->keyBy('month');
+
+
+    // données ventes par mois
+    $data = $months->map(fn($m) => $sale->has($m) ? (float) $sale[$m]->total : 0);
+
+    // données paiements par mois
     $data1 = $months->map(fn($m) => $sales1->has($m) ? (float) $sales1[$m]->total : 0);
-    // réindexe pour JS
-    $labels = $labels->values();
-    $data = $data->values();
-    $data1 = $data1->values();
+
+    // reste à encaisser par mois
+    $dataReste = $months->map(fn($m) =>
+        ($sale->has($m) ? (float) $sale[$m]->total : 0) -
+        ($sales1->has($m) ? (float) $sales1[$m]->total : 0));
+
+        $labels = $labels->values();
+        $data   = $data->values();
+        $data1  = $data1->values();
+        $dataReste = $dataReste->values();
 
 
             return view('dashboards.vendeur',
@@ -251,6 +273,7 @@ class DashboardController extends Controller
                         'chiffreAffaireMoisEnCourNonPaye',
                         'data',
                         'data1',
+                        'dataReste',
                         'ca_journalier',
                         'labels',
                         'derniersClients',

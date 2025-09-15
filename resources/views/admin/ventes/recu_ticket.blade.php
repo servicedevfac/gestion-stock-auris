@@ -67,7 +67,7 @@
              alt="Logo"
              style="width: 100px; height: auto; display: block; margin: 0 auto;">
 
-        <p>Adresse | Téléphone</p>
+        <p>San Pedro - 07 99 28 82 54</p>
         <hr>
     </div>
 

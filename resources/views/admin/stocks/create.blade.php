@@ -52,7 +52,7 @@
             <label>Motif</label>
             <select name="motif" class="form-control" required>
                 <option value="">-- Choisir un motif --</option>
-                <option value="reapprovisionnement">Reapprovisionnement</option>
+                <option value="reapprovisionnement">Approvisionnement</option>
                 <option value="defaut">Défaillance</option>
                 <option value="autre">Autre</option>
             </select>
@@ -72,7 +72,5 @@
 </div>
  </div>
     </div>
-
-
 
 @endsection

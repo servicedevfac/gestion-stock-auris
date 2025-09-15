@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExportationEcontroller;
 use App\Http\Controllers\HoraireController;
 use App\Http\Controllers\MouvementStockController;
+use App\Http\Controllers\paiementController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\UserLoginController;
@@ -79,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/horaires', [HoraireController::class, 'update'])->name('admin.horaires.update');
     Route::resource('users', UserContoller::class);
     Route::post('/users/{user}/toggle', [UserContoller::class, 'toggle'])->name('users.toggle');
+    route::post('/ventes/{vente}/paiement', [paiementController::class, 'store'])->name('paiements.store');
 });
 // Groupe pour les super administrateurs
 Route::middleware(['web', 'verified', 'auth', 'is.superAdmin'])->group(function () {

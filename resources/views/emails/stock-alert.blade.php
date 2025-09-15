@@ -86,16 +86,16 @@
             @elseif(isset($produit['url']))
             <a href="{{ $produit }}" class="action-button view-button">Voir le produit</a>
             @endif
-            <a href="http://localhost:8000/mouvementStocks/create" class="action-button restock-button">Réapprovisionner</a>
+            <a href="http://localhost:8000/mouvementStocks/create" class="action-button restock-button">Approvisionner</a>
         </div>
         @endforeach
-        <p><strong>Veuillez réapprovisionner ces produits dès que possible.</strong></p>
+        <p><strong>Veuillez approvisionner ces produits dès que possible.</strong></p>
 
         <p>Cordialement,<br>L'équipe {{ config('app.name') }}</p>
     </div>
     <div class="footer">
         <p>Ce message a été envoyé automatiquement. Merci de ne pas y répondre.</p>
-        <p>© {{ date('Y') }} {{ config('app.name') }}</p>
+        <p>© {{ date('Y') }} Gestion_USP</p>
     </div>
 </body>
 </html>

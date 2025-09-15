@@ -28,7 +28,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                 Chiffre d'affaires payés de la journée
+                                 Montant encaissé/jour
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($ca_journalier, 0, ',', ' ') }} XOF
@@ -47,7 +47,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                               Chiffre d'affaires payés du mois en cours
+                               Montant encaissé/mois
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} XOF
@@ -66,7 +66,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires annuelles payés
+                                Montant encaissé/an
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} XOF
@@ -85,7 +85,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                chiffre d'affaire global
+                                chiffre d'affaires
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{number_format($chiffreAffairesvendeursglobal, 0, ',', ' ')}} XOF
@@ -105,7 +105,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                Chiffre d'affaires impayés de la journée
+                                Reste à payer/jour
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
                                 {{number_format($ca_journalierNonPaye, 0, ',', ' ')}} XOF
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
+                            <i class="fas fa- fa-2x text-gray-300 text-danger  "></i>
                         </div>
                     </div>
                 </div>
@@ -125,20 +125,39 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
                             <div class="font-weight-bold text-black text-uppercase mb-1">
-                                chiffre d'affaire impayé du mois en cours
+                                Reste à payer/mois
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
                                  {{number_format($chiffreAffaireMoisEnCourNonPaye, 0, ',', ' ')}} XOF
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
+                            <i class="fas fa- fa-2x text-gray-300 text-danger  "></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
+            <div class="card stat-card primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="font-weight-bold text-black text-uppercase mb-1">
+                                Reste à payer/an
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
+                                {{number_format($chiffreAffairesvendeursimpaye, 0, ',', ' ')}} XOF
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa- fa-2x text-gray-300 text-danger  "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
             <div class="card stat-card primary h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -151,31 +170,12 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
+                            <i class="fas fa- fa-2x text-gray-300 text-danger  "></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col" style="flex: 0 0 25%; max-width: 25%;max-height:100px">
-            <div class="card stat-card primary h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col me-2">
-                            <div class="font-weight-bold text-black text-uppercase mb-1">
-                                chiffre d'affaire annuel non payé
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-danger">
-                                {{number_format($chiffreAffairesvendeursimpaye, 0, ',', ' ')}} XOF
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar fa-2x text-gray-300 text-danger  "></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div> --}}
          <div class="row mt-3">
         <div class="col-12">
             <div class="card">
@@ -310,21 +310,35 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const labels = @json($labels);
-    const data = @json($data);
-    const data1 = @json($data1);
+    const data = @json($data);   // Ligne 1 : CA
+    const data1 = @json($data1); // Ligne 2 : Bénéfice ou autre
+    const reste=@json($dataReste);
 
     const ctx = document.getElementById('caLineChart').getContext('2d');
 
     const caLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [
-               {
-                    label: 'Chiffre d\'affaires payés',
+
+                {
+                    label: 'Chiffre d\'affaires ',
                     data: data,
-                    borderColor: '#02228b',
-                    backgroundColor: '#e6b82359',
+                    backgroundColor: 'blue',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                },
+                                {
+                    label: 'Montant encaissé',
+                    data: data1,
+                   backgroundColor: 'green',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     fill: true,
                     tension: 0.3,
                     pointRadius: 4,
@@ -332,17 +346,17 @@
                     borderWidth: 2,
                 },
                 {
-                    label: 'Chiffre d\'affaire non payé',
-                    data: data1,
-                    borderColor: '#e62323',
-                    backgroundColor: '#e6232359',
+                    label: 'Reste à payer',
+                    data: reste,
+                    backgroundColor: 'red',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     fill: true,
                     tension: 0.3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
                     borderWidth: 2,
                 }
-            ]
+            ],
         },
         options: {
             responsive: true,
@@ -354,7 +368,7 @@
                     intersect: false,
                     callbacks: {
                         label: function(context) {
-                            return 'CA: ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(context.raw);
+                            return context.dataset.label + ': ' + new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(context.raw);
                         }
                     }
                 }

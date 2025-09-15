@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des ventes</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DejaVu+Sans:wght@400;700&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 12px;
-            margin: 20px;
+            margin: 5px 20px;
             color: #333;
         }
         h2 {
@@ -49,10 +53,44 @@
         .total-value {
             color: #e74c3c;
         }
+       .header {
+    margin: 0 50px;
+}
+
+.entete {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.entete p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
     </style>
 </head>
+
 <body>
-    <h2>Résultats de la recherche des ventes</h2>
+
+<header class="header" style="margin: 0 20px;">
+    <div class="entete" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="first">
+            <p>Édité le : {{ now()->format('d/m/Y H:i') }}</p>
+        </div>
+        <div class="second">
+            {{-- <p>Par : {{ auth()->user()->nom }} {{ auth()->user()->prenom }}</p> --}}
+        </div>
+    </div>
+</header>
+
+
+
+
+    <h2 style="margin-top: 50px;">Résultats de la recherche des ventes</h2>
     <table>
         <thead>
             <tr>
@@ -79,5 +117,10 @@
         </tr>
         </tbody>
     </table>
+    <br>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 </body>
 </html>

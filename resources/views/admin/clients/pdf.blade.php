@@ -18,6 +18,16 @@
     </style>
 </head>
 <body>
+    <header class="header" style="margin: 0 20px;">
+    <div class="entete" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="first">
+            <p>Édité le : {{ now()->format('d/m/Y H:i') }}</p>
+        </div>
+        <div class="second">
+            {{-- <p>Par : {{ auth()->user()->nom }} {{ auth()->user()->prenom }}</p> --}}
+        </div>
+    </div>
+</header>
     <h2>Liste des Clients</h2>
     <table>
         <thead>

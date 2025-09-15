@@ -30,7 +30,7 @@
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.10);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -100,7 +100,7 @@
 <body>
     <div class="bg"></div>
   <div class="glass-card">
-    <h2><i class="fas fa-boxes me-2"></i>Gest_Stock-Auris</h2>
+    <h2><i class="fas fa-boxes me-2"></i>Gestion_USP</h2>
     <form method="POST" action="{{ route('login') }}">
       @csrf
 
@@ -125,7 +125,7 @@
         <i class="fas fa-sign-in-alt me-2"></i>Se connecter
       </button>
 
-    
+
     </form>
   </div>
 

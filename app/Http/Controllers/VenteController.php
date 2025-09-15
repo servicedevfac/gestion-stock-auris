@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Paiement;
 
 
 class VenteController extends Controller
@@ -140,6 +141,14 @@ class VenteController extends Controller
                         'est_paye' => $estPaye,
                         'montant_paye' => $montantPaye,
                         'reste_a_payer' => $resteAPayer,
+                    ]);
+                    // Création du paiement
+                    Paiement::create([
+                        'vente_id' => $vente->id,
+                        'montant' => $montantPaye,
+                        'mode_paiement' => $request->mode_paiement,
+                        'date_paiement' => $request->date_vente,
+                        'reste_a_payer'=>$resteAPayer,
                     ]);
 
             // 1) Vérif stock AVANT (tu avais déjà, je garde et fiabilise un peu)
@@ -522,7 +531,9 @@ class VenteController extends Controller
         });
     }
 
-    $ventes = $ventes->get(); // ⚡ pas de paginate ici
+    $ventes = $ventes->get();
+     // ⚡ pas de paginate ici
+     //
 
     $pdf = PDF::loadView('admin.ventes.pdf', compact('ventes'));
     return $pdf->download('ventes_recherche.pdf');
