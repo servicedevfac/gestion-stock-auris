@@ -35,4 +35,9 @@ class paiementController extends Controller
     );
 
 }
+function ticketpaiement($id)
+{
+    $paiement = Paiement::with('vente')->findOrFail($id);
+    return view('ticket', compact('paiement'));
+}
 }

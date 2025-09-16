@@ -63,10 +63,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ asset('assets/images/logo-light.png') }}"
-             alt="Logo"
-             style="width: 100px; height: auto; display: block; margin: 0 auto;">
-
+       <img src="{{url('assets/images/logo-dark.png')}}" alt="dark logo" class="logo-lg" height="70">
         <p>San Pedro - 07 99 28 82 54</p>
         <hr>
     </div>
