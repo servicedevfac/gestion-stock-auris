@@ -317,16 +317,17 @@ class VenteController extends Controller
     public function imprimerTicket($id)
     {
         $vente = Vente::with(['client', 'details.produit', 'user'])->findOrFail($id);
-        $pdf = PDF::loadView('admin.ventes.recu_ticket', compact('vente'))
-            ->setPaper([0, 0, 250.77, 600], 'portrait')
-            ->setOptions([
-        'isHtml5ParserEnabled' => true,
+
+$pdf = PDF::loadView('admin.ventes.recu_ticket', compact('vente'))
+    ->setPaper([0, 0, 226.77, 600], 'portrait')
+    ->setOptions([
         'isRemoteEnabled' => true,
-        'margin-top' => 0,
+        'isHtml5ParserEnabled' => true,
+        'defaultFont' => 'Courier',
         'margin-right' => 0,
-        'margin-bottom' => 0,
         'margin-left' => 0,
     ]);
+
             return $pdf->stream('vente_' . $vente->code_recu . '.pdf');
     }
 

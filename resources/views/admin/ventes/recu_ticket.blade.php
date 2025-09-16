@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Courier New', monospace;
-            /* max-width: 80mm; Largeur standard imprimante thermique */
+            max-width: 58mm; /* Largeur standard imprimante thermique */
             margin: 0 auto;
             font-size: 12px;
             line-height: 1.4;
@@ -71,11 +71,22 @@
 <body>
     <div class="ticket">
     <div class="header">
-        <img src="{{ public_path('assets/images/logo-dark.png') }}" alt="Logo" height="70">
+        vue
+
+@php
+    $logo = base64_encode(file_get_contents(public_path('assets/images/logo-dark.png')));
+@endphp
+
+<img src="data:image/png;base64,{{ $logo }}" alt="Logo" height="70">
+
+
+
+
 
         <p>San Pedro - 07 99 28 82 54</p>
         <hr>
     </div>
+
 
     <div class="details">
         <p>Client: {{ $vente->client->nom ?? '' }}</p>
