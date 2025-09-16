@@ -135,11 +135,11 @@
         <p>Merci pour votre achat !</p>
     </div>
 
-    <script>
+    {{-- <script>
         // Ouvre directement la fenêtre d'impression
         window.onload = function() {
             window.print();
         }
-    </script>
+    </script> --}}
 </body>
 </html>
