@@ -316,10 +316,8 @@ class VenteController extends Controller
     }
     public function imprimerTicket($id)
     {
-        $vente = Vente::with(['client', 'details.produit', 'user'])->findOrFail($id);
-        $pdf = PDF::loadView('admin.ventes.recu_ticket', compact('vente'))
-            ->setPaper([0, 0, 300.77, 600], 'portrait');
-            return $pdf->stream('vente_' . $vente->code_recu . '.pdf');
+               $vente = Vente::with(['client', 'details.produit', 'user'])->findOrFail($id);
+        return view('admin.ventes.recu_ticket', compact('vente'));
     }
 
     public function ventesFiltrees(Request $request)
