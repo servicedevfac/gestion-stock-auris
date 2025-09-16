@@ -8,16 +8,13 @@
             font-family: 'Courier New', monospace;
             /* max-width: 80mm; Largeur standard imprimante thermique */
             margin: 0 auto;
-            padding: 10px;
             font-size: 12px;
             line-height: 1.4;
             color: #000;
         }
         .ticket{
             font-family: 'Courier New', monospace;
-             max-width: 80mm; /*Largeur standard imprimante thermique */ */
             margin: 0 auto;
-            padding: 10px;
              text-align: center;
             font-size: 12px;
             line-height: 1.4;
