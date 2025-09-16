@@ -71,7 +71,6 @@
 <body>
     <div class="ticket">
     <div class="header">
-        vue
 
 @php
     $logo = base64_encode(file_get_contents(public_path('assets/images/logo-dark.png')));
