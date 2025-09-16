@@ -13,9 +13,19 @@
             line-height: 1.4;
             color: #000;
         }
+        .ticket{
+            font-family: 'Courier New', monospace;
+             max-width: 80mm; /*Largeur standard imprimante thermique */ */
+            margin: 0 auto;
+            padding: 10px;
+             text-align: center;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #000;
+        }
 
         .header, .footer {
-            text-align: center;
+            text-align: center !important;
         }
 
         h2, h3 {
@@ -62,8 +72,9 @@
     </style>
 </head>
 <body>
+    <div class="ticket">
     <div class="header">
-<img src="{{ public_path('assets/images/logo-dark.png') }}" alt="Logo" height="70">
+        <img src="{{ public_path('assets/images/logo-dark.png') }}" alt="Logo" height="70">
 
         <p>San Pedro - 07 99 28 82 54</p>
         <hr>
@@ -135,6 +146,8 @@
         <hr>
         <p>Merci pour votre achat !</p>
     </div>
+    </div>
+
 
     {{-- <script>
         // Ouvre directement la fenêtre d'impression
