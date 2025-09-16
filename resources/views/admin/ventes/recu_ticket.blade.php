@@ -72,13 +72,13 @@
     <div class="ticket">
     <div class="header">
 
-@php
+{{-- @php
     $logo = base64_encode(file_get_contents(public_path('assets/images/logo-dark.png')));
 @endphp
 
 <img src="data:image/png;base64,{{ $logo }}" alt="Logo" height="70">
 
-
+ --}}
 
 
 
