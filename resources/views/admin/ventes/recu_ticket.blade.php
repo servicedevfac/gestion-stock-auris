@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Courier New', monospace;
-            max-width: 80mm; /* Largeur standard imprimante thermique */
+            /* max-width: 80mm; Largeur standard imprimante thermique */
             margin: 0 auto;
             padding: 10px;
             font-size: 12px;
