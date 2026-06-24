@@ -18177,7 +18177,6 @@ div.dataTables_scrollBody > table > :not(:first-child) {
   content: " ";
   display: table;
 }
-
 .simplebar-placeholder {
   max-height: 100%;
   max-width: 100%;
@@ -18185,7 +18184,6 @@ div.dataTables_scrollBody > table > :not(:first-child) {
   height: 100%;
   pointer-events: none;
 }
-
 .simplebar-height-auto-observer-wrapper {
   -webkit-box-sizing: inherit !important;
           box-sizing: inherit !important;
