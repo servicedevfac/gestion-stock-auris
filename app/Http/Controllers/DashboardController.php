@@ -37,7 +37,7 @@ class DashboardController extends Controller
                     : "DATE_FORMAT(ventes.date_vente, '%Y-%m')";
 
                 // Récupérer les 5 derniers clients ayant effectué une vente vente
-                $derniersClients = Vente::with('client')->orderBy('date_vente', 'desc')->select('client_id')->distinct()->take(10)->get();
+                $derniersClients = Vente::with('client')->select('client_id')->groupBy('client_id')->orderByRaw('MAX(date_vente) DESC')->take(10)->get();
 
                 // Calculer le chiffre d'affaires du jour
                 $ca_journalier = Paiement::whereDate('created_at', Carbon::today())->sum('montant');
@@ -193,9 +193,9 @@ $dataReste = $months->map(fn($m) =>
         // Récupérer les 5 derniers clients ayant effectué une vente pour ce vendeur
             $derniersClients = Vente::with('client')
                 ->where('user_id', $user->id)
-                ->orderBy('date_vente', 'desc')
                 ->select('client_id')
-                ->distinct()
+                ->groupBy('client_id')
+                ->orderByRaw('MAX(date_vente) DESC')
                 ->take(10)
                 ->get();
             // Récupérer le nombre total de ventes pour ce vendeur
