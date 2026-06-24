@@ -46,7 +46,6 @@ class DashboardController extends Controller
                 ->where('statut', 'valide')
                 ->whereDate('date_vente', Carbon::today())
                 ->sum('montant_total')-$ca_journalier;
-
                $chiffreAffaireMoisEnCours = Paiement::whereHas('vente', fn($q) => $q->where('statut', 'valide'))->whereYear('created_at', Carbon::now()->year)
                 ->whereMonth('created_at', Carbon::now()->month)
                 ->sum('montant');
