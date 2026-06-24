@@ -33,9 +33,7 @@
     <a class="dropdown-toggle btn btn-header1 d-flex align-items-center px-3 py-2"
        href="#"
        id="userDropdown"
-       role="button"
-       data-bs-toggle="dropdown"
-       aria-expanded="false"
+       onclick="event.preventDefault(); this.nextElementSibling.classList.toggle('show');"
        style="margin-top: 10px;">
         <span class="d-flex align-items-center justify-content-center rounded-circle bg-white fw-bold me-2" style="width:32px;height:32px;font-size:14px;color:#1a237e;">
             {{ strtoupper(substr(Auth::user()->nom, 0, 1)) }}

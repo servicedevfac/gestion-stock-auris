@@ -141,10 +141,16 @@
     <script>
         // Ensure dropdowns work
         document.addEventListener('DOMContentLoaded', function () {
-            var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
-            dropdownElements.map(function (dropdownToggleEl) {
-                new bootstrap.Dropdown(dropdownToggleEl);
-            });
+            try {
+                if (typeof bootstrap !== 'undefined') {
+                    var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+                    dropdownElements.map(function (dropdownToggleEl) {
+                        new bootstrap.Dropdown(dropdownToggleEl);
+                    });
+                }
+            } catch (e) {
+                console.error('Dropdown init error:', e);
+            }
         });
     </script>
     @yield('scripts')
