@@ -61,8 +61,8 @@ class DashboardController extends Controller
                 $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
-                SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
-                SUM(CASE WHEN type_mouvement = "sortie" THEN quantite ELSE 0 END) as stock_actuel
+                SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) -
+                SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END) as stock_actuel
             ')
             ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
@@ -210,8 +210,8 @@ $dataReste = $months->map(fn($m) =>
               $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
-                SUM(CASE WHEN type_mouvement = "entree" THEN quantite ELSE 0 END) -
-                SUM(CASE WHEN type_mouvement = "sortie" THEN quantite ELSE 0 END) as stock_actuel
+                SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) -
+                SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END) as stock_actuel
             ')
             ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
             ->havingRaw('stock_actuel <= seuil_alerte')
