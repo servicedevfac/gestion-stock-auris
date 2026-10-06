@@ -133,7 +133,7 @@
                             </ul>
                         </div>
                     </li>
-                    @canany(['view depense', 'create depense'])
+                    @if(Auth::user()->hasAnyRole(['super admin', 'Administrateur', 'Gestionnaire']) || Auth::user()->can('view depense') || Auth::user()->can('create depense'))
                     <li class="menu-item">
                         <a href="#menuDepenses" data-bs-toggle="collapse" class="menu-link waves-effect {{ request()->routeIs('depenses.*') ? 'active' : '' }}">
                             <span class="menu-icon"><i data-lucide="receipt"></i></span>
@@ -142,24 +142,24 @@
                         </a>
                         <div class="collapse {{ request()->routeIs('depenses.*') ? 'show' : '' }}" id="menuDepenses">
                             <ul class="sub-menu">
-                                @can('create depense')
+                                @if(Auth::user()->hasAnyRole(['super admin', 'Administrateur', 'Gestionnaire']) || Auth::user()->can('create depense'))
                                 <li class="menu-item">
                                     <a href="{{ route('depenses.create') }}" class="menu-link {{ request()->routeIs('depenses.create') ? 'active' : '' }}">
                                         <span class="menu-text">Nouvelle Dépense</span>
                                     </a>
                                 </li>
-                                @endcan
-                                @can('view depense')
+                                @endif
+                                @if(Auth::user()->hasAnyRole(['super admin', 'Administrateur', 'Gestionnaire']) || Auth::user()->can('view depense'))
                                 <li class="menu-item">
                                     <a href="{{ route('depenses.index') }}" class="menu-link {{ request()->routeIs('depenses.index') ? 'active' : '' }}">
                                         <span class="menu-text">Liste Dépenses</span>
                                     </a>
                                 </li>
-                                @endcan
+                                @endif
                             </ul>
                         </div>
                     </li>
-                    @endcanany
+                    @endif
 
                     <li class="menu-title">Administration</li>
 
