@@ -71,7 +71,7 @@
             </div>
 
             <footer class="footer mt-auto">
-                <div class="container">
+                <div class="container-fluid px-3 px-md-4">
                     <div class="row align-items-center">
                         <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                             <div>
