@@ -34,7 +34,7 @@
                     </thead>
 
                     <tbody>
-                        @foreach ($mouvements as $mouvement)
+                        @forelse ($mouvements as $mouvement)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $mouvement->produit->nom }}</td>
@@ -64,7 +64,20 @@
                             </td>
                                 @endif
                         </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="9" class="table-empty-state">
+                                    <i class="fas fa-warehouse"></i>
+                                    <h5 class="empty-title">Aucun mouvement de stock</h5>
+                                    <p class="empty-desc">Aucune entrée ou sortie de stock n'a été enregistrée pour l'instant.</p>
+                                    @can('create stock')
+                                        <a href="{{ route('mouvementStocks.create') }}" class="btn btn-primary btn-sm mt-3">
+                                            <i class="fas fa-plus me-1"></i> Nouveau mouvement
+                                        </a>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
 
                 </table>

@@ -45,7 +45,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($clients as $client)
+                            @forelse ($clients as $client)
                                 <tr>
                                     <td>{{ $client->code_client }}</td>
                                     <td>{{ $client->nom }}</td>
@@ -76,7 +76,20 @@
                                                @endcan
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="table-empty-state">
+                                        <i class="fas fa-users-slash"></i>
+                                        <h5 class="empty-title">Aucun client trouvé</h5>
+                                        <p class="empty-desc">Aucun client ne correspond à votre recherche ou la liste est vide.</p>
+                                        @can('create client')
+                                            <a href="{{ route('clients.create') }}" class="btn btn-primary btn-sm mt-3">
+                                                <i class="fas fa-user-plus me-1"></i> Nouveau client
+                                            </a>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

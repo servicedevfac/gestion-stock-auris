@@ -167,7 +167,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($produitsStockFaible as $produit)
+                                @forelse ($produitsStockFaible as $produit)
                                     <tr class="low-stock-row">
                                         <td>{{ $loop->iteration }}</td>
                                         <td><strong>{{ $produit->nom }}</strong></td>
@@ -178,7 +178,14 @@
                                                 class="btn btn-header1 btn-sm"><i class="fas fa-plus me-1"></i>Approvisionner</a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-success">
+                                            <i class="fas fa-check-circle font-size-24 mb-2 d-block opacity-75"></i>
+                                            Tous les stocks sont à un niveau optimal !
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -204,7 +211,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($derniersClients as $derniersClient)
+                                @forelse ($derniersClients as $derniersClient)
                                     <tr>
                                         <td class="table-user fw-semibold">
                                             {{ $derniersClient->client->nom }}
@@ -216,7 +223,14 @@
                                             {{ $derniersClient->client->adresse }}
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">
+                                            <i class="fas fa-users-slash font-size-24 mb-2 d-block opacity-50"></i>
+                                            Aucun client enregistré récemment.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -242,13 +256,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($derniersVentes as $vente)
+                                @forelse ($derniersVentes as $vente)
                                     <tr>
                                         <td class="fw-semibold">{{ $vente->client->nom }}</td>
                                         <td>{{ $vente->date_vente }}</td>
                                         <td><strong>{{ number_format($vente->montant_total, 0, ',', ' ') }} XOF</strong></td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-muted">
+                                            <i class="fas fa-shopping-cart font-size-24 mb-2 d-block opacity-50"></i>
+                                            Aucune vente enregistrée récemment.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

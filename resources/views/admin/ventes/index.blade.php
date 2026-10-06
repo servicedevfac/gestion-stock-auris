@@ -132,7 +132,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($ventes as $vente)
+            @forelse($ventes as $vente)
             <tr class="align-middle text-center" @if ($vente->statut=='valide') style="background-color:#d4edda;"
             @elseif ($vente->statut=='annulee') style="background-color:#f8d7da ;"
 
@@ -178,7 +178,20 @@
 
                 </td>
             </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="11" class="table-empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h5 class="empty-title">Aucune vente enregistrée</h5>
+                        <p class="empty-desc">Aucune vente ne correspond à vos critères de recherche.</p>
+                        @can('create vente')
+                            <a href="{{ route('ventes.create') }}" class="btn btn-primary btn-sm mt-3">
+                                <i class="fas fa-plus me-1"></i> Créer une vente
+                            </a>
+                        @endcan
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     </div>

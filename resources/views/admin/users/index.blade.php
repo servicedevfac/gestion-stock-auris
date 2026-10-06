@@ -24,9 +24,8 @@
                                 <th>Téléphone</th>
                                 <th>Actions</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($users as $user)
+                        </th                        <tbody>
+                            @forelse($users as $user)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $user->nom }}</td>
@@ -84,12 +83,24 @@
                                                     </button>
                                                 </form>
                                             @endcan
-
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="table-empty-state">
+                                        <i class="fas fa-users-cog"></i>
+                                        <h5 class="empty-title">Aucun utilisateur trouvé</h5>
+                                        <p class="empty-desc">Aucun compte utilisateur n'a été trouvé.</p>
+                                        @can('create utilisateur')
+                                            <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm mt-3">
+                                                <i class="fas fa-user-plus me-1"></i> Nouvel utilisateur
+                                            </a>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody> </tbody>
                     </table>
                     </div>
 

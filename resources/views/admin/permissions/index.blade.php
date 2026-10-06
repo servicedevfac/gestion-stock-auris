@@ -25,7 +25,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($permissions as $permission)
+                                @forelse($permissions as $permission)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $permission->name }}</td>
@@ -50,17 +50,24 @@
                                         </div>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="table-empty-state">
+                                            <i class="fas fa-key"></i>
+                                            <h5 class="empty-title">Aucune permission trouvée</h5>
+                                            <p class="empty-desc">Aucune permission n'est actuellement enregistrée.</p>
+                                            @can('create permission')
+                                                <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm mt-3">
+                                                    <i class="fas fa-plus me-1"></i> Nouvelle permission
+                                                </a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                         {{ $permissions->links() }}
                     </div>
-
-                    @if($permissions->isEmpty())
-                    <div class="alert alert-info mt-3" role="alert">
-                        Aucun rôle trouvé.
-                    </div>
-                    @endif
                 </div>
             </div>
         </div>

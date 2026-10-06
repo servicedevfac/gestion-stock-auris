@@ -27,7 +27,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($horaires as $horaire)
+                            @forelse($horaires as $horaire)
                                 <tr>
                                     <td>{{ ucfirst($horaire->jour_semaine) }}</td>
                                     <td>{{ $horaire->heure_ouverture }}</td>
@@ -36,7 +36,15 @@
                                         <a class="btn  btn-success" href="{{ route('admin.horaires.edit', $horaire->id) }}"><i class="fas fa-edit "></i></a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="table-empty-state">
+                                        <i class="fas fa-clock"></i>
+                                        <h5 class="empty-title">Aucun horaire configuré</h5>
+                                        <p class="empty-desc">Aucun horaire d'ouverture n'a été défini pour le moment.</p>
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

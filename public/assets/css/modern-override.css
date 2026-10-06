@@ -1615,3 +1615,32 @@ body {
         font-size: 12px !important;
     }
 }
+
+/* ── Empty State Table ────────────────────────────────────── */
+.table-empty-state {
+    padding: 36px 16px !important;
+    text-align: center !important;
+    color: var(--text-muted, #94a3b8);
+}
+
+.table-empty-state i {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    opacity: 0.45;
+    display: inline-block;
+}
+
+.table-empty-state h5,
+.table-empty-state .empty-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary, #64748b);
+    margin-bottom: 4px;
+}
+
+.table-empty-state p,
+.table-empty-state .empty-desc {
+    font-size: 13px;
+    color: var(--text-muted, #94a3b8);
+    margin-bottom: 0;
+}

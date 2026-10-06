@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($roles as $role)
+                        @forelse ($roles as $role)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $role->name }}</td>
@@ -59,7 +59,20 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="table-empty-state">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h5 class="empty-title">Aucun rôle trouvé</h5>
+                                    <p class="empty-desc">Aucun rôle n'est actuellement défini dans le système.</p>
+                                    @can('create role')
+                                        <a href="{{ route('roles.create') }}" class="btn btn-primary btn-sm mt-3">
+                                            <i class="fas fa-plus me-1"></i> Nouveau rôle
+                                        </a>
+                                    @endcan
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

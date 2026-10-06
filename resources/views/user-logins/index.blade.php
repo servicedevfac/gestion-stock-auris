@@ -20,7 +20,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($logins as $login)
+                            @forelse($logins as $login)
                                 <tr class="border-t">
                                     <td>{{ $login->user->nom ?? 'Supprimé' }}</td>
                                     <td>{{ $login['ip_address'] ?? '' }}</td>
@@ -28,7 +28,15 @@
                                     <td>{{ $login->logged_in_at ? \Carbon\Carbon::parse($login->logged_in_at)->format('d/m/Y H:i') : '' }}
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="table-empty-state">
+                                        <i class="fas fa-history"></i>
+                                        <h5 class="empty-title">Aucune connexion enregistrée</h5>
+                                        <p class="empty-desc">Aucun historique de connexion disponible pour le moment.</p>
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
 

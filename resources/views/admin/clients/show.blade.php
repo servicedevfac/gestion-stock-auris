@@ -58,7 +58,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($ventes as $vente)
+            @forelse($ventes as $vente)
             <tr @if ($vente->statut=='valide') style="background-color:#d4edda;"
             @elseif ($vente->statut=='annulee') style="background-color:#f8d7da ;"
 
@@ -91,7 +91,20 @@
                     @endif
                 </td>
             </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="8" class="table-empty-state">
+                        <i class="fas fa-receipt"></i>
+                        <h5 class="empty-title">Aucune vente pour ce client</h5>
+                        <p class="empty-desc">Ce client n'a effectué aucun achat pour le moment.</p>
+                        @can('create vente')
+                            <a href="{{ route('ventes.create') }}" class="btn btn-primary btn-sm mt-3">
+                                <i class="fas fa-plus me-1"></i> Enregistrer une vente
+                            </a>
+                        @endcan
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     {{ $ventes->appends(request()->query())->links() }}

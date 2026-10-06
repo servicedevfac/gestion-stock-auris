@@ -39,7 +39,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($produits as $produit)
+                            @forelse ($produits as $produit)
 
                                 <tr @php $stock = $produit->stock_actuel; @endphp @if($stock < $produit->seuil_alerte)
                                 style="background-color: #f8d7da;" @endif>
@@ -78,11 +78,22 @@
                                             </form>
                                         @endcan
 
-
-
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="table-empty-state">
+                                        <i class="fas fa-boxes"></i>
+                                        <h5 class="empty-title">Aucun produit trouvé</h5>
+                                        <p class="empty-desc">Aucun produit n'est actuellement enregistré dans le catalogue.</p>
+                                        @can('create produit')
+                                            <a href="{{ route('produits.create') }}" class="btn btn-primary btn-sm mt-3">
+                                                <i class="fas fa-plus me-1"></i> Créer un produit
+                                            </a>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                     </div>
