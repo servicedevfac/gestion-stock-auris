@@ -4,21 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Liste des permissions
      */
     public function index()
     {
-        $permissions = Permission::paginate(15);
+        $permissions = Permission::orderBy('name')->paginate(15);
         return view('admin.permissions.index', compact('permissions'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulaire de création
      */
     public function create()
     {
@@ -26,26 +25,33 @@ class PermissionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Enregistrement d'une nouvelle permission
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:permissions,name',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:permissions,name',
         ]);
-        Permission::create(['name' => $request->name, 'guard_name' => 'web']);
-        return redirect()->route('permissions.index')->with('success', 'Permission a été créée avec succès');
+
+        Permission::create([
+            'name'       => $validated['name'],
+            'guard_name' => 'web',
+        ]);
+
+        return redirect()->route('permissions.index')->with('success', 'Permission créée avec succès.');
     }
 
     /**
-     * Display the specified resource.
+     * Affichage d'une permission
      */
     public function show(string $id)
     {
+        $permission = Permission::with('roles')->findOrFail($id);
+        return view('admin.permissions.show', compact('permission'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Formulaire d'édition
      */
     public function edit(string $id)
     {
@@ -54,25 +60,34 @@ class PermissionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mise à jour d'une permission
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|unique:permissions,name,' . $id,
-        ]);
         $permission = Permission::findOrFail($id);
-        $permission->update(['name' => $request->name]);
 
-        return redirect()->route('permissions.index')->with('success', 'Permission a été mise à jour avec succès');
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:permissions,name,' . $permission->id,
+        ]);
+
+        $permission->update(['name' => $validated['name']]);
+
+        return redirect()->route('permissions.index')->with('success', 'Permission mise à jour avec succès.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Suppression d'une permission
      */
-    public function destroy( $id)
+    public function destroy(string $id)
     {
-        Permission::findOrFail($id)->delete();
-        return redirect()->route('permissions.index')->with('success', 'Permission  a été supprimée');
+        $permission = Permission::findOrFail($id);
+
+        if ($permission->roles()->count() > 0) {
+            return redirect()->route('permissions.index')->with('error', 'Impossible de supprimer cette permission : elle est attribuée à des rôles.');
+        }
+
+        $permission->delete();
+
+        return redirect()->route('permissions.index')->with('success', 'Permission supprimée avec succès.');
     }
 }

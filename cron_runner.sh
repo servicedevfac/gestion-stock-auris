@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Chemin vers le projet
-PROJECT_PATH="/Volumes/Sans titre/app/gestion-stock-auris"
+PROJECT_PATH="/Volumes/Sans titre/app/gestion-stock-StockGX"
 
 # Chemin vers PHP
 PHP_PATH="/Users/palmer/.config/herd-lite/bin/php"

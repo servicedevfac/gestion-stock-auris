@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Gest_Stock-Auris'),
+    'name' => env('APP_NAME', 'StockGX'),
 
     /*
     |--------------------------------------------------------------------------

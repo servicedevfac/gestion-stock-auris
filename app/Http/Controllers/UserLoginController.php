@@ -3,45 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserLogin;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserLoginController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Vérification des permissions
+     */
+    private function checkAdminPermission(): void
+    {
+        if (!Auth::user()->hasAnyRole(['Administrateur', 'super admin'])) {
+            abort(403, 'Accès refusé. Seul un administrateur peut consulter le journal des connexions.');
+        }
+    }
+
+    /**
+     * Journal des connexions
      */
     public function index()
     {
-        $logins = UserLogin::with('user')->paginate(10);
+        $this->checkAdminPermission();
+
+        $logins = UserLogin::with('user')
+            ->orderByDesc('created_at')
+            ->paginate(15);
+
         return view('user-logins.index', compact('logins'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
-
-    /**
-     * Display the specified resource.
-     */
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-
-
-    /**
-     * Remove the specified resource from storage.
+     * Suppression d'une entrée du journal
      */
     public function destroy(UserLogin $userLogin)
     {
+        $this->checkAdminPermission();
+
         $userLogin->delete();
-        return redirect()->route('user-logins.index')->with('success', 'Connexion supprimée avec succès');
+
+        return redirect()->route('user-logins.index')->with('success', 'Entrée du journal supprimée avec succès.');
     }
 }

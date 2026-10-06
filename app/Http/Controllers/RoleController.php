@@ -9,98 +9,109 @@ use Spatie\Permission\Models\Permission;
 class RoleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Rôles protégés du système
+     */
+    private const PROTECTED_ROLES = ['super admin', 'administrateur'];
+
+    /**
+     * Liste des rôles avec leurs permissions
      */
     public function index()
     {
-
-        $roles = Role::with('permissions')->paginate(15);
+        $roles = Role::with('permissions')->orderBy('name')->paginate(15);
         return view('admin.roles.index', compact('roles'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Formulaire de création d'un rôle
      */
     public function create()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('name')->get();
         return view('admin.roles.create', compact('permissions'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Enregistrement d'un rôle
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|unique:roles,name',
-        'permissions' => 'array|required', // les permissions doivent être un tableau
-    ]);
-
-    // 1. Créer le rôle avec guard_name
-    $role = Role::create([
-        'name' => $request->name,
-        'guard_name' => 'web', // important si non défini dans modèle
-    ]);
-
-    // 2. Attribuer les permissions sélectionnées
-    $role->syncPermissions($request->permissions);
-
-    return redirect()->route('roles.index')->with('success', 'Rôle créé avec permissions.');
-}
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Role $role)
     {
-        // Afficher les détails du rôle avec ses permissions
-        $role->load('permissions');
-        return view('admin.roles.show', compact('role', ));
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255|unique:roles,name',
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,name',
+        ]);
+
+        $role = Role::create([
+            'name'       => $validated['name'],
+            'guard_name' => 'web',
+        ]);
+
+        $role->syncPermissions($validated['permissions']);
+
+        return redirect()->route('roles.index')->with('success', 'Rôle créé avec succès.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Détail d'un rôle
+     */
+    public function show(Role $role)
+    {
+        $role->load('permissions', 'users');
+        return view('admin.roles.show', compact('role'));
+    }
+
+    /**
+     * Formulaire d'édition d'un rôle
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('name')->get();
         return view('admin.roles.edite', compact('role', 'permissions'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mise à jour d'un rôle
      */
     public function update(Request $request, Role $role)
     {
-        $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
-            'permissions' => 'array|required', // les permissions doivent être un tableau
+        $isProtected = in_array(strtolower($role->name), self::PROTECTED_ROLES);
 
-        ]);
+        $rules = [
+            'permissions'   => 'required|array',
+            'permissions.*' => 'exists:permissions,name',
+        ];
 
-        $role->update([
-            'name' => $request->name,
-        ]);
+        if (!$isProtected) {
+            $rules['name'] = 'required|string|max:255|unique:roles,name,' . $role->id;
+        }
 
-        $role->syncPermissions($request->permissions);
+        $validated = $request->validate($rules);
 
-        return redirect()->route('roles.index')->with('success', 'Rôle mis à jour avec succès');
+        if (!$isProtected && isset($validated['name'])) {
+            $role->update(['name' => $validated['name']]);
+        }
+
+        $role->syncPermissions($validated['permissions']);
+
+        return redirect()->route('roles.index')->with('success', 'Rôle mis à jour avec succès.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Suppression d'un rôle
      */
     public function destroy(Role $role)
     {
-        // Vérifier si le rôle est utilisé par des utilisateurs
-        if ($role->users()->count() > 0) {
-            return redirect()->route('roles.index')->with('error', 'Impossible de supprimer ce rôle car il est attribué à des utilisateurs.');
+        if (in_array(strtolower($role->name), self::PROTECTED_ROLES)) {
+            return redirect()->route('roles.index')->with('error', 'Le rôle système principal ne peut pas être supprimé.');
         }
 
-        // Supprimer le rôle
+        if ($role->users()->count() > 0) {
+            return redirect()->route('roles.index')->with('error', 'Impossible de supprimer ce rôle car il est attribué à des utilisateurs actifs.');
+        }
+
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Rôle supprimé avec succès');
+        return redirect()->route('roles.index')->with('success', 'Rôle supprimé avec succès.');
     }
 }

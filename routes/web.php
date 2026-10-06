@@ -12,6 +12,7 @@ use App\Http\Controllers\UserLoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserContoller; // ✅ Correction du nom
+use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\VenteController;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\StockAlerte;
@@ -40,12 +41,6 @@ Route::middleware('auth')->group(function () {
     // Produits (uniquement index)
     Route::get('produits', [ProduitController::class, 'index'])->name('produits.index');
     Route::post('/ventes/{vente}/payer', [VenteController::class, 'payer'])->name('ventes.payer');
-
-
-
-
-
-
 
 
     // Mouvements de stock (uniquement index)
@@ -87,6 +82,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/toggle', [UserContoller::class, 'toggle'])->name('users.toggle');
     route::post('/ventes/{vente}/paiement', [paiementController::class, 'store'])->name('paiements.store');
     Route::get('/admin/horaires/historique', [HoraireController::class, 'historique'])->name('admin.horaires.historique');
+
+    // Gestion des dépenses
+    Route::get('/depenses/export-excel', [DepenseController::class, 'exportExcel'])->name('depenses.export-excel');
+    Route::get('/depenses/export-pdf', [DepenseController::class, 'exportPdf'])->name('depenses.export-pdf');
+    Route::resource('depenses', DepenseController::class);
 });
 // Groupe pour les super administrateurs
 Route::middleware(['web', 'verified', 'auth', 'is.superAdmin'])->group(function () {

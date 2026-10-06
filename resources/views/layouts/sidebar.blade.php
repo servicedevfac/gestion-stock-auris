@@ -1,7 +1,10 @@
 
-        <div class="main-menu">
+        <div class="main-menu" id="mainMenuSidebar">
             <!-- Brand Logo -->
-            <div class="logo-box text-center" style="padding: 24px 0; height: auto;">
+            <div class="logo-box text-center position-relative" style="padding: 24px 0; height: auto;">
+                <button type="button" class="btn-close-sidebar d-lg-none" id="sidebarCloseBtn" aria-label="Fermer le menu">
+                    <i class="fas fa-times"></i>
+                </button>
                 <!-- Brand Logo Light -->
                 <a href="{{url(path: 'dashboard')}}" class="logo-light">
                     <img src="{{url('assets/images/logo-light.png')}}" alt="logo" class="logo-lg" style="height: 60px; object-fit: contain;">
@@ -130,6 +133,33 @@
                             </ul>
                         </div>
                     </li>
+                    @canany(['view depense', 'create depense'])
+                    <li class="menu-item">
+                        <a href="#menuDepenses" data-bs-toggle="collapse" class="menu-link waves-effect {{ request()->routeIs('depenses.*') ? 'active' : '' }}">
+                            <span class="menu-icon"><i data-lucide="receipt"></i></span>
+                            <span class="menu-text"> Dépenses </span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('depenses.*') ? 'show' : '' }}" id="menuDepenses">
+                            <ul class="sub-menu">
+                                @can('create depense')
+                                <li class="menu-item">
+                                    <a href="{{ route('depenses.create') }}" class="menu-link {{ request()->routeIs('depenses.create') ? 'active' : '' }}">
+                                        <span class="menu-text">Nouvelle Dépense</span>
+                                    </a>
+                                </li>
+                                @endcan
+                                @can('view depense')
+                                <li class="menu-item">
+                                    <a href="{{ route('depenses.index') }}" class="menu-link {{ request()->routeIs('depenses.index') ? 'active' : '' }}">
+                                        <span class="menu-text">Liste Dépenses</span>
+                                    </a>
+                                </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                    @endcanany
 
                     <li class="menu-title">Administration</li>
 

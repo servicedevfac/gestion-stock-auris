@@ -96,6 +96,36 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card modern-stat stat-red">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-label">Dépenses ce mois</div>
+                            <div class="stat-value">{{ number_format($depensesMois ?? 0, 0, ',', ' ') }} <small>XOF</small></div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card modern-stat {{ ($beneficeNetMois ?? 0) >= 0 ? 'stat-teal' : 'stat-red' }}">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-label">Bénéfice Net (Mois)</div>
+                            <div class="stat-value">{{ number_format($beneficeNetMois ?? 0, 0, ',', ' ') }} <small>XOF</small></div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-scale-balanced"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- Chart --}}
@@ -103,7 +133,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header card-heade">
-                    <h4 class="card-title"><i class="fas fa-chart-bar me-2"></i>Chiffre d'affaires des 12 derniers mois</h4>
+                    <h4 class="card-title"><i class="fas fa-chart-line me-2"></i>Performance financière des 12 derniers mois (CA, Encaissé, Dépenses & Bénéfice Net)</h4>
                 </div>
                 <div class="chart-container">
                     <canvas id="caLineChart" width="800" height="350"></canvas>
@@ -223,6 +253,69 @@
         </div>
     </div>
 
+    {{-- Recent expenses --}}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header card-heade d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-receipt"></i>
+                        <h4 class="card-title mb-0">Dernières dépenses d'exploitation</h4>
+                    </div>
+                    <div>
+                        <a href="{{ route('depenses.index') }}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            Toutes les dépenses <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered table-nowrap mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Libellé / Titre</th>
+                                    <th>Catégorie</th>
+                                    <th>Bénéficiaire</th>
+                                    <th>Paiement</th>
+                                    <th class="text-end">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($derniersDepenses as $depense)
+                                    <tr>
+                                        <td>{{ $depense->date_depense ? $depense->date_depense->format('d/m/Y') : '-' }}</td>
+                                        <td class="fw-semibold">
+                                            <a href="{{ route('depenses.show', $depense) }}" class="text-dark text-decoration-none">
+                                                {{ $depense->titre }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">
+                                                {{ $depense->categorie_label }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $depense->beneficiaire ?? '-' }}</td>
+                                        <td><span class="badge bg-secondary-subtle text-secondary">{{ $depense->mode_paiement }}</span></td>
+                                        <td class="text-end fw-bold text-danger">
+                                            {{ number_format($depense->montant, 0, ',', ' ') }} XOF
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            Aucune dépense enregistrée pour le moment.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
@@ -232,6 +325,8 @@
     const data = @json($data);
     const data1 = @json($data1);
     const reste = @json($dataReste);
+    const depenses = @json($dataDepenses);
+    const benefice = @json($dataBenefice);
 
     const ctx = document.getElementById('caLineChart').getContext('2d');
 
@@ -241,28 +336,54 @@
             labels: labels,
             datasets: [
                 {
+                    type: 'bar',
                     label: "Chiffre d'affaires",
                     data: data,
                     backgroundColor: 'rgba(26, 35, 126, 0.85)',
                     borderColor: 'rgba(26, 35, 126, 1)',
                     borderRadius: 6,
                     borderWidth: 0,
+                    order: 2,
                 },
                 {
+                    type: 'bar',
                     label: 'Montant encaissé',
                     data: data1,
                     backgroundColor: 'rgba(22, 163, 74, 0.85)',
                     borderColor: 'rgba(22, 163, 74, 1)',
                     borderRadius: 6,
                     borderWidth: 0,
+                    order: 2,
                 },
                 {
-                    label: 'Reste à payer',
-                    data: reste,
-                    backgroundColor: 'rgba(220, 38, 38, 0.85)',
-                    borderColor: 'rgba(220, 38, 38, 1)',
+                    type: 'bar',
+                    label: 'Dépenses',
+                    data: depenses,
+                    backgroundColor:'rgba(245, 158, 11, 0.85)' ,
+                    borderColor: 'rgba(239, 68, 68, 1)',
                     borderRadius: 6,
                     borderWidth: 0,
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Reste à payer',
+                    data: reste,
+                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Bénéfice Net',
+                    data: benefice,
+                    backgroundColor: 'rgba(14, 165, 233, 0.85)',
+                    borderColor: 'rgba(14, 165, 233, 1)',
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    order:1,
                 }
             ],
         },

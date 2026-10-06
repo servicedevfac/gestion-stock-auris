@@ -19,9 +19,9 @@
     </a>
 </p>
 
-# Gestion Stock Auris
+# Gestion Stock StockGX
 
-Gestion Stock Auris est une application web basée sur le framework Laravel, conçue pour faciliter la gestion des stocks de votre entreprise. Elle offre une interface intuitive et des fonctionnalités puissantes pour suivre, organiser et optimiser vos inventaires.
+Gestion Stock StockGX est une application web basée sur le framework Laravel, conçue pour faciliter la gestion des stocks de votre entreprise. Elle offre une interface intuitive et des fonctionnalités puissantes pour suivre, organiser et optimiser vos inventaires.
 
 ## Fonctionnalités principales
 
@@ -43,7 +43,7 @@ Gestion Stock Auris est une application web basée sur le framework Laravel, con
 1. Clonez ce dépôt :
      ```bash
      git clone <url-du-repo>
-     cd gestion-stock-auris
+     cd gestion-stock-StockGX
      ```
 2. Installez les dépendances PHP :
      ```bash

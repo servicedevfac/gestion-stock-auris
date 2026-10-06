@@ -97,26 +97,93 @@
                 @endif
 
                 {{-- Formulaire d’ajout d’un paiement si pas encore payé --}}
-                @if (!$vente->est_paye)
-                    <hr>
-                    <h6>Ajouter un paiement :</h6>
-                    <form action="{{ route('paiements.store', $vente->id) }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="montant">Montant</label>
-                            <input type="number" step="0.01" name="montant" class="form-control" required>
+                @if (!$vente->est_paye && $vente->reste_a_payer > 0)
+                    <hr class="my-4">
+                    <div class="card border-0 shadow-sm bg-light p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <h5 class="mb-0 fw-bold text-dark">
+                                <i class="fas fa-hand-holding-usd text-success me-2"></i>Enregistrer un règlement
+                            </h5>
+                            <span class="badge bg-warning text-dark px-3 py-2 fs-6">
+                                Reste à payer : {{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA
+                            </span>
                         </div>
-                        <div class="mb-3">
-                            <label for="mode_paiement">Mode de paiement</label>
-                            <select name="mode_paiement" class="form-select" required>
-                                <option value="">-- Choisir --</option>
-                                <option value="espèces">Espèces</option>
-                                <option value="mobile_money">Mobile Money</option>
-                                <option value="carte">Carte bancaire</option>
-                            </select>
+
+                        <form action="{{ route('paiements.store', $vente->id) }}" method="POST" id="form-paiement">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="montant_paiement" class="form-label fw-bold">
+                                        Montant à payer (FCFA) <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number" 
+                                           id="montant_paiement" 
+                                           name="montant" 
+                                           class="form-control" 
+                                           min="1" 
+                                           max="{{ $vente->reste_a_payer }}" 
+                                           step="any" 
+                                           value="{{ old('montant', $vente->reste_a_payer) }}" 
+                                           required>
+                                    <div class="form-text" id="montant-helper">
+                                        Montant maximum autorisé : <strong>{{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA</strong>
+                                    </div>
+                                    <div id="montant-erreur" class="text-danger mt-1 small d-none fw-bold">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Le montant ne peut pas dépasser le solde restant à payer ({{ number_format($vente->reste_a_payer, 0, ',', ' ') }} FCFA).
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="mode_paiement" class="form-label fw-bold">
+                                        Mode de paiement <span class="text-danger">*</span>
+                                    </label>
+                                    <select name="mode_paiement" id="mode_paiement" class="form-select" required>
+                                        <option value="">-- Choisir un moyen de paiement --</option>
+                                        <option value="espèces" {{ old('mode_paiement') == 'espèces' ? 'selected' : '' }}>Espèces</option>
+                                        <option value="mobile_money" {{ old('mode_paiement') == 'mobile_money' ? 'selected' : '' }}>Mobile Money</option>
+                                        <option value="carte" {{ old('mode_paiement') == 'carte' ? 'selected' : '' }}>Carte bancaire</option>
+                                        <option value="virement" {{ old('mode_paiement') == 'virement' ? 'selected' : '' }}>Virement</option>
+                                        <option value="chèque" {{ old('mode_paiement') == 'chèque' ? 'selected' : '' }}>Chèque</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success" id="btn-submit-paiement">
+                                <i class="fas fa-check-circle me-1"></i> Valider le paiement
+                            </button>
+                        </form>
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const montantInput = document.getElementById('montant_paiement');
+                            const maxMontant = {{ (float) $vente->reste_a_payer }};
+                            const erreurMsg = document.getElementById('montant-erreur');
+                            const btnSubmit = document.getElementById('btn-submit-paiement');
+
+                            if (montantInput) {
+                                montantInput.addEventListener('input', function() {
+                                    const val = parseFloat(this.value || 0);
+                                    if (val > maxMontant) {
+                                        this.classList.add('is-invalid');
+                                        erreurMsg.classList.remove('d-none');
+                                        btnSubmit.disabled = true;
+                                    } else {
+                                        this.classList.remove('is-invalid');
+                                        erreurMsg.classList.add('d-none');
+                                        btnSubmit.disabled = false;
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                @else
+                    <hr class="my-4">
+                    <div class="alert alert-success d-flex align-items-center mb-0" role="alert">
+                        <i class="fas fa-check-double fa-2x me-3"></i>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-1">Vente entièrement soldée</h6>
+                            <p class="mb-0">Tous les paiements nécessaires ont été effectués pour cette vente. Aucun solde restant dû.</p>
                         </div>
-                        <button type="submit" class="btn btn-success">Ajouter paiement</button>
-                    </form>
+                    </div>
                 @endif
             </div>
         </div>

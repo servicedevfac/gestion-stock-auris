@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="light" data-menu-color="dark" data-topbar-color="light">
 <head>
     <meta charset="utf-8" />
-    <title>Gest_Stock-Auris</title>
+    <title>StockGX</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="GESTION-USP" name="description" />
     <meta content="MyraStudio" name="author" />
@@ -35,7 +35,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     {{-- Modern Design Override --}}
-    <link href="{{ url('assets/css/modern-override.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url('assets/css/modern-override.css') }}?v={{ filemtime(public_path('assets/css/modern-override.css')) }}" rel="stylesheet" type="text/css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -46,12 +46,13 @@
 <body>
     <div class="layout-wrapper">
         @include('layouts.sidebar')
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
         <div class="page-content">
-            <div class="px-3">
-                <div class="container">
-                    @include('layouts.top-bar')
+            @include('layouts.top-bar')
 
+            <div class="main-content-container py-3 px-2 px-md-3 flex-grow-1">
+                <div class="container-fluid px-1 px-md-2">
                     @if (session('success'))
                         <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
                             <i class="fas fa-check-circle"></i>
@@ -74,7 +75,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                             <div>
-                                <script>document.write(new Date().getFullYear())</script> © Gest_Stock-Auris
+                                <script>document.write(new Date().getFullYear())</script> © StockGX
                             </div>
                         </div>
                         <div class="col-md-6 text-center text-md-end">
@@ -93,7 +94,6 @@
     <script src="{{ url('assets/js/vendor.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url('assets/js/app.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('.btn-delete').on('click', function () {
@@ -119,7 +119,6 @@
     <script src="{{ url('assets/libs/jquery-knob/jquery.knob.min.js') }}"></script>
     <script src="{{ url('assets/libs/morris.js/morris.min.js') }}"></script>
     <script src="{{ url('assets/libs/raphael/raphael.min.js') }}"></script>
-    <script src="{{ url('assets/js/pages/dashboard.js') }}"></script>
     <script src="{{ url('assets/js/app.js') }}"></script>
     <script src="{{ url('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
@@ -135,12 +134,12 @@
     <script src="{{ url('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ url('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{ url('assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
     <script>
-        // Ensure dropdowns work
+        // Ensure dropdowns and responsive sidebar work flawlessly
         document.addEventListener('DOMContentLoaded', function () {
+            // 1. Dropdowns
             try {
                 if (typeof bootstrap !== 'undefined') {
                     var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
@@ -151,6 +150,76 @@
             } catch (e) {
                 console.error('Dropdown init error:', e);
             }
+
+            // 2. Responsive Mobile Sidebar
+            const toggleBtns = document.querySelectorAll('.button-toggle-menu');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const htmlEl = document.documentElement;
+            const bodyEl = document.body;
+
+            function openSidebar() {
+                htmlEl.classList.add('sidebar-enable');
+                bodyEl.classList.add('sidebar-enable');
+            }
+
+            function closeSidebar() {
+                htmlEl.classList.remove('sidebar-enable');
+                bodyEl.classList.remove('sidebar-enable');
+            }
+
+            function toggleSidebar() {
+                if (htmlEl.classList.contains('sidebar-enable')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            }
+
+            toggleBtns.forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    closeSidebar();
+                });
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener('click', function () {
+                    closeSidebar();
+                });
+            }
+
+            // Close with Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && htmlEl.classList.contains('sidebar-enable')) {
+                    closeSidebar();
+                }
+            });
+
+            // Close on window resize if resizing to desktop
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992 && htmlEl.classList.contains('sidebar-enable')) {
+                    // On desktop, sidebar-enable means collapsed sidebar, keep as is
+                }
+            });
+
+            // Close mobile sidebar when clicking a direct menu link (not a collapse trigger)
+            const menuLinks = document.querySelectorAll('.app-menu .menu-link:not([data-bs-toggle="collapse"])');
+            menuLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth < 992) {
+                        closeSidebar();
+                    }
+                });
+            });
         });
     </script>
     @yield('scripts')

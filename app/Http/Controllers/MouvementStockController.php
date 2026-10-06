@@ -13,132 +13,166 @@ use Illuminate\Support\Facades\Notification;
 class MouvementStockController extends Controller
 {
     /**
-     * Affiche la liste des mouvements de stock.
+     * Vérification des droits administrateur
+     */
+    private function checkAdminPermission(string $action = 'manage'): void
+    {
+        $user = Auth::user();
+        if (!$user->hasAnyRole(['Administrateur', 'super admin']) && !$user->can("{$action} stock")) {
+            abort(403, 'Accès refusé. Seul un administrateur est autorisé à effectuer cette action sur le stock.');
+        }
+    }
+
+    /**
+     * Liste des mouvements de stock avec chargement des relations
      */
     public function index()
     {
+        $produits = Produit::orderBy('nom')->get();
+        $users = User::orderBy('nom')->get();
 
-        $produits = Produit::all(); // Récupère tous les produits pour le champ
-        $users = User::all(); // Récupère tous les utilisateurs pour le champ
+        $mouvements = MouvementStock::with(['produit', 'user'])
+            ->orderByDesc('created_at')
+            ->paginate(25);
 
-        $mouvements = MouvementStock::orderBy('created_at', 'desc')->take(200)->get();
         return view('admin.stocks.index', compact('mouvements', 'produits', 'users'));
-
     }
 
     /**
-     * Affiche le formulaire de création d'un mouvement de stock.
+     * Formulaire d'enregistrement d'un mouvement de stock
      */
     public function create()
     {
-        $produits = Produit::all();
-        $users = User::all(); // Récupère tous les utilisateurs pour le champ utilisateur
+        $this->checkAdminPermission('create');
+
+        $produits = Produit::orderBy('nom')->get();
+        $users = User::orderBy('nom')->get();
+
         return view('admin.stocks.create', compact('produits', 'users'));
     }
-public function store(Request $request)
-{
-    // Validation
-    $request->validate([
-        'produit_id' => 'required|exists:produits,id',
-        'type_mouvement' => 'required|in:entree,sortie',
-        'quantite' => 'required|integer|min:1',
-        'motif' => 'required|string|max:255',
-        'date_mouvement' => 'required|date',
-    ]);
 
-    // Récupérer le produit
-    $produit = Produit::find($request->produit_id);
-    if (!$produit) {
-        return redirect()->back()->withErrors(['produit_id' => 'Produit non trouvé.']);
+    /**
+     * Enregistrement d'un mouvement de stock
+     */
+    public function store(Request $request)
+    {
+        $this->checkAdminPermission('create');
+
+        $validated = $request->validate([
+            'produit_id'     => 'required|exists:produits,id',
+            'type_mouvement' => 'required|in:entree,sortie',
+            'quantite'       => 'required|integer|min:1',
+            'motif'          => 'required|string|max:255',
+            'date_mouvement' => 'required|date',
+        ]);
+
+        $produit = Produit::findOrFail($validated['produit_id']);
+
+        // Sécurité anti-stock négatif : vérifier si le stock est suffisant en cas de sortie
+        if ($validated['type_mouvement'] === 'sortie' && $validated['quantite'] > $produit->stock_actuel) {
+            return back()->withInput()->with(
+                'error',
+                "Sortie impossible : la quantité demandée ({$validated['quantite']}) dépasse le stock actuel ({$produit->stock_actuel})."
+            );
+        }
+
+        $mouvement = MouvementStock::create([
+            'produit_id'     => $produit->id,
+            'user_id'        => Auth::id(),
+            'type_mouvement' => $validated['type_mouvement'],
+            'quantite'       => $validated['quantite'],
+            'motif'          => $validated['motif'],
+            'date_mouvement' => $validated['date_mouvement'],
+            'vente_id'       => null,
+        ]);
+
+        // Recharger le produit pour recalculer le stock
+        $produit->load('mouvements');
+
+        // Gestion de l'alerte stock faible
+        if ($produit->stock_actuel <= $produit->seuil_alerte && !$produit->alerte_envoyee) {
+            try {
+                $produitsFaibles = Produit::all()
+                    ->filter(fn ($p) => $p->stock_actuel <= $p->seuil_alerte)
+                    ->values()
+                    ->all();
+
+                $admins = User::role('Administrateur')->get();
+                if ($admins->isNotEmpty()) {
+                    Notification::send($admins, new StockAlerte($produitsFaibles));
+                }
+
+                $produit->update([
+                    'alerte_envoyee'  => true,
+                    'last_alerted_at' => now(),
+                ]);
+            } catch (\Exception $e) {
+                // Éviter de bloquer l'enregistrement si le serveur mail n'est pas joignable
+                report($e);
+            }
+        }
+
+        return redirect()->route('mouvementStocks.index')
+                         ->with('success', 'Mouvement de stock enregistré avec succès.');
     }
-   // dd($produit);
 
-    // Créer le mouvement
-    $mouvement = new MouvementStock();
-    $mouvement->produit_id = $produit->id;
-    $mouvement->type_mouvement = $request->type_mouvement;
-    $mouvement->quantite = $request->quantite;
-    $mouvement->motif = $request->motif;
-    $mouvement->date_mouvement = $request->date_mouvement;
-    $mouvement->user_id = Auth::id();
-    $mouvement->vente_id = null; // seulement pour ventes
-    $mouvement->save();
-
-    // ⚡ Recharger le produit et sa relation pour recalcul correct du stock
-    $produit->load('mouvements');
-
-    if ($produit->stockActuel < $produit->seuil_alerte && $produit->alerte_envoyee == false) {
-    
-        $produitsFaibles = Produit::all()
-            ->filter(function ($p) {
-                return $p->stockActuel < $p->seuil_alerte;
-            })
-            ->values()
-            ->all();
-    
-        $admins = User::role('Administrateur')->get();
-    
-        Notification::send(
-            $admins,
-            new StockAlerte($produitsFaibles)
-        );
-    
-        $produit->alerte_envoyee = true;
-        $produit->last_alerted_at = now();
-        $produit->save();
-    }
-   // dd($produit->alerte_envoyee);
-    return redirect()->route('mouvementStocks.index')
-                     ->with('success', 'Mouvement enregistré avec succès.');
-}
-
-
+    /**
+     * Détail d'un mouvement de stock
+     */
     public function show($id)
     {
-        $mouvementStock = MouvementStock::find($id);
+        $mouvementStock = MouvementStock::with(['produit', 'user'])->findOrFail($id);
         return view('admin.stocks.show', compact('mouvementStock'));
     }
 
-public function edit(MouvementStock $mouvementStock)
-{
-    $produits = Produit::all();
-    $users = User::all();
-
-    return view('admin.stocks.edit', compact('mouvementStock', 'produits', 'users'));
-}
-
-
     /**
-     * Met à jour un mouvement de stock existant en base de données.
+     * Formulaire de modification d'un mouvement
      */
-    public function update(Request $request, MouvementStock $mouvementStock)
+    public function edit(MouvementStock $mouvementStock)
     {
-        $request->validate([
-    'produit_id' => 'required|exists:produits,id',
-    'user_id' => 'required|exists:users,id',
-    'type_mouvement' => 'required|in:entree,sortie',
-    'quantite' => 'required|numeric|min:1',
-    'motif' => 'required|string|max:255',
-    'date_mouvement' => 'required|date',
-]);
+        $this->checkAdminPermission('edit');
 
+        $produits = Produit::orderBy('nom')->get();
+        $users = User::orderBy('nom')->get();
 
-        $mouvementStock->update($request->all());
-
-        return redirect()->route('mouvementStocks.index')->with('success', 'Mouvement de stock mis à jour avec succès.');
+        return view('admin.stocks.edit', compact('mouvementStock', 'produits', 'users'));
     }
 
     /**
-     * Supprime un mouvement de stock de la base de données.
+     * Mise à jour d'un mouvement de stock
      */
-    public function destroy(MouvementStock $mouvementStock)
-{
-    return redirect()->route('mouvementStocks.index')
-        ->with('error', 'La suppression des mouvements de stock est interdite.');
-}
+    public function update(Request $request, MouvementStock $mouvementStock)
+    {
+        $this->checkAdminPermission('edit');
 
+        $validated = $request->validate([
+            'produit_id'     => 'required|exists:produits,id',
+            'user_id'        => 'required|exists:users,id',
+            'type_mouvement' => 'required|in:entree,sortie',
+            'quantite'       => 'required|integer|min:1',
+            'motif'          => 'required|string|max:255',
+            'date_mouvement' => 'required|date',
+        ]);
+
+        $mouvementStock->update([
+            'produit_id'     => $validated['produit_id'],
+            'user_id'        => $validated['user_id'],
+            'type_mouvement' => $validated['type_mouvement'],
+            'quantite'       => $validated['quantite'],
+            'motif'          => $validated['motif'],
+            'date_mouvement' => $validated['date_mouvement'],
+        ]);
+
+        return redirect()->route('mouvementStocks.index')
+                         ->with('success', 'Mouvement de stock mis à jour avec succès.');
+    }
 
     /**
-     * Affiche une liste filtrée des mouvements de stock selon les critères.
-     */// fin de la méthode filter
+     * Suppression d'un mouvement
+     */
+    public function destroy(MouvementStock $mouvementStock)
+    {
+        return redirect()->route('mouvementStocks.index')
+                         ->with('error', 'La suppression des mouvements de stock est désactivée pour garantir l\'auditabilité des flux.');
+    }
 }

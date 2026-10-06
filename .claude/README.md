@@ -1,4 +1,4 @@
-# Claude Code Setup for gestion-stock-auris
+# Claude Code Setup for gestion-stock-StockGX
 
 This Laravel project has been configured with Claude Code and the following MCP servers:
 
@@ -33,7 +33,7 @@ Run `source .claude/shortcuts.sh` to load helpful aliases.
 
 ## Tips
 - Global servers work across all your Laravel projects
-- Use project names when referencing files: "Read .env from gestion-stock-auris"
+- Use project names when referencing files: "Read .env from gestion-stock-StockGX"
 - GitHub access works for all your repositories
 - Memory is shared, so decisions in one project can inform others
 

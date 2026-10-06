@@ -1,7 +1,7 @@
-# Memory Initialization for gestion-stock-auris
+# Memory Initialization for gestion-stock-StockGX
 
 ## Project Information
-- **Project Name**: gestion-stock-auris
+- **Project Name**: gestion-stock-StockGX
 - **Tech Stack**: Laravel + Livewire + Filament + Alpine.js + Tailwind CSS
 - **Database**: sqlite
 - **Main Developer**: Laravel Full-Stack Developer

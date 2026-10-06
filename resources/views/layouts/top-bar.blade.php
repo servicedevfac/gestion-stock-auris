@@ -1,27 +1,18 @@
 <div class="navbar-custom">
-                <div class="topbar">
-                    <div class="topbar-menu d-flex align-items-center gap-lg-2 gap-1">
+    <div class="topbar">
+        <div class="topbar-menu d-flex align-items-center gap-2">
+            <!-- Sidebar Menu Toggle Button -->
+            <button type="button" class="button-toggle-menu waves-effect waves-dark rounded-circle text-gray" aria-label="Menu" id="buttonToggleMenu">
+                <i class="mdi mdi-menu"></i>
+            </button>
 
-                        <!-- Brand Logo -->
-                        <div class="logo-box">
-                            <!-- Brand Logo Light -->
-                            <a href="{{url(path: 'dashboard')}}" class="logo-light">
-                                <img src="{{url('assets/images/logo-darkc.png')}}" alt="logo" class="logo-lg" style="height: 60px; object-fit: contain;">
-                                <img src="{{url('assets/images/logo-smF.png')}}" alt="small logo" class="logo-sm" style="height: 40px; object-fit: contain;">
-                            </a>
-
-                            <!-- Brand Logo Dark -->
-                            <a href="{{url(path: 'dashboard')}}" class="logo-dark">
-                                <img src="{{url('assets/images/logo-darkc.png')}}" alt="dark logo" class="logo-lg" style="height: 60px !important; object-fit: contain;">
-                                <img src="{{url('assets/images/logo-smF.png')}}" alt="small logo" class="logo-sm" style="height: 40px; object-fit: contain;">
-                            </a>
-                        </div>
-
-                        <!-- Sidebar Menu Toggle Button -->
-                        <button class="button-toggle-menu waves-effect waves-dark rounded-circle text-gray">
-                            <i class="mdi mdi-menu"></i>
-                        </button>
-                    </div>
+            <!-- Brand Logo (visible on mobile/tablet) -->
+            <div class="logo-box d-lg-none">
+                <a href="{{url('dashboard')}}" class="d-flex align-items-center">
+                    <img src="{{url('assets/images/logo-darkc.png')}}" alt="STOKGX" style="height: 38px; object-fit: contain;">
+                </a>
+            </div>
+        </div>
 
                     <ul class="topbar-menu d-flex align-items-center gap-2">
 

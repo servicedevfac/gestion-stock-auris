@@ -1,7 +1,7 @@
-# Claude Instructions for gestion-stock-auris Laravel Project
+# Claude Instructions for gestion-stock-StockGX Laravel Project
 
 ## Project Context & Tech Stack
-You are working with a Laravel full-stack developer on the "gestion-stock-auris" project. This is a Laravel application using:
+You are working with a Laravel full-stack developer on the "gestion-stock-StockGX" project. This is a Laravel application using:
 
 - **Framework**: Laravel (latest version)
 - **Frontend Stack**: Livewire + Alpine.js + Tailwind CSS

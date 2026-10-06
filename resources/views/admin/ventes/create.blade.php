@@ -167,9 +167,18 @@ function recalculerTotals() {
     document.getElementById('montant_total').value = montantApayer.toFixed(0);
 
     // Vérifier avance vs total
-    const avance = parseFloat(document.getElementById('montant_paye')?.value || 0);
+    const avanceInput = document.getElementById('montant_paye');
+    let avance = parseFloat(avanceInput?.value || 0);
     const estPaye = document.getElementById('est_paye');
     const sectionAvance = document.getElementById('avance_section');
+
+    if (avanceInput) {
+        avanceInput.max = montantApayer;
+        if (avance > montantApayer && montantApayer > 0) {
+            avance = montantApayer;
+            avanceInput.value = montantApayer.toFixed(0);
+        }
+    }
 
     if (avance >= montantApayer && montantApayer > 0) {
         estPaye.checked = true;

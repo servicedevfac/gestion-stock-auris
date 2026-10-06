@@ -2,322 +2,314 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Depense;
 use App\Models\Paiement;
 use App\Models\Produit;
 use App\Models\Vente;
-use App\Models\Detail_vente;
 use Carbon\Carbon;
-use DateTime;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    /**
+     * Tableau de bord principal (Admin & Vendeur)
+     */
     public function index()
-    {  // Récupérer les données pour le graphique des ventes par mois
-
+    {
         $user = Auth::user();
-        // Afficher le dashboard correspondant au rôle de l'utilisateur
-        if ($user->hasRole('Administrateur') || $user->hasRole('super admin')) {
-            // Récupérer l'utilisateur actuellement authentifié
-                // Récupérer toutes les ventes
-                $ventes = Vente::all();
+        $driver = DB::getDriverName();
 
-                // Récupérer le nom du driver de la base de données (sqlite, mysql, etc.)
-                $driver = DB::getDriverName();
+        // 1. Dashboard Administrateur / Super Admin
+        if ($user->hasAnyRole(['Administrateur', 'super admin'])) {
+            return $this->adminDashboard($driver);
+        }
 
-                // Récupérer les 5 dernières ventes (par date de création décroissante)
-                $derniersVentes = Vente::where('statut', 'valide')->orderBy('date_vente', 'desc')->take(10)->get();
+        // 2. Dashboard Commercial / Gestionnaire
+        if ($user->hasAnyRole(['Gestionnaire', 'Commercial'])) {
+            return $this->vendeurDashboard($user, $driver);
+        }
 
-                // Définir l'expression de format de date selon le driver utilisé
-                $dateExpression = $driver === 'sqlite'
-                    ? "strftime('%Y-%m', ventes.date_vente)"
-                    : "DATE_FORMAT(ventes.date_vente, '%Y-%m')";
+        // 3. Fallback pour tout autre rôle
+        return redirect()->route('ventes.index');
+    }
 
-                // Récupérer les 5 derniers clients ayant effectué une vente vente
-                $derniersClients = Vente::with('client')->select('client_id')->groupBy('client_id')->orderByRaw('MAX(date_vente) DESC')->take(10)->get();
+    /**
+     * Données du tableau de bord Administrateur
+     */
+    private function adminDashboard(string $driver)
+    {
+        $today = Carbon::today();
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
 
-                // Calculer le chiffre d'affaires du jour
-                $ca_journalier = Paiement::whereDate('created_at', Carbon::today())->sum('montant');
-                $ca_journalierNonPaye = DB::table('ventes')
-                ->where('user_id', $user->id)
-                ->where('statut', 'valide')
-                ->whereDate('date_vente', Carbon::today())
-                ->sum('montant_total')-$ca_journalier;
-               $chiffreAffaireMoisEnCours = Paiement::whereHas('vente', fn($q) => $q->where('statut', 'valide'))->whereYear('created_at', Carbon::now()->year)
-                ->whereMonth('created_at', Carbon::now()->month)
-                ->sum('montant');
+        // Ventes globales
+        $ventes = Vente::all();
+        $derniersVentes = Vente::where('statut', 'valide')->orderByDesc('date_vente')->take(10)->get();
 
-                                // Calculer le chiffre d'affaires total
-                $chiffreAffaires = Paiement::whereHas('vente', fn($q) => $q->where('statut', 'valide'))
-                    ->whereYear('created_at', Carbon::now()->year)
-                    ->sum('montant');
-                $chiffreAffairesGlobaux = Vente::where('statut', 'valide')->sum('montant_total');
-                
-                $totalVentesNonPayes = max( 0,$chiffreAffairesGlobaux - Paiement::whereHas('vente', fn($q) => $q->where('statut', 'valide'))->sum('montant'));
+        // Clients récents
+        $derniersClients = Vente::with('client')
+            ->select('client_id')
+            ->groupBy('client_id')
+            ->orderByRaw('MAX(date_vente) DESC')
+            ->take(10)
+            ->get();
 
-                $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
+        // Chiffre d'affaires
+        $ca_journalier = Paiement::whereDate('created_at', $today)->sum('montant');
+
+        $chiffreAffaireMoisEnCours = Paiement::whereHas('vente', fn ($q) => $q->where('statut', 'valide'))
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->sum('montant');
+
+        $chiffreAffaires = Paiement::whereHas('vente', fn ($q) => $q->where('statut', 'valide'))
+            ->whereYear('created_at', $currentYear)
+            ->sum('montant');
+
+        $chiffreAffairesGlobaux = Vente::where('statut', 'valide')->sum('montant_total');
+
+        $totalEncaisse = Paiement::whereHas('vente', fn ($q) => $q->where('statut', 'valide'))->sum('montant');
+        $totalVentesNonPayes = max(0, $chiffreAffairesGlobaux - $totalEncaisse);
+
+        // Dépenses d'exploitation
+        $depensesMois = Depense::whereYear('date_depense', $currentYear)
+            ->whereMonth('date_depense', $currentMonth)
+            ->sum('montant');
+
+        $depensesAujourdhui = Depense::whereDate('date_depense', $today)->sum('montant');
+        $depensesAnnuelles = Depense::whereYear('date_depense', $currentYear)->sum('montant');
+        $beneficeNetMois = $chiffreAffaireMoisEnCours - $depensesMois;
+        $derniersDepenses = Depense::with('user')->orderByDesc('date_depense')->take(5)->get();
+
+        // Produits en alerte de stock
+        $produitsStockFaible = Produit::select('produits.*')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
                 SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) -
                 SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END) as stock_actuel
             ')
-            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
+            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee', 'produits.created_at', 'produits.updated_at')
             ->havingRaw('(SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) - SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END)) <= seuil_alerte')
             ->get();
 
-    //
-    $months = collect(range(0, 11))
-        ->map(fn($i) => Carbon::now()->subMonths($i)->format('Y-m'))
-        ->reverse();
+        // 12 derniers mois
+        $months = collect(range(0, 11))
+            ->map(fn ($i) => Carbon::now()->subMonths($i)->format('Y-m'))
+            ->reverse()
+            ->values();
 
-    // labels lisibles
-    $labels = $months->map(fn($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'));
+        $labels = $months->map(fn ($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'))->values();
 
-    // détecter le driver (MySQL, PostgreSQL, SQLite)
-    $driver = DB::getDriverName();
-    $dateExpr = match ($driver) {
-        'mysql'  => "DATE_FORMAT(created_at, '%Y-%m')",
-        'sqlite' => "strftime('%Y-%m', created_at)",
-        'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
-        default  => "DATE_FORMAT(created_at, '%Y-%m')",
-    };
+        $dateExprVente = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', date_vente)",
+            'pgsql'  => "TO_CHAR(date_vente, 'YYYY-MM')",
+            default  => "DATE_FORMAT(date_vente, '%Y-%m')",
+        };
 
-    // ventes par mois
-    $sale = Vente::selectRaw("$dateExpr as month, SUM(montant_total) as total")
-        ->where('date_vente', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-        ->where('statut', 'valide')
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
+        $dateExprPaiement = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', created_at)",
+            'pgsql'  => "TO_CHAR(created_at, 'YYYY-MM')",
+            default  => "DATE_FORMAT(created_at, '%Y-%m')",
+        };
 
-    // paiements par mois
-    $sales1 = Paiement::whereHas('vente', fn($q) => $q->where('statut', 'valide'))->selectRaw("$dateExpr as month, SUM(montant) as total")
-        ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
+        $dateExprDepense = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', date_depense)",
+            'pgsql'  => "TO_CHAR(date_depense, 'YYYY-MM')",
+            default  => "DATE_FORMAT(date_depense, '%Y-%m')",
+        };
 
-    // données ventes par mois
-    $data = $months->map(fn($m) => $sale->has($m) ? (float) $sale[$m]->total : 0);
+        $startMonthLimit = Carbon::now()->subMonths(11)->startOfMonth()->format('Y-m-d');
 
-    // données paiements par mois
-    $data1 = $months->map(fn($m) => $sales1->has($m) ? (float) $sales1[$m]->total : 0);
+        // Ventes par mois
+        $salesByMonth = Vente::selectRaw("$dateExprVente as month, SUM(montant_total) as total")
+            ->where('date_vente', '>=', $startMonthLimit)
+            ->where('statut', 'valide')
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
- // reste à encaisser par mois
-$dataReste = $months->map(fn($m) => 
-    max(
-        0,
-        ($sale->has($m) ? (float) $sale[$m]->total : 0) -
-        ($sales1->has($m) ? (float) $sales1[$m]->total : 0)
-    )
-);
+        // Paiements par mois
+        $paymentsByMonth = Paiement::whereHas('vente', fn ($q) => $q->where('statut', 'valide'))
+            ->selectRaw("$dateExprPaiement as month, SUM(montant) as total")
+            ->where('created_at', '>=', $startMonthLimit)
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-        $labels = $labels->values();
-        $data   = $data->values();
-        $data1  = $data1->values();
-        $dataReste = $dataReste->values();
+        // Dépenses par mois
+        $depensesByMonth = Depense::selectRaw("$dateExprDepense as month, SUM(montant) as total")
+            ->where('date_depense', '>=', $startMonthLimit)
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
+        $data = $months->map(fn ($m) => (float) ($salesByMonth[$m] ?? 0))->values();
+        $data1 = $months->map(fn ($m) => (float) ($paymentsByMonth[$m] ?? 0))->values();
+        $dataDepenses = $months->map(fn ($m) => (float) ($depensesByMonth[$m] ?? 0))->values();
+        $dataBenefice = $months->map(fn ($m) => (float) (($paymentsByMonth[$m] ?? 0) - ($depensesByMonth[$m] ?? 0)))->values();
+        $dataReste = $months->map(fn ($m) => max(0, (float) (($salesByMonth[$m] ?? 0) - ($paymentsByMonth[$m] ?? 0))))->values();
 
+        return view('dashboards.admin', compact(
+            'ca_journalier',
+            'chiffreAffaires',
+            'totalVentesNonPayes',
+            'ventes',
+            'labels',
+            'data',
+            'dataReste',
+            'data1',
+            'dataDepenses',
+            'dataBenefice',
+            'chiffreAffairesGlobaux',
+            'derniersVentes',
+            'derniersClients',
+            'produitsStockFaible',
+            'chiffreAffaireMoisEnCours',
+            'depensesMois',
+            'depensesAujourdhui',
+            'depensesAnnuelles',
+            'beneficeNetMois',
+            'derniersDepenses'
+        ));
+    }
 
-    $totalVentesPayes = $ventes->where('est_paye', true)->sum('montant_total');
-//dd($labels, $data);
-            return view('dashboards.admin', compact(
-                'ca_journalier',
-                'chiffreAffaires',
-                'totalVentesNonPayes',
-                'ventes',
-                'labels',
-                'data',
-                'dataReste',
-                'data1',
-                'chiffreAffairesGlobaux',
-                'derniersVentes',
-                'derniersClients',
-                'produitsStockFaible',
-                'chiffreAffaireMoisEnCours',
-                //'chartData' // Passer les données du graphique
-            ));
-        }
+    /**
+     * Données du tableau de bord Vendeur / Commercial
+     */
+    private function vendeurDashboard($user, string $driver)
+    {
+        $userId = $user->id;
+        $today = Carbon::today()->format('Y-m-d');
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
 
-        if ($user->hasRole('Gestionnaire')||$user->hasRole('Commercial')) {
-            // Récupérer les 10 dernières ventes du vendeur
-            $ventes = Vente::where('user_id', $user->id)
-                ->orderBy('date_vente', 'desc')
-                ->take(10)
-                ->get();
-                // Récupérer le chiffre d'affaires du vendeur
-            $chiffreAffairesvendeurs = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->whereYear('date_vente', Carbon::now()->year)->sum('montant_paye');
-            $chiffreAffairesvendeursimpaye = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->whereYear('date_vente', Carbon::now()->year)->sum('reste_a_payer');
-            $chiffreAffairesvendeursglobal = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->sum('montant_total');
-            $ca_journalier = DB::table('ventes')
-             ->where('user_id', $user->id)
-             ->where('statut', 'valide')
-             ->whereDate('date_vente', Carbon::today())
-             ->sum('montant_paye');
-            $ca_journalierNonPaye = DB::table('ventes')
-             ->where('user_id', $user->id)
-             ->where('statut', 'valide')
-             ->whereDate('date_vente', Carbon::today())
-             ->sum('reste_a_payer');
+        $ventes = Vente::where('user_id', $userId)
+            ->orderByDesc('date_vente')
+            ->take(10)
+            ->get();
 
-                // Récupérer le chiffre d'affaires du mois en cours pour le vendeur
-            $chiffreAffaireMoisEnCours = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->whereYear('date_vente', Carbon::now()->year)
-                ->whereMonth('date_vente', Carbon::now()->month)
-                ->sum('montant_paye');
-            $chiffreAffaireMoisEnCourNonPaye = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->whereYear('date_vente', Carbon::now()->year)
-                ->whereMonth('date_vente', Carbon::now()->month)
-                ->sum('reste_a_payer');
+        $chiffreAffairesvendeurs = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->whereYear('date_vente', $currentYear)
+            ->sum('montant_paye');
 
+        $chiffreAffairesvendeursimpaye = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->whereYear('date_vente', $currentYear)
+            ->sum('reste_a_payer');
 
-        // Récupérer les 5 derniers clients ayant effectué une vente pour ce vendeur
-            $derniersClients = Vente::with('client')
-                ->where('user_id', $user->id)
-                ->select('client_id')
-                ->groupBy('client_id')
-                ->orderByRaw('MAX(date_vente) DESC')
-                ->take(10)
-                ->get();
-            // Récupérer le nombre total de ventes pour ce vendeur
+        $chiffreAffairesvendeursglobal = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->sum('montant_total');
 
-            $chiffreAffairesSemaine = DB::table('ventes')
-                ->where('statut', 'valide')
-                ->where('user_id', $user->id)
-                ->where('est_paye', true)
-                ->whereBetween('date_vente', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-                ->sum('montant_total');
-            // Récupérer les données pour les produits dont le stock est faible
+        $ca_journalier = DB::table('ventes')
+            ->where('user_id', $userId)
+            ->where('statut', 'valide')
+            ->whereDate('date_vente', $today)
+            ->sum('montant_paye');
 
-              $produitsStockFaible = Produit::select('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
+        $ca_journalierNonPaye = DB::table('ventes')
+            ->where('user_id', $userId)
+            ->where('statut', 'valide')
+            ->whereDate('date_vente', $today)
+            ->sum('reste_a_payer');
+
+        $chiffreAffaireMoisEnCours = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->whereYear('date_vente', $currentYear)
+            ->whereMonth('date_vente', $currentMonth)
+            ->sum('montant_paye');
+
+        $chiffreAffaireMoisEnCourNonPaye = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->whereYear('date_vente', $currentYear)
+            ->whereMonth('date_vente', $currentMonth)
+            ->sum('reste_a_payer');
+
+        $derniersClients = Vente::with('client')
+            ->where('user_id', $userId)
+            ->select('client_id')
+            ->groupBy('client_id')
+            ->orderByRaw('MAX(date_vente) DESC')
+            ->take(10)
+            ->get();
+
+        $chiffreAffairesSemaine = DB::table('ventes')
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->where('est_paye', true)
+            ->whereBetween('date_vente', [Carbon::now()->startOfWeek()->format('Y-m-d'), Carbon::now()->endOfWeek()->format('Y-m-d')])
+            ->sum('montant_total');
+
+        $produitsStockFaible = Produit::select('produits.*')
             ->join('mouvement_stocks', 'produits.id', '=', 'mouvement_stocks.produit_id')
             ->selectRaw('
                 SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) -
                 SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END) as stock_actuel
             ')
-            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee','produits.created_at', 'produits.updated_at')
+            ->groupBy('produits.id', 'produits.nom', 'produits.prix', 'produits.seuil_alerte', 'produits.alerte_envoyee', 'produits.created_at', 'produits.updated_at')
             ->havingRaw('(SUM(CASE WHEN type_mouvement = \'entree\' THEN quantite ELSE 0 END) - SUM(CASE WHEN type_mouvement = \'sortie\' THEN quantite ELSE 0 END)) <= seuil_alerte')
             ->get();
 
+        // Graphiques
+        $months = collect(range(0, 11))
+            ->map(fn ($i) => now()->subMonths($i)->format('Y-m'))
+            ->reverse()
+            ->values();
 
-$userId = $user->id;
+        $labels = $months->map(fn ($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y'))->values();
+        $startDate = now()->subMonths(11)->startOfMonth()->format('Y-m-d');
 
-//////////////////////////////////////////////////
-// 1️⃣ Générer les 12 derniers mois
-//////////////////////////////////////////////////
+        $dateExprVente = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', date_vente)",
+            'pgsql'  => "TO_CHAR(date_vente, 'YYYY-MM')",
+            default  => "DATE_FORMAT(date_vente, '%Y-%m')",
+        };
 
-$months = collect(range(0, 11))
-    ->map(fn ($i) => now()->subMonths($i)->format('Y-m'))
-    ->reverse()
-    ->values();
+        $dateExprPaiement = match ($driver) {
+            'sqlite' => "strftime('%Y-%m', date_paiement)",
+            'pgsql'  => "TO_CHAR(date_paiement, 'YYYY-MM')",
+            default  => "DATE_FORMAT(date_paiement, '%Y-%m')",
+        };
 
-$labels = $months->map(
-    fn ($m) => Carbon::createFromFormat('Y-m', $m)->translatedFormat('M Y')
-);
+        $sales = Vente::query()
+            ->selectRaw("$dateExprVente as month, SUM(montant_total) as total")
+            ->where('statut', 'valide')
+            ->where('user_id', $userId)
+            ->where('date_vente', '>=', $startDate)
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-$startDate = now()->subMonths(11)->startOfMonth()->format('Y-m-d');
+        $payments = Paiement::query()
+            ->whereHas('vente', fn ($q) => $q->where('user_id', $userId)->where('statut', 'valide'))
+            ->selectRaw("$dateExprPaiement as month, SUM(montant) as total")
+            ->where('date_paiement', '>=', $startDate)
+            ->groupBy('month')
+            ->pluck('total', 'month');
 
-//////////////////////////////////////////////////
-// 2️⃣ EXPRESSIONS MYSQL (string ➜ date)
-//////////////////////////////////////////////////
+        $data = $months->map(fn ($m) => (float) ($sales[$m] ?? 0))->values();
+        $data1 = $months->map(fn ($m) => (float) ($payments[$m] ?? 0))->values();
+        $dataReste = $months->map(fn ($m) => max(0, (float) (($sales[$m] ?? 0) - ($payments[$m] ?? 0))))->values();
 
-$dateExprVente = "
-    DATE_FORMAT(
-        STR_TO_DATE(date_vente, '%Y-%m-%d'),
-        '%Y-%m'
-    )
-";
-
-$dateExprPaiement = "
-    DATE_FORMAT(
-        STR_TO_DATE(date_paiement, '%Y-%m-%d'),
-        '%Y-%m'
-    )
-";
-
-//////////////////////////////////////////////////
-// 3️⃣ VENTES PAR MOIS
-//////////////////////////////////////////////////
-
-$sales = Vente::query()
-    ->selectRaw("$dateExprVente as month, SUM(montant_total) as total")
-    ->where('statut', 'valide')
-    ->where('user_id', $userId)
-    ->whereRaw("STR_TO_DATE(date_vente, '%Y-%m-%d') >= ?", [$startDate])
-    ->groupBy('month')
-    ->pluck('total', 'month');
-
-//////////////////////////////////////////////////
-// 4️⃣ PAIEMENTS PAR MOIS
-//////////////////////////////////////////////////
-
-$payments = Paiement::query()
-    ->whereHas('vente', fn ($q) =>
-        $q->where('user_id', $userId)
-          ->where('statut', 'valide')
-    )
-    ->selectRaw("$dateExprPaiement as month, SUM(montant) as total")
-    ->whereRaw("STR_TO_DATE(date_paiement, '%Y-%m-%d') >= ?", [$startDate])
-    ->groupBy('month')
-    ->pluck('total', 'month');
-
-//////////////////////////////////////////////////
-// 5️⃣ DATASETS
-//////////////////////////////////////////////////
-
-$data = $months->map(fn ($m) => (float) ($sales[$m] ?? 0));
-$data1 = $months->map(fn ($m) => (float) ($payments[$m] ?? 0));
-
-$dataReste = $months->map(fn ($m) =>
-    max(0, ($sales[$m] ?? 0) - ($payments[$m] ?? 0))
-);
-
-//////////////////////////////////////////////////
-// 6️⃣ RESULTAT FINAL (Chart.js ready)
-//////////////////////////////////////////////////
-
-
-
-
-            return view('dashboards.vendeur',
-            compact(
-                'chiffreAffairesvendeurs',
-                'chiffreAffairesSemaine',
-                        'chiffreAffaireMoisEnCours',
-                        'ventes',
-                        'ca_journalierNonPaye',
-                        'chiffreAffaireMoisEnCourNonPaye',
-                        'data',
-                        'data1',
-                        'dataReste',
-                        'ca_journalier',
-                        'labels',
-                        'derniersClients',
-                        'produitsStockFaible',
-                        'chiffreAffairesvendeursglobal',
-                        'chiffreAffairesvendeursimpaye'
-            ));
-        }
-
-
-
+        return view('dashboards.vendeur', compact(
+            'chiffreAffairesvendeurs',
+            'chiffreAffairesSemaine',
+            'chiffreAffaireMoisEnCours',
+            'ventes',
+            'ca_journalierNonPaye',
+            'chiffreAffaireMoisEnCourNonPaye',
+            'data',
+            'data1',
+            'dataReste',
+            'ca_journalier',
+            'labels',
+            'derniersClients',
+            'produitsStockFaible',
+            'chiffreAffairesvendeursglobal',
+            'chiffreAffairesvendeursimpaye'
+        ));
     }
 }

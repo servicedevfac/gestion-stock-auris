@@ -1,4 +1,4 @@
-# Coding Standards for gestion-stock-auris
+# Coding Standards for gestion-stock-StockGX
 
 ## Laravel Conventions
 - Use singular model names (User, Post, not Users, Posts)
