@@ -166,13 +166,19 @@
             function closeSidebar() {
                 htmlEl.classList.remove('sidebar-enable');
                 bodyEl.classList.remove('sidebar-enable');
+                const customBackdrop = document.getElementById('custom-backdrop');
+                if (customBackdrop) {
+                    customBackdrop.remove();
+                }
             }
 
             function toggleSidebar() {
-                if (htmlEl.classList.contains('sidebar-enable')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
+                if (window.innerWidth < 992) {
+                    if (htmlEl.classList.contains('sidebar-enable')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
                 }
             }
 
@@ -204,11 +210,15 @@
                 }
             });
 
-            // Close on window resize if resizing to desktop
+            // Cleanly handle window resize across responsive breakpoints
+            let lastWindowWidth = window.innerWidth;
             window.addEventListener('resize', function () {
-                if (window.innerWidth >= 992 && htmlEl.classList.contains('sidebar-enable')) {
-                    // On desktop, sidebar-enable means collapsed sidebar, keep as is
+                const currentWidth = window.innerWidth;
+                // If crossing the 992px breakpoint in either direction, always reset sidebar state
+                if ((lastWindowWidth < 992 && currentWidth >= 992) || (lastWindowWidth >= 992 && currentWidth < 992)) {
+                    closeSidebar();
                 }
+                lastWindowWidth = currentWidth;
             });
 
             // Close mobile sidebar when clicking a direct menu link (not a collapse trigger)

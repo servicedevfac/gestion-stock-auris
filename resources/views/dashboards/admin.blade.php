@@ -4,12 +4,16 @@
 
     {{-- Stock faible alert --}}
     @if($produitsStockFaible->count() > 0)
-        <div class="marquee">
-            ⚠ Stock faible :
-            @foreach($produitsStockFaible as $produit)
-                {{ $produit->nom }} ({{ $produit->stock_actuel }}) &nbsp;&nbsp;|&nbsp;&nbsp;
-            @endforeach
-            — Veuillez approvisionner ces produits.
+        <div class="marquee-wrapper mb-3">
+            <div class="marquee-content">
+                <span class="marquee-badge"><i class="fas fa-exclamation-triangle me-1"></i> Stock faible</span>
+                <span class="marquee-track">
+                    @foreach($produitsStockFaible as $produit)
+                        <strong>{{ $produit->nom }}</strong> ({{ $produit->stock_actuel }}) &nbsp;&nbsp;|&nbsp;&nbsp;
+                    @endforeach
+                    Veuillez réapprovisionner ces produits.
+                </span>
+            </div>
         </div>
     @endif
 
@@ -136,7 +140,7 @@
                     <h4 class="card-title"><i class="fas fa-chart-line me-2"></i>Performance financière des 12 derniers mois (CA, Encaissé, Dépenses & Bénéfice Net)</h4>
                 </div>
                 <div class="chart-container">
-                    <canvas id="caLineChart" width="800" height="350"></canvas>
+                    <canvas id="caLineChart"></canvas>
                 </div>
             </div>
         </div>

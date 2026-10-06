@@ -71,12 +71,23 @@
 }
 
 /* ── Global Reset / Base ──────────────────────────────────── */
-body {
+html, body {
     font-family: var(--font-sans) !important;
     background: var(--bg-page) !important;
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative;
+}
+
+.layout-wrapper {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 100vh;
 }
 
 /* ── Animations ───────────────────────────────────────────── */
@@ -141,7 +152,7 @@ body {
     }
 }
 
-@keyframes marqueeScroll {
+@keyframes marqueeSlide {
     0% {
         transform: translateX(100%);
     }
@@ -814,16 +825,52 @@ body {
 }
 
 /* ── Marquee (Stock faible) ───────────────────────────────── */
-.marquee {
-    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+.marquee-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    background: linear-gradient(135deg, #b91c1c, #dc2626) !important;
     color: #ffffff !important;
-    padding: 12px 20px !important;
+    padding: 10px 16px !important;
     border-radius: var(--radius-md) !important;
-    font-weight: 600 !important;
-    font-size: 13.5px !important;
-    animation: marqueeScroll 25s linear infinite !important;
     box-shadow: 0 4px 12px rgba(220, 38, 38, .2) !important;
-    letter-spacing: .2px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.marquee-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden !important;
+    white-space: nowrap;
+}
+
+.marquee-badge {
+    background: rgba(0, 0, 0, .3);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.marquee-track {
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
+    animation: marqueeSlide 30s linear infinite;
+    will-change: transform;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.marquee-wrapper:hover .marquee-track {
+    animation-play-state: paused;
 }
 
 /* ── Pagination ───────────────────────────────────────────── */
@@ -960,9 +1007,28 @@ div.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
 
 /* ── Chart container ──────────────────────────────────────── */
 .chart-container {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 380px !important;
     padding: 20px;
     background: var(--surface);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    box-sizing: border-box;
+}
+
+@media (max-width: 991.98px) {
+    .chart-container {
+        height: 320px !important;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .chart-container {
+        height: 260px !important;
+        padding: 8px;
+    }
 }
 
 /* ── Color utility classes ────────────────────────────────── */
@@ -1218,48 +1284,22 @@ body {
         width: 260px !important;
         min-width: 260px !important;
         max-width: 260px !important;
-        flex-shrink: 0;
+        flex-shrink: 0 !important;
         z-index: 1030 !important;
-        transition: width 0.25s ease, min-width 0.25s ease !important;
+        transform: none !important;
+        transition: none !important;
     }
 
     .page-content {
         margin-left: 260px !important;
         width: calc(100% - 260px) !important;
+        max-width: calc(100% - 260px) !important;
         min-width: 0 !important;
-        transition: margin-left 0.25s ease, width 0.25s ease !important;
     }
 
-    /* Collapsed sidebar mode on desktop */
-    html.sidebar-enable .main-menu {
-        width: 70px !important;
-        min-width: 70px !important;
-        max-width: 70px !important;
-    }
-
-    html.sidebar-enable .page-content {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-    }
-
-    html.sidebar-enable .main-menu .logo-box .logo-lg {
+    /* Fixed sidebar on desktop: hide toggle button, mobile close, and backdrop */
+    .button-toggle-menu {
         display: none !important;
-    }
-
-    html.sidebar-enable .main-menu .logo-box .logo-sm {
-        display: block !important;
-        margin: 0 auto;
-    }
-
-    html.sidebar-enable .main-menu .menu-title,
-    html.sidebar-enable .main-menu .menu-text,
-    html.sidebar-enable .main-menu .menu-arrow {
-        display: none !important;
-    }
-
-    html.sidebar-enable .main-menu .menu-icon {
-        margin: 0 auto;
-        text-align: center;
     }
 
     .navbar-custom .logo-box {
