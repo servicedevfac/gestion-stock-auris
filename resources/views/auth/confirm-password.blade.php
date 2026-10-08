@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StockGX — Confirmation du mot de passe</title>
+  <title>STOKGX — Confirmation du mot de passe</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="shortcut icon" href="{{ url('assets/images/logo-sm.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="{{ url('assets/images/logo-light.png') }}">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -226,7 +226,9 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-logo">
-        <img src="{{ url('assets/images/logo-sm.png') }}" alt="Logo">
+        <div style="display:inline-flex; align-items:center; justify-content:center; padding:10px 18px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); box-shadow:0 10px 25px rgba(0,0,0,0.35); margin-bottom:14px;">
+          <img src="{{ url('assets/images/logo-light.png') }}" alt="Logo STOKGX" style="height:60px; width:auto; object-fit:contain;">
+        </div>
         <h1>Zone sécurisée</h1>
         <p>Veuillez confirmer votre mot de passe pour continuer.</p>
       </div>

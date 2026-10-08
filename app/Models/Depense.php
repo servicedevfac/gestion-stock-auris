@@ -29,6 +29,7 @@ class Depense extends Model
     /**
      * Utilisateur ayant enregistré la dépense
      */
+    
     public function user()
     {
         return $this->belongsTo(User::class);

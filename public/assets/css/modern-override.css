@@ -1644,3 +1644,127 @@ body {
     color: var(--text-muted, #94a3b8);
     margin-bottom: 0;
 }
+
+/* ── Indicator Filter Bar ─────────────────────────────────── */
+.indicator-filter-bar {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm) !important;
+    padding: 12px 18px !important;
+    transition: all var(--transition-base);
+}
+
+.indicator-category-pills {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.indicator-category-pills .btn {
+    border-radius: var(--radius-full) !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    padding: 6px 14px !important;
+    color: var(--text-secondary) !important;
+    background: var(--surface-alt) !important;
+    border: 1px solid var(--border) !important;
+    transition: all var(--transition-fast) !important;
+}
+
+.indicator-category-pills .btn:hover {
+    color: var(--primary) !important;
+    background: var(--surface-hover) !important;
+    border-color: var(--primary-light) !important;
+}
+
+.indicator-category-pills .btn.active {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.25) !important;
+}
+
+.indicator-category-pills .btn.active .badge {
+    background-color: #ffffff !important;
+    color: var(--primary) !important;
+}
+
+.indicator-card-col {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease !important;
+}
+
+.indicator-card-col.is-hidden {
+    display: none !important;
+}
+
+.indicator-dropdown-menu {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-lg) !important;
+    min-width: 290px;
+    padding: 14px 16px !important;
+    z-index: 1050;
+}
+
+.indicator-dropdown-menu .form-check-label {
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.indicator-dropdown-menu .form-check-input {
+    cursor: pointer;
+}
+
+.indicator-dropdown-menu .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ── Period Filter Buttons & Spacing ──────────────────────── */
+.period-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px !important;
+}
+
+.period-filter-btn {
+    border-radius: var(--radius-full, 9999px) !important;
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border: 1px solid var(--border, #cbd5e1) !important;
+    background-color: #ffffff !important;
+    color: var(--text-secondary, #475569) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none !important;
+}
+
+.period-filter-btn:hover {
+    background-color: var(--surface-hover, #f1f5f9) !important;
+    color: var(--primary, #1a237e) !important;
+    border-color: var(--primary-light, #283593) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+}
+
+.period-filter-btn.active,
+.period-filter-btn.btn-active-period {
+    background-color: var(--primary, #1a237e) !important;
+    color: #ffffff !important;
+    border-color: var(--primary, #1a237e) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 3px 10px rgba(var(--primary-rgb, 26, 35, 126), 0.3) !important;
+}
+
+.period-badge-status {
+    border-radius: var(--radius-full, 9999px) !important;
+    padding: 6px 14px !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+}

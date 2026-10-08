@@ -22,15 +22,74 @@
         </div>
     </div>
 
+    {{-- Filtre de Période (Jour, Semaine, Mois, Année) pour les Indicateurs --}}
+    <div class="card border-0 shadow-sm mt-3 mb-3">
+        <div class="card-body p-3">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+                {{-- Boutons rapides de période : Jour, Semaine, Mois, Année, Tout --}}
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <span class="text-muted fw-semibold small me-1">
+                        <i class="fas fa-calendar-alt text-primary me-1"></i> Filtrer par période :
+                    </span>
+                    <div class="period-buttons-container">
+                        <a href="{{ route('dashboard', ['periode' => 'jour']) }}" 
+                           class="period-filter-btn {{ $periode === 'jour' ? 'btn-active-period' : '' }}">
+                            <i class="fas fa-calendar-day me-1"></i> Jour
+                        </a>
+                        <a href="{{ route('dashboard', ['periode' => 'semaine']) }}" 
+                           class="period-filter-btn {{ $periode === 'semaine' ? 'btn-active-period' : '' }}">
+                            <i class="fas fa-calendar-week me-1"></i> Semaine
+                        </a>
+                        <a href="{{ route('dashboard', ['periode' => 'mois']) }}" 
+                           class="period-filter-btn {{ $periode === 'mois' ? 'btn-active-period' : '' }}">
+                            <i class="fas fa-calendar-alt me-1"></i> Mois
+                        </a>
+                        <a href="{{ route('dashboard', ['periode' => 'annee']) }}" 
+                           class="period-filter-btn {{ $periode === 'annee' ? 'btn-active-period' : '' }}">
+                            <i class="fas fa-calendar me-1"></i> Année
+                        </a>
+                        <a href="{{ route('dashboard', ['periode' => 'tout']) }}" 
+                           class="period-filter-btn {{ $periode === 'tout' ? 'btn-active-period' : '' }}">
+                            <i class="fas fa-infinity me-1"></i> Tout
+                        </a>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle period-badge-status ms-md-2">
+                        <i class="fas fa-clock me-1"></i> {{ $periodeLabel }}
+                    </span>
+                </div>
+
+                {{-- Filtre personnalisé de dates (Du / Au) --}}
+                <form method="GET" action="{{ route('dashboard') }}" class="d-flex flex-wrap align-items-center gap-2 m-0">
+                    <input type="hidden" name="periode" value="custom">
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-light text-muted small">Du</span>
+                        <input type="date" name="date_debut" class="form-control form-control-sm" value="{{ request('date_debut', $dateDebut ?? '') }}" required>
+                        <span class="input-group-text bg-light text-muted small">Au</span>
+                        <input type="date" name="date_fin" class="form-control form-control-sm" value="{{ request('date_fin', $dateFin ?? '') }}" required>
+                        <button type="submit" class="btn btn-primary btn-sm" title="Appliquer la plage personnalisée">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                    </div>
+                    @if(request()->hasAny(['periode', 'date_debut', 'date_fin']))
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm" title="Réinitialiser au mois">
+                            <i class="fas fa-undo"></i>
+                        </a>
+                    @endif
+                </form>
+            </div>
+        </div>
+    </div>
+
     {{-- Stat cards --}}
-    <div class="row mt-3 gx-3 gy-3">
-        <div class="col-sm-6 col-lg-3">
+    <div class="row mt-3 gx-3 gy-3" id="indicator-cards-container">
+        {{-- Encaissé --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-encaisse">
             <div class="card modern-stat stat-green">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="stat-label">Encaissé / jour</div>
-                            <div class="stat-value">{{ number_format($ca_journalier, 0, ',', ' ') }} <small>XOF</small></div>
+                            <div class="stat-label">Encaissé ({{ ucfirst($periodeTitle) }})</div>
+                            <div class="stat-value">{{ number_format($encaissePeriode, 0, ',', ' ') }} <small>XOF</small></div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-coins"></i>
@@ -39,43 +98,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card modern-stat stat-blue">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="stat-label">Encaissé / mois</div>
-                            <div class="stat-value">{{ number_format($chiffreAffaireMoisEnCours, 0, ',', ' ') }} <small>XOF</small></div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card modern-stat stat-gold">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="stat-label">Encaissé / an</div>
-                            <div class="stat-value">{{ number_format($chiffreAffairesvendeurs, 0, ',', ' ') }} <small>XOF</small></div>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
+
+        {{-- Chiffre d'affaires --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-ca">
             <div class="card modern-stat stat-purple">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <div class="stat-label">Chiffre d'affaires</div>
-                            <div class="stat-value">{{ number_format($chiffreAffairesvendeursglobal, 0, ',', ' ') }} <small>XOF</small></div>
+                            <div class="stat-value">{{ number_format($caPeriode, 0, ',', ' ') }} <small>XOF</small></div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-wallet"></i>
@@ -84,13 +115,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
+
+        {{-- Reste à payer --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-reste-payer">
             <div class="card modern-stat stat-red">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="stat-label">Reste à payer / jour</div>
-                            <div class="stat-value">{{ number_format($ca_journalierNonPaye, 0, ',', ' ') }} <small>XOF</small></div>
+                            <div class="stat-label">Reste à payer</div>
+                            <div class="stat-value">{{ number_format($resteAPayerPeriode, 0, ',', ' ') }} <small>XOF</small></div>
                         </div>
                         <div class="stat-icon">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -99,36 +132,65 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card modern-stat stat-red">
+
+        {{-- Ventes réalisées --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-nb-ventes">
+            <div class="card modern-stat stat-blue">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="stat-label">Reste à payer / mois</div>
-                            <div class="stat-value">{{ number_format($chiffreAffaireMoisEnCourNonPaye, 0, ',', ' ') }} <small>XOF</small></div>
+                            <div class="stat-label">Ventes réalisées</div>
+                            <div class="stat-value">{{ number_format($nbVentesPeriode, 0, ',', ' ') }} <small>vente(s)</small></div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-clock"></i>
+                            <i class="fas fa-shopping-bag"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card modern-stat stat-red">
+
+        {{-- Panier moyen --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-panier-moyen">
+            <div class="card modern-stat stat-gold">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="stat-label">Reste à payer / an</div>
-                            <div class="stat-value">{{ number_format($chiffreAffairesvendeursimpaye, 0, ',', ' ') }} <small>XOF</small></div>
+                            <div class="stat-label">Panier moyen</div>
+                            <div class="stat-value">{{ number_format($panierMoyenPeriode, 0, ',', ' ') }} <small>XOF</small></div>
                         </div>
                         <div class="stat-icon">
-                            <i class="fas fa-file-invoice-dollar"></i>
+                            <i class="fas fa-receipt"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- Taux de recouvrement --}}
+        <div class="col-sm-6 col-lg-3 indicator-card-col" id="card-taux-recouvrement">
+            <div class="card modern-stat stat-teal">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="stat-label">Taux d'encaissement</div>
+                            <div class="stat-value">{{ $tauxRecouvrement }} <small>%</small></div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Alerte aucun indicateur sélectionné --}}
+    <div id="no-indicators-alert" class="alert alert-info d-none mt-3 text-center py-3 rounded-3 shadow-sm border-0">
+        <i class="fas fa-info-circle me-2 text-primary"></i> Aucun indicateur n'est visible avec la sélection actuelle.
+        <button type="button" class="btn btn-sm btn-link p-0 ms-2 fw-semibold text-primary text-decoration-underline" id="btn-reset-indicators">
+            Afficher tous les indicateurs
+        </button>
     </div>
 
     {{-- Chart --}}
